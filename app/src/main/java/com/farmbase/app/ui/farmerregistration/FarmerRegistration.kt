@@ -1,11 +1,14 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.models.Farmer
@@ -105,11 +108,11 @@ fun FarmerForm(
     farmer: Farmer?,
     onSubmit: (String, String, String, String, String) -> Unit
 ) {
-    var name by remember { mutableStateOf(farmer?.name ?: "") }
-    var email by remember { mutableStateOf(farmer?.email ?: "") }
-    var phoneNumber by remember { mutableStateOf(farmer?.phoneNumber ?: "") }
-    var location by remember { mutableStateOf(farmer?.location ?: "") }
-    var specialtyCrops by remember { mutableStateOf(farmer?.specialtyCrops ?: "") }
+    var name by rememberSaveable { mutableStateOf(farmer?.name ?: "") }
+    var email by rememberSaveable { mutableStateOf(farmer?.email ?: "") }
+    var phoneNumber by rememberSaveable { mutableStateOf(farmer?.phoneNumber ?: "") }
+    var location by rememberSaveable { mutableStateOf(farmer?.location ?: "") }
+    var specialtyCrops by rememberSaveable { mutableStateOf(farmer?.specialtyCrops ?: "") }
 
     Column(
         modifier = Modifier
@@ -125,7 +128,8 @@ fun FarmerForm(
             },
             label = { Text("Name") },
             placeholder = { Text("Enter name") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         OutlinedTextField(
@@ -135,7 +139,8 @@ fun FarmerForm(
             },
             label = { Text("Email") },
             placeholder = { Text("Enter email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
 
         OutlinedTextField(
@@ -145,7 +150,8 @@ fun FarmerForm(
             },
             label = { Text("Phone Number") },
             placeholder = { Text("Enter phone number") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
         )
 
         OutlinedTextField(
@@ -155,7 +161,8 @@ fun FarmerForm(
             },
             label = { Text("Location") },
             placeholder = { Text("Enter location") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
         )
 
         DropdownField(
