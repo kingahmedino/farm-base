@@ -11,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.farmerregistration.FarmerRegistrationViewModel
 import com.farmbase.app.ui.farmerregistration.ValidationResult
+import com.farmbase.app.ui.widgets.DropdownField
+import com.farmbase.app.utils.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,13 +158,13 @@ fun FarmerForm(
             modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
+        DropdownField(
             value = specialtyCrops,
             onValueChange = { value ->
                 specialtyCrops = value
             },
-            label = { Text("Specialty Crops") },
-            placeholder = { Text("Enter specialty crops") },
+            label = "Specialty Crops",
+            options = Constants.SPECIALTY_CROPS,
             modifier = Modifier.fillMaxWidth()
         )
 
