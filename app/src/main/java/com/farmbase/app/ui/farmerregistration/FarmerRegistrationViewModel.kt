@@ -17,17 +17,8 @@ import javax.inject.Inject
 class FarmerRegistrationViewModel @Inject constructor(
     private val repository: FarmerRepository
 ) : ViewModel() {
-    private val _selectedFarmer = MutableStateFlow<Farmer?>(null)
-    val selectedFarmer: StateFlow<Farmer?> = _selectedFarmer.asStateFlow()
-
     private val _validationState = MutableStateFlow<ValidationResult?>(null)
     val validationState: StateFlow<ValidationResult?> = _validationState.asStateFlow()
-
-    fun loadFarmer(id: Int) {
-        viewModelScope.launch {
-            _selectedFarmer.value = repository.getFarmerById(id)
-        }
-    }
 
     fun submitFarmer(
         name: String,
@@ -56,7 +47,6 @@ class FarmerRegistrationViewModel @Inject constructor(
                 } else {
                     repository.insertFarmer(farmer)
                 }
-                _selectedFarmer.value = null
                 _validationState.value = null
             }
         }

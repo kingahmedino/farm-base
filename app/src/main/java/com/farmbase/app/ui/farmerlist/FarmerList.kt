@@ -37,7 +37,7 @@ import com.farmbase.app.models.Farmer
 fun FarmerListScreen(
     viewModel: FarmerListViewModel = hiltViewModel(),
     onAddNewFarmer: () -> Unit,
-    onEditFarmer: (Int) -> Unit
+    onEditFarmer: (Farmer) -> Unit
 ) {
     val farmers by viewModel.allFarmers.collectAsState()
 
@@ -109,12 +109,12 @@ fun FarmerListHeader(onAddNewFarmer: () -> Unit) {
 @Composable
 fun FarmerListItem(
     farmer: Farmer,
-    onEditClick: (Int) -> Unit
+    onEditClick: (Farmer) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onEditClick(farmer.id) },
+            .clickable { onEditClick(farmer) },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(

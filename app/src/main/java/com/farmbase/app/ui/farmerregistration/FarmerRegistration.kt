@@ -8,46 +8,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.farmerregistration.FarmerRegistrationViewModel
 import com.farmbase.app.ui.farmerregistration.ValidationResult
-
-data class FarmerFormState(
-    val name: String = "",
-    val email: String = "",
-    val phoneNumber: String = "",
-    val location: String = "",
-    val specialtyCrops: String = ""
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FarmerRegistrationScreen(
     viewModel: FarmerRegistrationViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
-    farmerId: Int? = null
+    farmer: Farmer? = null
 ) {
-    val selectedFarmer by viewModel.selectedFarmer.collectAsState()
-    var formState by remember { mutableStateOf(FarmerFormState()) }
     val validationState by viewModel.validationState.collectAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(farmerId) {
-        farmerId?.let {
-            viewModel.loadFarmer(it)
-        }
-    }
-
-    LaunchedEffect(selectedFarmer) {
-        selectedFarmer?.let { farmer ->
-            formState = FarmerFormState(
-                name = farmer.name,
-                email = farmer.email,
-                phoneNumber = farmer.phoneNumber,
-                location = farmer.location,
-                specialtyCrops = farmer.specialtyCrops
-            )
-        }
-    }
 
     LaunchedEffect(validationState) {
         when (validationState) {
@@ -93,7 +66,7 @@ fun FarmerRegistrationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (farmerId == null) "New farmer profile" else "Edit farmer profile") },
+                title = { Text(if (farmer == null) "New farmer profile" else "Edit farmer profile") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -109,7 +82,7 @@ fun FarmerRegistrationScreen(
                 .padding(16.dp)
         ) {
             FarmerForm(
-                formState = formState,
+                farmer = farmer,
                 onSubmit = { name, email, phoneNumber, location, specialty -> 
                     viewModel.submitFarmer(
                         name = name,
@@ -117,7 +90,7 @@ fun FarmerRegistrationScreen(
                         phoneNumber = phoneNumber,
                         location = location,
                         specialtyCrops = specialty,
-                        farmerId = farmerId
+                        farmerId = farmer?.id
                     )
                 }
             )
@@ -127,14 +100,14 @@ fun FarmerRegistrationScreen(
 
 @Composable
 fun FarmerForm(
-    formState: FarmerFormState,
+    farmer: Farmer?,
     onSubmit: (String, String, String, String, String) -> Unit
 ) {
-    var name by remember { mutableStateOf(formState.name) }
-    var email by remember { mutableStateOf(formState.email) }
-    var phoneNumber by remember { mutableStateOf(formState.phoneNumber) }
-    var location by remember { mutableStateOf(formState.location) }
-    var specialtyCrops by remember { mutableStateOf(formState.name) }
+    var name by remember { mutableStateOf(farmer?.name ?: "") }
+    var email by remember { mutableStateOf(farmer?.email ?: "") }
+    var phoneNumber by remember { mutableStateOf(farmer?.phoneNumber ?: "") }
+    var location by remember { mutableStateOf(farmer?.location ?: "") }
+    var specialtyCrops by remember { mutableStateOf(farmer?.specialtyCrops ?: "") }
 
     Column(
         modifier = Modifier

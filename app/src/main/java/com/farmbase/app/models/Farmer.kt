@@ -2,7 +2,9 @@ package com.farmbase.app.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "farmers")
 data class Farmer(
     @PrimaryKey(autoGenerate = true)
