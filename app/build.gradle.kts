@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,6 +7,14 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.serialization)
     kotlin("kapt")
+}
+
+val envFile = rootProject.file("env.properties")
+val envProperties = Properties()
+if (envFile.exists()) {
+    envFile.inputStream().use { envProperties.load(it) }
+} else {
+    throw GradleException("env.properties not found. Please create it from env.properties.template")
 }
 
 android {
@@ -23,8 +33,8 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "IMG_HIPPO_API_KEY", "\"489b437d51a3379a10863d86d6c7a6d6\"")
-        buildConfigField("String", "IMG_HIPPO_BASE_URL", "\"https://api.imghippo.com/v1/\"")
+        buildConfigField("String", "IMG_HIPPO_API_KEY", envProperties["IMG_HIPPO_API_KEY"].toString())
+        buildConfigField("String", "IMG_HIPPO_BASE_URL", envProperties["IMG_HIPPO_BASE_URL"].toString())
     }
 
     buildTypes {
