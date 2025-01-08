@@ -108,6 +108,11 @@ class FarmerRegistrationViewModel @Inject constructor(
         }
         if (phoneNumber.isBlank()) {
             errors.add("Phone number is required")
+        } else {
+            val nigerianPhoneRegex = "^(0|\\+?234)[789][01]\\d{8}$".toRegex()
+            if (!nigerianPhoneRegex.matches(phoneNumber)) {
+                errors.add("Please enter a valid Nigerian phone number")
+            }
         }
         if (location.isBlank()) {
             errors.add("Location is required")
