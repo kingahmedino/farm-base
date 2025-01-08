@@ -1,3 +1,4 @@
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.farmerregistration.FarmerRegistrationViewModel
+import com.farmbase.app.ui.farmerregistration.UploadState
 import com.farmbase.app.ui.farmerregistration.ValidationResult
-import com.farmbase.app.ui.widgets.DropdownField
 import com.farmbase.app.utils.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,6 +26,8 @@ fun FarmerRegistrationScreen(
     farmer: Farmer? = null
 ) {
     val validationState by viewModel.validationState.collectAsState()
+    val uploadState by viewModel.uploadState.collectAsState()
+    var showValidationErrorDialog by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(validationState) {
@@ -33,20 +36,36 @@ fun FarmerRegistrationScreen(
                 onNavigateBack()
                 viewModel.clearValidation()
             }
+
             is ValidationResult.Error -> {
-                showErrorDialog = true
+                showValidationErrorDialog = true
             }
+
             null -> {
-                showErrorDialog = false
+                showValidationErrorDialog = false
             }
         }
     }
 
-    if (showErrorDialog) {
+    LaunchedEffect(uploadState) {
+        when (uploadState) {
+            is UploadState.Success -> {
+                onNavigateBack()
+            }
+
+            is UploadState.Error -> {
+                showErrorDialog = true
+            }
+
+            else -> {}
+        }
+    }
+
+    if (showValidationErrorDialog) {
         val errors = (validationState as ValidationResult.Error).errors
         AlertDialog(
             onDismissRequest = {
-                showErrorDialog = false
+                showValidationErrorDialog = false
                 viewModel.clearValidation()
             },
             title = { Text("Validation Error") },
@@ -59,8 +78,28 @@ fun FarmerRegistrationScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    showErrorDialog = false
+                    showValidationErrorDialog = false
                     viewModel.clearValidation()
+                }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+
+    if (showErrorDialog) {
+        val errorMessage = (uploadState as UploadState.Error).message
+        AlertDialog(
+            onDismissRequest = {
+                showErrorDialog = false
+            },
+            title = { Text("Error") },
+            text = {
+                Text(errorMessage)
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showErrorDialog = false
                 }) {
                     Text("OK")
                 }
@@ -88,13 +127,15 @@ fun FarmerRegistrationScreen(
         ) {
             FarmerForm(
                 farmer = farmer,
-                onSubmit = { name, email, phoneNumber, location, specialty -> 
+                isLoading = uploadState is UploadState.Loading,
+                onSubmit = { name, email, phoneNumber, location, specialty, profilePictureUri ->
                     viewModel.submitFarmer(
                         name = name,
                         email = email,
                         phoneNumber = phoneNumber,
                         location = location,
                         specialtyCrops = specialty,
+                        profilePictureUri = profilePictureUri,
                         farmerId = farmer?.id
                     )
                 }
@@ -106,13 +147,22 @@ fun FarmerRegistrationScreen(
 @Composable
 fun FarmerForm(
     farmer: Farmer?,
-    onSubmit: (String, String, String, String, String) -> Unit
+    isLoading: Boolean,
+    onSubmit: (String, String, String, String, String, Uri?) -> Unit
 ) {
     var name by rememberSaveable { mutableStateOf(farmer?.name ?: "") }
     var email by rememberSaveable { mutableStateOf(farmer?.email ?: "") }
     var phoneNumber by rememberSaveable { mutableStateOf(farmer?.phoneNumber ?: "") }
     var location by rememberSaveable { mutableStateOf(farmer?.location ?: "") }
     var specialtyCrops by rememberSaveable { mutableStateOf(farmer?.specialtyCrops ?: "") }
+    var profilePictureUri: Uri? by rememberSaveable {
+        mutableStateOf(
+            if (farmer?.profilePictureUrl != null)
+                Uri.parse(farmer.profilePictureUrl)
+            else
+                null
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -121,6 +171,14 @@ fun FarmerForm(
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        PhotoPicker(
+            imageUri = profilePictureUri,
+            onImagePicked = { uri ->
+                profilePictureUri = uri
+            },
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+
         OutlinedTextField(
             value = name,
             onValueChange = { value ->
@@ -129,7 +187,8 @@ fun FarmerForm(
             label = { Text("Name") },
             placeholder = { Text("Enter name") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            enabled = !isLoading
         )
 
         OutlinedTextField(
@@ -140,7 +199,8 @@ fun FarmerForm(
             label = { Text("Email") },
             placeholder = { Text("Enter email") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            enabled = !isLoading
         )
 
         OutlinedTextField(
@@ -151,7 +211,8 @@ fun FarmerForm(
             label = { Text("Phone Number") },
             placeholder = { Text("Enter phone number") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            enabled = !isLoading
         )
 
         OutlinedTextField(
@@ -162,7 +223,8 @@ fun FarmerForm(
             label = { Text("Location") },
             placeholder = { Text("Enter location") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            enabled = !isLoading
         )
 
         DropdownField(
@@ -172,18 +234,27 @@ fun FarmerForm(
             },
             label = "Specialty Crops",
             options = Constants.SPECIALTY_CROPS,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !isLoading
         )
 
         Button(
             onClick = {
-                onSubmit(name, email, phoneNumber, location, specialtyCrops)
+                onSubmit(name, email, phoneNumber, location, specialtyCrops, profilePictureUri)
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(56.dp),
+            enabled = !isLoading
         ) {
-            Text(text = "Submit")
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text("Submit")
+            }
         }
     }
 }

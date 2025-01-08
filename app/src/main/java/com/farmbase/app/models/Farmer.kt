@@ -13,5 +13,6 @@ data class Farmer(
     val email: String,
     val phoneNumber: String,
     val location: String,
-    val specialtyCrops: String
+    val specialtyCrops: String,
+    val profilePictureUrl: String?
 )

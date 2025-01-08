@@ -1,17 +1,6 @@
-package com.farmbase.app.ui.widgets
-
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,13 +10,14 @@ fun DropdownField(
     onValueChange: (String) -> Unit,
     label: String,
     options: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = it },
+        onExpandedChange = { if (enabled) expanded = it },
         modifier = modifier
     ) {
         OutlinedTextField(
@@ -37,6 +27,7 @@ fun DropdownField(
             label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor()
@@ -52,7 +43,8 @@ fun DropdownField(
                     onClick = {
                         onValueChange(option)
                         expanded = false
-                    }
+                    },
+                    enabled = enabled
                 )
             }
         }

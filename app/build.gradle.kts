@@ -22,6 +22,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "IMG_HIPPO_API_KEY", "\"489b437d51a3379a10863d86d6c7a6d6\"")
+        buildConfigField("String", "IMG_HIPPO_BASE_URL", "\"https://api.imghippo.com/v1/\"")
     }
 
     buildTypes {
@@ -42,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -78,6 +82,18 @@ dependencies {
 
     // Kotlin serialization
     implementation(libs.kotlinx.serialization.json)
+
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp.logging)
+
+    // Image Loading
+    implementation(libs.coil)
+
+    // Accompanist
+    implementation(libs.accompanist.permissions)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

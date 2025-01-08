@@ -15,8 +15,8 @@ import java.net.URLEncoder
 import kotlin.text.Charsets.UTF_8
 
 sealed class Screen(val route: String) {
-    object FarmerList : Screen("farmerList")
-    object FarmerRegistration : Screen("farmerRegistration?farmerJson={farmerJson}") {
+    data object FarmerList : Screen("farmerList")
+    data object FarmerRegistration : Screen("farmerRegistration?farmerJson={farmerJson}") {
         fun createRoute(farmer: Farmer? = null): String {
             return if (farmer != null) {
                 val jsonString = Json.encodeToString(farmer)
