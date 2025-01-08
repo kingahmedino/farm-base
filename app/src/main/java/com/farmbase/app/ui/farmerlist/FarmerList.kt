@@ -29,12 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.models.Farmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FarmerListScreen(
-    viewModel: FarmerListViewModel,
+    viewModel: FarmerListViewModel = hiltViewModel(),
     onAddNewFarmer: () -> Unit,
     onEditFarmer: (Int) -> Unit
 ) {
@@ -111,7 +112,8 @@ fun FarmerListItem(
     onEditClick: (Int) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .clickable { onEditClick(farmer.id) },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {

@@ -20,26 +20,10 @@ import com.farmbase.app.ui.farmerlist.FarmerListScreen
 import com.farmbase.app.ui.farmerlist.FarmerListViewModel
 import com.farmbase.app.ui.farmerregistration.FarmerRegistrationViewModel
 import com.farmbase.app.ui.theme.FarmBaseTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val database by lazy { FarmerDatabase.getDatabase(applicationContext) }
-    private val repository by lazy { FarmerRepository(database.farmerDao()) }
-    private val farmerListViewModel by viewModels<FarmerListViewModel> {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return FarmerListViewModel(repository) as T
-            }
-        }
-    }
-    private val farmerRegistrationViewModel by viewModels<FarmerRegistrationViewModel> {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return FarmerRegistrationViewModel(repository) as T
-            }
-        }
-    }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,14 +35,12 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController, startDestination = "farmerList") {
                     composable("farmerList") {
                         FarmerListScreen(
-                            viewModel = farmerListViewModel,
                             onAddNewFarmer = { navController.navigate("farmerRegistration") },
                             onEditFarmer = { farmerId -> navController.navigate("farmerEdit/$farmerId") }
                         )
                     }
                     composable("farmerRegistration") {
                         FarmerRegistrationScreen(
-                            viewModel = farmerRegistrationViewModel,
                             onNavigateBack = { navController.popBackStack() }
                         )
                     }
@@ -69,7 +51,6 @@ class MainActivity : ComponentActivity() {
                         val farmerId =
                             backStackEntry.arguments?.getInt("farmerId") ?: return@composable
                         FarmerRegistrationScreen(
-                            viewModel = farmerRegistrationViewModel,
                             onNavigateBack = { navController.popBackStack() },
                             farmerId = farmerId
                         )

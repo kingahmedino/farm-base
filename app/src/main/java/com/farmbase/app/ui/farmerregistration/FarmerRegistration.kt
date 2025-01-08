@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.ui.farmerregistration.FarmerRegistrationViewModel
 import com.farmbase.app.ui.farmerregistration.ValidationResult
 
@@ -21,7 +22,7 @@ data class FarmerFormState(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FarmerRegistrationScreen(
-    viewModel: FarmerRegistrationViewModel,
+    viewModel: FarmerRegistrationViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     farmerId: Int? = null
 ) {

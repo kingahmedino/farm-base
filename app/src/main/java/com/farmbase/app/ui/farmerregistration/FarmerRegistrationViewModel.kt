@@ -4,14 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.repositories.FarmerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FarmerRegistrationViewModel(private val repository: FarmerRepository) : ViewModel() {
+@HiltViewModel
+class FarmerRegistrationViewModel @Inject constructor(
+    private val repository: FarmerRepository
+) : ViewModel() {
     private val _selectedFarmer = MutableStateFlow<Farmer?>(null)
     val selectedFarmer: StateFlow<Farmer?> = _selectedFarmer.asStateFlow()
 
