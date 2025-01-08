@@ -29,9 +29,9 @@ This project uses environment variables for sensitive configuration. To set up:
 
 1. Create a `env.properties` file in your project root
 
-2. Edit `env.properties` and configure it appropriately:
+2. Edit `env.properties` and add the following (In an ideal environment, this information will not be in a README file):
 ```properties
-IMG_HIPPO_API_KEY="your_actual_api_key"
+IMG_HIPPO_API_KEY="489b437d51a3379a10863d86d6c7a6d6"
 IMG_HIPPO_BASE_URL="https://api.imghippo.com/v1/"
 ```
 

@@ -14,7 +14,7 @@ val envProperties = Properties()
 if (envFile.exists()) {
     envFile.inputStream().use { envProperties.load(it) }
 } else {
-    throw GradleException("env.properties not found. Please create it from env.properties.template")
+    throw GradleException("env.properties not found. Please check README.md and create it")
 }
 
 android {
