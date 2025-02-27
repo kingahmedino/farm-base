@@ -65,7 +65,10 @@ fun FarmerListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    FarmerListHeader(onAddNewFarmer)
+                    FarmerListHeader({
+//                        onAddNewFarmer
+                        viewModel.insertFarmers()
+                    })
                 }
 
                 items(farmers) { farmer ->

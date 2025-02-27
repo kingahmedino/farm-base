@@ -2,6 +2,7 @@ package com.farmbase.app.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.farmbase.app.models.SyncMetadata.SyncStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,5 +15,7 @@ data class Farmer(
     val phoneNumber: String,
     val location: String,
     val specialtyCrops: String,
-    val profilePictureUrl: String?
+    val profilePictureUrl: String?,
+    val timestamp: Long = System.currentTimeMillis(),
+    val syncStatus: SyncStatus = SyncStatus.UNSYNCED,
 )

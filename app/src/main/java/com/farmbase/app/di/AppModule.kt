@@ -1,7 +1,7 @@
 package com.farmbase.app.di
 import android.content.Context
 import com.farmbase.app.database.FarmerDao
-import com.farmbase.app.database.FarmerDatabase
+import com.farmbase.app.database.FarmBaseDatabase
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.Module
 import dagger.Provides
@@ -15,13 +15,13 @@ import javax.inject.Singleton
 object AppModule {
     @Provides
     @Singleton
-    fun provideFarmerDatabase(@ApplicationContext context: Context): FarmerDatabase {
-        return FarmerDatabase.getDatabase(context)
+    fun provideFarmerDatabase(@ApplicationContext context: Context): FarmBaseDatabase {
+        return FarmBaseDatabase.getDatabase(context)
     }
 
     @Provides
     @Singleton
-    fun provideFarmerDao(database: FarmerDatabase): FarmerDao {
+    fun provideFarmerDao(database: FarmBaseDatabase): FarmerDao {
         return database.farmerDao()
     }
 

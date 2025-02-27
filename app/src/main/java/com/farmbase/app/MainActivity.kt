@@ -7,6 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.farmbase.app.ui.navigation.Screen
 import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
