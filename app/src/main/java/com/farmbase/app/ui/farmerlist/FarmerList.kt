@@ -3,10 +3,14 @@ package com.farmbase.app.ui.farmerlist
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -41,7 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.farmbase.app.models.Farmer
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FarmerListScreen(
     viewModel: FarmerListViewModel = hiltViewModel(),
@@ -70,36 +75,80 @@ fun FarmerListScreen(
                         viewModel.syncData()
                     }
 
-                    Button(
-                        onClick = {
-                            viewModel.insertFarmers()
-                        }
-                    ) {
-                        Text(
-                            text = "Add farmers",
-                            style = MaterialTheme.typography.bodyMedium,
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            viewModel.insertCrops()
+                    FlowRow {
+                        Button(
+                            onClick = {
+                                viewModel.insertFarmers()
+                            }
+                        ) {
+                            Text(
+                                text = "Add farmers",
+                                style = MaterialTheme.typography.bodyMedium,
+
+                                )
                         }
-                    ) {
-                        Text(
-                            text = "Add crops",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            viewModel.insertHarvests()
+                        Button(
+                            onClick = {
+                                viewModel.insertCrops()
+                            }
+                        ) {
+                            Text(
+                                text = "Add crops",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
                         }
-                    ) {
-                        Text(
-                            text = "Add harvests",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
+                        Button(
+                            onClick = {
+                                viewModel.insertHarvests()
+                            }
+                        ) {
+                            Text(
+                                text = "Add harvests",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.insertEmployee()
+                            }
+                        ) {
+                            Text(
+                                text = "Add employees",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.insertEquipments()
+                            }
+                        ) {
+                            Text(
+                                text = "Add equipments",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.insertProjects()
+                            }
+                        ) {
+                            Text(
+                                text = "Add projects",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.insertStorages()
+                            }
+                        ) {
+                            Text(
+                                text = "Add storages",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                        }
                     }
                 }
 
@@ -129,19 +178,19 @@ fun FarmerListHeader(onAddNewFarmer: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                Icons.Default.Add,
-                contentDescription = "Add",
+                Icons.Default.Refresh,
+                contentDescription = "Sync",
                 modifier = Modifier.size(40.dp)
             )
             Column(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(
-                    text = "Add a new farmer profile",
+                    text = "Sync data",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "You can add new profiles to your list",
+                    text = "Start syncing app data",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )

@@ -3,8 +3,12 @@ package com.farmbase.app.ui.farmerlist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.models.Crop
+import com.farmbase.app.models.Employee
+import com.farmbase.app.models.Equipment
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.models.Harvest
+import com.farmbase.app.models.Project
+import com.farmbase.app.models.Storage
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class FarmerListViewModel @Inject constructor(
@@ -61,6 +66,78 @@ class FarmerListViewModel @Inject constructor(
             }
 
             repository.insertCrops(crops)
+        }
+    }
+
+    fun insertEmployee() {
+        val employees = mutableListOf<Employee>()
+        val names = listOf("Femi", "Deji", "Sola", "Wale", "Dapo", "Lola")
+        val locations = listOf("Lagos", "Abuja", "Kano", "Kebbi", "Sokoto", "Kaduna")
+        viewModelScope.launch(Dispatchers.IO) {
+            for (i in 0..5000) {
+                val employee = Employee(
+                    name = "${names.random()} $i",
+                    location = locations.random(),
+                    profilePicture = "https://example.com"
+                )
+
+                employees.add(employee)
+            }
+
+            repository.insertEmployees(employees)
+        }
+    }
+
+    fun insertEquipments() {
+        val equipments = mutableListOf<Equipment>()
+        val equipmentTypes = listOf("Hoe", "Tractor", "Cutlass", "Axe", "Dagger", "Watering Can")
+        viewModelScope.launch(Dispatchers.IO) {
+            for (i in 0..5000) {
+                val equipment = Equipment(
+                    name = "Equipment $i",
+                    type = equipmentTypes.random(),
+                    image = "https://example.com"
+                )
+
+                equipments.add(equipment)
+            }
+
+            repository.insertEquipments(equipments)
+        }
+    }
+
+    fun insertProjects() {
+        val projects = mutableListOf<Project>()
+        viewModelScope.launch(Dispatchers.IO) {
+            for (i in 0..5000) {
+                val harvest = Project(
+                    name = "Project $i",
+                    duration = Random.nextLong(),
+                )
+
+                projects.add(harvest)
+            }
+
+            repository.insertProjects(projects)
+        }
+    }
+
+    fun insertStorages() {
+        val storages = mutableListOf<Storage>()
+        val locations =
+            listOf("Lagos", "Kano", "Abuja", "Katsina", "Nasarrawa", "Ogun")
+        viewModelScope.launch(Dispatchers.IO) {
+            for (i in 0..5000) {
+                val storage = Storage(
+                    name = "Storage $i",
+                    location = locations.random(),
+                    imageOfStorage = "https://example.com"
+                )
+
+                storages.add(storage)
+            }
+
+            repository.insertStorages(storages)
         }
     }
 

@@ -3,8 +3,12 @@ package com.farmbase.app.sync
 import android.util.Log
 import com.farmbase.app.database.FarmBaseDatabase
 import com.farmbase.app.models.Crop
+import com.farmbase.app.models.Employee
+import com.farmbase.app.models.Equipment
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.models.Harvest
+import com.farmbase.app.models.Project
+import com.farmbase.app.models.Storage
 import com.farmbase.app.models.SyncMetadata
 import com.farmbase.app.utils.HeavySyncTask
 import kotlinx.coroutines.CoroutineScope
@@ -12,15 +16,20 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlin.random.Random
 
 class SyncOrchestrator(
     private val database: FarmBaseDatabase,
 ) {
     private val tableConfigs = listOf(
         // High priority tables (sync first)
-        TableSyncConfig("farmers", batchSize = 100, priority = TableSyncConfig.SyncPriority.HIGH),
-        TableSyncConfig("crops", batchSize = 100, priority = TableSyncConfig.SyncPriority.HIGH),
-        TableSyncConfig("harvests", batchSize = 100, priority = TableSyncConfig.SyncPriority.LOW),
+        TableSyncConfig("farmers", batchSize = 10, priority = TableSyncConfig.SyncPriority.HIGH),
+        TableSyncConfig("crops", batchSize = 50, priority = TableSyncConfig.SyncPriority.HIGH),
+        TableSyncConfig("employees", batchSize = 50, priority = TableSyncConfig.SyncPriority.HIGH),
+        TableSyncConfig("equipments", batchSize = 50, priority = TableSyncConfig.SyncPriority.HIGH),
+        TableSyncConfig("projects", batchSize = 50, priority = TableSyncConfig.SyncPriority.MEDIUM),
+        TableSyncConfig("storages", batchSize = 50, priority = TableSyncConfig.SyncPriority.LOW),
+        TableSyncConfig("harvests", batchSize = 50, priority = TableSyncConfig.SyncPriority.LOW),
     )
 
     // Extension function to get unsynced records for any table
@@ -32,6 +41,10 @@ class SyncOrchestrator(
             "farmers" -> database.farmerDao().getUnsynced(limit = batchSize)
             "crops" -> database.cropDao().getUnsynced(limit = batchSize)
             "harvests" -> database.harvestDao().getUnsynced(limit = batchSize)
+            "employees" -> database.employeeDao().getUnsynced(limit = batchSize)
+            "equipments" -> database.equipmentDao().getUnsynced(limit = batchSize)
+            "projects" -> database.projectDao().getUnsynced(limit = batchSize)
+            "storages" -> database.storageDao().getUnsynced(limit = batchSize)
             else -> emptyList()
         } as List<T>
     }
@@ -129,11 +142,14 @@ class SyncOrchestrator(
                         location = "Farmer $i Location",
                         specialtyCrops = "Farmer $i specialty",
                         profilePictureUrl = "Farmer $i profile picture",
-                        syncStatus = SyncMetadata.SyncStatus.COMPLETED
                     )
 
-                    heavyTask.execute(farmer.name)
-                    downloadedFarmers.add(farmer)
+                    val (success, _) = heavyTask.execute(farmer.name)
+                    downloadedFarmers.add(
+                        farmer.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
                 }
 
                 database.farmerDao().updateFarmers(downloadedFarmers)
@@ -150,8 +166,12 @@ class SyncOrchestrator(
                         image = "https://example.com"
                     )
 
-                    heavyTask.execute(crop.name)
-                    downloadedCrops.add(crop)
+                    val (success, _) = heavyTask.execute(crop.name)
+                    downloadedCrops.add(
+                        crop.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
                 }
 
                 database.cropDao().updateCrops(downloadedCrops)
@@ -166,11 +186,102 @@ class SyncOrchestrator(
                         duration = "4 years",
                     )
 
-                    heavyTask.execute(harvest.cropName)
-                    downloadedHarvests.add(harvest)
+                    val (success, _) = heavyTask.execute(harvest.cropName)
+                    downloadedHarvests.add(
+                        harvest.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
                 }
 
                 database.harvestDao().updateHarvests(downloadedHarvests)
+            }
+
+            "employees" -> {
+                val downloadedEmployees = mutableListOf<Employee>()
+
+                for (i in 0..5000) {
+                    val employee = Employee(
+                        name = "Employee $i",
+                        location = "Location $i",
+                        profilePicture = "https://example.com"
+                    )
+
+                    val (success, _) = heavyTask.execute(employee.name)
+                    downloadedEmployees.add(
+                        employee.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
+                }
+
+                database.employeeDao().updateEmployees(downloadedEmployees)
+            }
+
+            "equipments" -> {
+                val downloadedEquipments = mutableListOf<Equipment>()
+                val equipmentTypes =
+                    listOf("Hoe", "Tractor", "Cutlass", "Axe", "Dagger", "Watering Can")
+
+                for (i in 0..5000) {
+                    val equipment = Equipment(
+                        name = "Equipment $i",
+                        type = equipmentTypes.random(),
+                        image = "https://example.com"
+                    )
+
+                    val (success, _) = heavyTask.execute(equipment.name)
+                    downloadedEquipments.add(
+                        equipment.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
+                }
+
+                database.equipmentDao().updateEquipments(downloadedEquipments)
+            }
+
+            "projects" -> {
+                val downloadedProjects = mutableListOf<Project>()
+
+                for (i in 0..5000) {
+                    val project = Project(
+                        name = "Project $i",
+                        duration = Random.nextLong(),
+                    )
+
+                    val (success, _) = heavyTask.execute(project.name)
+                    downloadedProjects.add(
+                        project.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
+                }
+
+                database.projectDao().updateProjects(downloadedProjects)
+            }
+
+            "storages" -> {
+                val downloadedStorages = mutableListOf<Storage>()
+                val locations =
+                    listOf("Lagos", "Kano", "Abuja", "Katsina", "Nasarrawa", "Ogun")
+
+                for (i in 0..5000) {
+                    val storage = Storage(
+                        name = "Storage $i",
+                        location = locations.random(),
+                        imageOfStorage = "https://example.com"
+                    )
+
+                    val (success, _) = heavyTask.execute(storage.name)
+                    downloadedStorages.add(
+                        storage.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    )
+                }
+
+                database.storageDao().updateStorages(downloadedStorages)
             }
         }
     }
@@ -180,7 +291,7 @@ class SyncOrchestrator(
         val heavyTask = HeavySyncTask(
             tableName = config.tableName,
             taskConfig = HeavySyncTask.TaskConfig(
-                networkLatencyMs = 1000L..4000L,
+                networkLatencyMs = 2000L..8000L,
                 cpuIntensity = 0.9f,
                 memoryUsage = 10 * 1024 * 1024
             )
@@ -202,9 +313,9 @@ class SyncOrchestrator(
                     val synced = (unsynced as List<Farmer>).map { e ->
                         // Simulate a long running task like api call, data serialization,
                         // file conversion on each data
-                        heavyTask.execute(e.name)
+                        val (success, _) = heavyTask.execute(e.name)
                         e.copy(
-                            syncStatus = SyncMetadata.SyncStatus.COMPLETED
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
                         )
                     }
                     database.farmerDao().updateFarmers(synced)
@@ -212,9 +323,9 @@ class SyncOrchestrator(
 
                 "crops" -> {
                     val synced = (unsynced as List<Crop>).map { e ->
-                        heavyTask.execute(e. name)
+                        val (success, _) = heavyTask.execute(e.name)
                         e.copy(
-                            syncStatus = SyncMetadata.SyncStatus.COMPLETED
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
                         )
                     }
                     database.cropDao().updateCrops(synced)
@@ -222,12 +333,52 @@ class SyncOrchestrator(
 
                 "harvests" -> {
                     val synced = (unsynced as List<Harvest>).map { e ->
-                        heavyTask.execute(e.cropName)
+                        val (success, _) = heavyTask.execute(e.cropName)
                         e.copy(
-                            syncStatus = SyncMetadata.SyncStatus.COMPLETED
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
                         )
                     }
                     database.harvestDao().updateHarvests(synced)
+                }
+
+                "employees" -> {
+                    val synced = (unsynced as List<Employee>).map { e ->
+                        val (success, _) = heavyTask.execute(e.name)
+                        e.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    }
+                    database.employeeDao().updateEmployees(synced)
+                }
+
+                "equipments" -> {
+                    val synced = (unsynced as List<Equipment>).map { e ->
+                        val (success, _) = heavyTask.execute(e.name)
+                        e.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    }
+                    database.equipmentDao().updateEquipments(synced)
+                }
+
+                "projects" -> {
+                    val synced = (unsynced as List<Project>).map { e ->
+                        val (success, _) = heavyTask.execute(e.name)
+                        e.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    }
+                    database.projectDao().updateProjects(synced)
+                }
+
+                "storages" -> {
+                    val synced = (unsynced as List<Storage>).map { e ->
+                        val (success, _) = heavyTask.execute(e.name)
+                        e.copy(
+                            syncStatus = if (success) SyncMetadata.SyncStatus.COMPLETED else SyncMetadata.SyncStatus.UNSYNCED
+                        )
+                    }
+                    database.storageDao().updateStorages(synced)
                 }
             }
         }

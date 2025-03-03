@@ -2,9 +2,13 @@ package com.farmbase.app.di
 
 import android.content.Context
 import com.farmbase.app.database.CropDao
+import com.farmbase.app.database.EmployeeDao
+import com.farmbase.app.database.EquipmentDao
 import com.farmbase.app.database.FarmerDao
 import com.farmbase.app.database.FarmBaseDatabase
 import com.farmbase.app.database.HarvestDao
+import com.farmbase.app.database.ProjectDao
+import com.farmbase.app.database.StorageDao
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.Module
 import dagger.Provides
@@ -42,11 +46,47 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideEmployeeDao(database: FarmBaseDatabase): EmployeeDao {
+        return database.employeeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEquipmentDao(database: FarmBaseDatabase): EquipmentDao {
+        return database.equipmentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideProjectDao(database: FarmBaseDatabase): ProjectDao {
+        return database.projectDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageDao(database: FarmBaseDatabase): StorageDao {
+        return database.storageDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideFarmerRepository(
         farmerDao: FarmerDao,
         cropDao: CropDao,
-        harvestDao: HarvestDao
+        harvestDao: HarvestDao,
+        employeeDao: EmployeeDao,
+        equipmentDao: EquipmentDao,
+        projectDao: ProjectDao,
+        storageDao: StorageDao
     ): FarmerRepository {
-        return FarmerRepository(farmerDao, cropDao, harvestDao)
+        return FarmerRepository(
+            farmerDao,
+            cropDao,
+            harvestDao,
+            equipmentDao,
+            employeeDao,
+            projectDao,
+            storageDao,
+        )
     }
 }

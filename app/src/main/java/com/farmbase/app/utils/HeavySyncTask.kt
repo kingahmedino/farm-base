@@ -51,7 +51,7 @@ class HeavySyncTask(
                 return@withContext Pair(false, 0)
             }
 
-            val batchSize = 100
+            val batchSize = 1000
 
             // Simulate CPU-intensive work
             if (taskConfig.cpuIntensity > 0) {
