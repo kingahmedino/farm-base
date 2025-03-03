@@ -4,12 +4,23 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.farmbase.app.models.Crop
 import com.farmbase.app.models.Farmer
+import com.farmbase.app.models.Harvest
 import com.farmbase.app.models.SyncMetadata
 
-@Database(entities = [Farmer::class, SyncMetadata::class], version = 1)
+@Database(
+    entities = [
+        Farmer::class,
+        Crop::class,
+        Harvest::class,
+        SyncMetadata::class],
+    version = 1
+)
 abstract class FarmBaseDatabase : RoomDatabase() {
     abstract fun farmerDao(): FarmerDao
+    abstract fun cropDao(): CropDao
+    abstract fun harvestDao(): HarvestDao
     abstract fun syncMetadataDao(): SyncMetadataDao
 
     companion object {
@@ -23,8 +34,8 @@ abstract class FarmBaseDatabase : RoomDatabase() {
                     FarmBaseDatabase::class.java,
                     "farmbase_database"
                 )
-                .enableMultiInstanceInvalidation()
-                .build().also { INSTANCE = it }
+                    .enableMultiInstanceInvalidation()
+                    .build().also { INSTANCE = it }
             }
         }
     }

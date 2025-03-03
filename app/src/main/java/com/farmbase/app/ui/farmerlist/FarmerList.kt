@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -65,10 +66,41 @@ fun FarmerListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    FarmerListHeader({
-//                        onAddNewFarmer
-                        viewModel.insertFarmers()
-                    })
+                    FarmerListHeader {
+                        viewModel.syncData()
+                    }
+
+                    Button(
+                        onClick = {
+                            viewModel.insertFarmers()
+                        }
+                    ) {
+                        Text(
+                            text = "Add farmers",
+                            style = MaterialTheme.typography.bodyMedium,
+
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            viewModel.insertCrops()
+                        }
+                    ) {
+                        Text(
+                            text = "Add crops",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            viewModel.insertHarvests()
+                        }
+                    ) {
+                        Text(
+                            text = "Add harvests",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
                 }
 
                 items(farmers) { farmer ->

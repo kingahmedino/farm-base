@@ -1,7 +1,10 @@
 package com.farmbase.app.di
+
 import android.content.Context
+import com.farmbase.app.database.CropDao
 import com.farmbase.app.database.FarmerDao
 import com.farmbase.app.database.FarmBaseDatabase
+import com.farmbase.app.database.HarvestDao
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.Module
 import dagger.Provides
@@ -27,7 +30,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFarmerRepository(farmerDao: FarmerDao): FarmerRepository {
-        return FarmerRepository(farmerDao)
+    fun provideCropDao(database: FarmBaseDatabase): CropDao {
+        return database.cropDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHarvestDao(database: FarmBaseDatabase): HarvestDao {
+        return database.harvestDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFarmerRepository(
+        farmerDao: FarmerDao,
+        cropDao: CropDao,
+        harvestDao: HarvestDao
+    ): FarmerRepository {
+        return FarmerRepository(farmerDao, cropDao, harvestDao)
     }
 }

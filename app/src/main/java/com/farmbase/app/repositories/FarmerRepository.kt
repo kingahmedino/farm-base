@@ -9,20 +9,21 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.farmbase.app.database.CropDao
 import com.farmbase.app.database.FarmerDao
+import com.farmbase.app.database.HarvestDao
+import com.farmbase.app.models.Crop
 import com.farmbase.app.models.Farmer
+import com.farmbase.app.models.Harvest
 import com.farmbase.app.sync.SyncWorker
 import kotlinx.coroutines.flow.Flow
 import java.time.Duration
 
-class FarmerRepository(private val farmerDao: FarmerDao) {
-    private val pagingConfig = PagingConfig(
-        pageSize = 50,
-        prefetchDistance = 150,
-        enablePlaceholders = true,
-        maxSize = 400
-    )
-
+class FarmerRepository(
+    private val farmerDao: FarmerDao,
+    private val cropDao: CropDao,
+    private val harvestDao: HarvestDao
+) {
     val allFarmers: Flow<List<Farmer>> = farmerDao.getAllFarmers()
 
     suspend fun insertFarmer(farmer: Farmer) {
@@ -34,25 +35,21 @@ class FarmerRepository(private val farmerDao: FarmerDao) {
         farmerDao.updateFarmer(farmer)
     }
 
-    suspend fun getFarmerById(id: Int): Farmer? {
-        return farmerDao.getFarmerById(id)
-    }
-
-    // Get paged farmers
-    fun getPagedFarmers(): Flow<PagingData<Farmer>> {
-        return Pager(pagingConfig) {
-            farmerDao.getPaginatedFarmers()
-        }.flow
-    }
-
     // Insert farmers with background sync
     suspend fun insertFarmers(farmers: List<Farmer>) {
         farmerDao.insertFarmers(farmers)
-        scheduleSync()
+    }
+
+    suspend fun insertCrops(crops: List<Crop>) {
+        cropDao.insertCrops(crops)
+    }
+
+    suspend fun insertHarvests(harvests: List<Harvest>) {
+        harvestDao.insertHarvests(harvests)
     }
 
     // Sync worker for background operations
-    private fun scheduleSync() {
+    fun scheduleSync() {
         val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
             .setConstraints(
                 Constraints.Builder()
