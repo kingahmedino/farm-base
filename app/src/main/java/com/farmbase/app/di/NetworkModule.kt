@@ -1,6 +1,7 @@
 package com.farmbase.app.di
 
 import com.farmbase.app.BuildConfig
+import com.farmbase.app.network.FormBuilderApiService
 import com.farmbase.app.network.ImageUploadApi
 import dagger.Module
 import dagger.Provides
@@ -10,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +30,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @Named("imageUploadRetrofit") // Added Named qualifier
+    fun provideImageUploadRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.IMG_HIPPO_BASE_URL)
             .client(okHttpClient)
@@ -38,7 +41,24 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideImageUploadApi(retrofit: Retrofit): ImageUploadApi {
+    @Named("formBuilderRetrofit")
+    fun provideFormBuilderRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.FORM_BUILDER_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageUploadApi(@Named("imageUploadRetrofit") retrofit: Retrofit): ImageUploadApi {
         return retrofit.create(ImageUploadApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFormBuilderApi(@Named("formBuilderRetrofit") retrofit: Retrofit): FormBuilderApiService {
+        return retrofit.create(FormBuilderApiService::class.java)
     }
 }
