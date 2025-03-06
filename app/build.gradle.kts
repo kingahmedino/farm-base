@@ -35,6 +35,7 @@ android {
 
         buildConfigField("String", "IMG_HIPPO_API_KEY", envProperties["IMG_HIPPO_API_KEY"].toString())
         buildConfigField("String", "IMG_HIPPO_BASE_URL", envProperties["IMG_HIPPO_BASE_URL"].toString())
+        buildConfigField("String", "FORM_BUILDER_BASE_URL", envProperties["FORM_BUILDER_URL"].toString())
     }
 
     buildTypes {
@@ -126,4 +127,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // cameraX
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.two)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.video)
+    implementation(libs.camerax.view)
+    implementation(libs.camerax.extensions)
+    implementation(libs.material.icons.extended)
 }
