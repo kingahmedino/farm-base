@@ -4,13 +4,15 @@ import android.content.Context
 import com.farmbase.app.database.CropDao
 import com.farmbase.app.database.EmployeeDao
 import com.farmbase.app.database.EquipmentDao
-import com.farmbase.app.database.FarmerDao
 import com.farmbase.app.database.FarmBaseDatabase
+import com.farmbase.app.database.FarmerDao
 import com.farmbase.app.database.HarvestDao
 import com.farmbase.app.database.ProjectDao
 import com.farmbase.app.database.StorageDao
 import com.farmbase.app.database.couchbase.DBManager
+import com.farmbase.app.network.FormBuilderApiService
 import com.farmbase.app.repositories.FarmerRepository
+import com.farmbase.app.repositories.FormBuilderRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -95,5 +97,13 @@ object AppModule {
             projectDao,
             storageDao,
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFormBuilderRepository(
+        formBuilderApiService: FormBuilderApiService
+    ): FormBuilderRepository {
+        return FormBuilderRepository(formBuilderApiService)
     }
 }

@@ -77,6 +77,12 @@ fun FarmerListScreen(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
+                    Button(onClick = onAddNewFarmer) {
+                        Text("Add New Farmer")
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     FlowRow {
                         Button(
                             onClick = {
