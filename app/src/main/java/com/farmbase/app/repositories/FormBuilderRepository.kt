@@ -24,8 +24,8 @@ class FormBuilderRepository(
     suspend fun getFormDataById(id: String): Resource<FormData> {
         return try {
             val response = api.getFormDataById(id)
-            if (response.success && response.data.isNotEmpty()) {
-                Resource.Success(response.data.first())
+            if (response.success) {
+                Resource.Success(response.data)
             } else {
                 Resource.Error(response.message)
             }

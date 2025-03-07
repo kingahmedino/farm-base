@@ -2,6 +2,7 @@ package com.farmbase.app.di
 
 import com.farmbase.app.repositories.FormBuilderRepository
 import com.farmbase.app.useCase.FormBuilderUseCases
+import com.farmbase.app.useCase.GetFormDataByIdUseCase
 import com.farmbase.app.useCase.GetFormDataUseCase
 import com.farmbase.app.useCase.InitializeFormStateUseCase
 import com.farmbase.app.useCase.StreamlineFormDataUseCase
@@ -36,17 +37,24 @@ object UseCaseModule {
     }
 
     @Provides
+    fun provideGetFormDataByIdUseCase(repository: FormBuilderRepository): GetFormDataByIdUseCase {
+        return GetFormDataByIdUseCase(repository)
+    }
+
+    @Provides
     fun provideFormBuilderUseCases(
         getFormDataUseCase: GetFormDataUseCase,
         initializeFormStateUseCase: InitializeFormStateUseCase,
         updateFormFieldUseCase: UpdateFormFieldUseCase,
-        streamlineFormDataUseCase: StreamlineFormDataUseCase
+        streamlineFormDataUseCase: StreamlineFormDataUseCase,
+        getFormDataByIdUseCase: GetFormDataByIdUseCase
     ): FormBuilderUseCases {
         return FormBuilderUseCases(
             getFormDataUseCase,
             initializeFormStateUseCase,
             updateFormFieldUseCase,
-            streamlineFormDataUseCase
+            streamlineFormDataUseCase,
+            getFormDataByIdUseCase
         )
     }
 }

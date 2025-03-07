@@ -17,11 +17,17 @@ interface FormBuilderApiService {
     @GET("form/{id}")
     suspend fun getFormDataById(
         @Path("id") id: String
-    ): FormApiResponse
+    ): SingleFormApiResponse
 }
 
 data class FormApiResponse(
     val success: Boolean,
     val message: String,
     val data: List<FormData>
+)
+
+data class SingleFormApiResponse(
+    val success: Boolean,
+    val message: String,
+    val data: FormData
 )
