@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.farmerlist.FarmerListScreen
+import com.farmbase.app.ui.formBuilder.FormBuilder
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
@@ -27,13 +28,14 @@ sealed class Screen(val route: String) {
             }
         }
     }
+    data object NewForm : Screen("formBuilder")
 }
 
 fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
     composable(Screen.FarmerList.route) {
         FarmerListScreen(
             onAddNewFarmer = {
-                navController.navigate(Screen.FarmerRegistration.createRoute())
+                navController.navigate(Screen.NewForm.route)
             },
             onEditFarmer = { farmer ->
                 navController.navigate(Screen.FarmerRegistration.createRoute(farmer))
@@ -65,5 +67,9 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
             onNavigateBack = { navController.popBackStack() },
             farmer = farmer
         )
+    }
+
+    composable(Screen.NewForm.route) {
+        FormBuilder()
     }
 }
