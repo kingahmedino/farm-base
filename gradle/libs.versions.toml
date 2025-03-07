@@ -21,7 +21,7 @@ coil = "2.5.0"
 accompanist = "0.32.0"
 workmanager = "2.9.0"
 coroutines = "1.7.3"
-pagingCommonAndroid = "3.3.6"
+couchbase = "3.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,7 +57,7 @@ accompanist-permissions = { group = "com.google.accompanist", name = "accompanis
 workmanager-runtime = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
-androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
+couchbase-lite-android = { group = "com.couchbase.lite", name = "couchbase-lite-android-ktx", version.ref = "couchbase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

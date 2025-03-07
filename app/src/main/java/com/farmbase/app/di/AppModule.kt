@@ -9,6 +9,7 @@ import com.farmbase.app.database.FarmBaseDatabase
 import com.farmbase.app.database.HarvestDao
 import com.farmbase.app.database.ProjectDao
 import com.farmbase.app.database.StorageDao
+import com.farmbase.app.database.couchbase.DBManager
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.Module
 import dagger.Provides
@@ -24,6 +25,12 @@ object AppModule {
     @Singleton
     fun provideFarmerDatabase(@ApplicationContext context: Context): FarmBaseDatabase {
         return FarmBaseDatabase.getDatabase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDBManager(@ApplicationContext context: Context): DBManager {
+        return DBManager.getInstance(context)
     }
 
     @Provides
