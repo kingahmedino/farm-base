@@ -1,6 +1,11 @@
 package com.farmbase.app.ui.formBuilder.utils.audio
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -11,8 +16,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import com.farmbase.app.ui.formBuilder.utils.MediaInputButton
 import com.farmbase.app.ui.formBuilder.utils.audio.AudioRecord
 
@@ -31,14 +38,29 @@ fun AudioScreen(
     onClick: (Uri, String) -> Unit = { _, _ -> }
 ) {
     var showAudioDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    Column(
-        modifier = modifier
-    ) {
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            showAudioDialog = true
+        } else {
+            Toast.makeText(context, "Microphone permission is required.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    Column(modifier = modifier) {
         MediaInputButton(
             modifier = modifier,
             title = title,
-            onClick = { showAudioDialog = true }
+            onClick = {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                    showAudioDialog = true
+                } else {
+                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
+            }
         )
 
         if (showAudioDialog) {

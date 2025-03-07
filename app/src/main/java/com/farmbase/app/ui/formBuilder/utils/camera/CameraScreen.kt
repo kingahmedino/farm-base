@@ -1,14 +1,22 @@
 package com.farmbase.app.ui.formBuilder.utils.camera
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.ui.formBuilder.utils.MediaInputButton
 
 /**
@@ -23,21 +31,47 @@ import com.farmbase.app.ui.formBuilder.utils.MediaInputButton
 fun CameraScreen(
     title: String,
     type: String,
+    viewModel: CameraViewModel = hiltViewModel(),
     onMediaCaptured: (Uri, String) -> Unit
 ) {
     var showCameraDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val permissionsToRequest = arrayOf(
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.CAMERA
+    )
+
+    val permissionLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
+            val allGranted = permissionsToRequest.all { perms[it] == true }
+            permissionsToRequest.forEach { permission ->
+                viewModel.onPermissionResult(permission, perms[permission] == true)
+            }
+            if (allGranted) {
+                showCameraDialog = true
+            } else {
+                Toast.makeText(context, "Camera and audio permissions are required", Toast.LENGTH_SHORT).show()
+            }
+        }
 
     Column {
         MediaInputButton(
             title = title,
-            onClick = { showCameraDialog = true }
+            onClick = {
+                if (permissionsToRequest.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }) {
+                    showCameraDialog = true
+                } else {
+                    permissionLauncher.launch(permissionsToRequest)
+                }
+            }
         )
 
         if (showCameraDialog) {
             DialogCameraScreen(
                 type = type,
                 onDismiss = { showCameraDialog = false },
-                onMediaCaptured = {uri, filepath ->
+                onMediaCaptured = { uri, filepath ->
                     onMediaCaptured(uri, filepath)
                     showCameraDialog = false
                 }
@@ -45,6 +79,7 @@ fun CameraScreen(
         }
     }
 }
+
 
 /**
  * This component creates a full-screen dialog containing the camera functionality.
