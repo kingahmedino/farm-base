@@ -1,7 +1,17 @@
 package com.farmbase.app.ui.farmerlist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.couchbase.lite.DataSource
+import com.couchbase.lite.Database
+import com.couchbase.lite.ListenerToken
+import com.couchbase.lite.MutableDocument
+import com.couchbase.lite.Ordering
+import com.couchbase.lite.QueryBuilder
+import com.couchbase.lite.Result
+import com.couchbase.lite.SelectResult
+import com.farmbase.app.database.couchbase.DBManager
 import com.farmbase.app.models.Crop
 import com.farmbase.app.models.Employee
 import com.farmbase.app.models.Equipment
@@ -12,8 +22,10 @@ import com.farmbase.app.models.Storage
 import com.farmbase.app.repositories.FarmerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,10 +33,21 @@ import kotlin.random.Random
 
 @HiltViewModel
 class FarmerListViewModel @Inject constructor(
-   private val repository: FarmerRepository
+   private val repository: FarmerRepository,
+   private val dbManager: DBManager,
 ) : ViewModel() {
+    private val database: Database = dbManager.getDatabase()
+    private var queryChangeListener: ListenerToken? = null
+
+    init {
+        startLiveQuery()
+    }
+
     val allFarmers: StateFlow<List<Farmer>> = repository.allFarmers
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val _resultsState = MutableStateFlow<List<Result>>(emptyList())
+    val resultsState = _resultsState.asStateFlow()
 
     fun syncData() {
         repository.scheduleSync()
@@ -155,5 +178,36 @@ class FarmerListViewModel @Inject constructor(
 
             repository.insertHarvests(harvests)
         }
+    }
+
+    private fun startLiveQuery() {
+        try {
+            val collection = database.getCollection("New_Form_6th_March")
+
+            val query = QueryBuilder
+                .select(SelectResult.all())
+                .from(DataSource.collection(collection!!))
+                .orderBy(Ordering.property("short_answer_51945").ascending())
+
+            queryChangeListener = query.addChangeListener { change ->
+                if (change.error == null) {
+                    val results = change.results!!.allResults()
+
+                    // Update state flow
+                    _resultsState.value = results
+                } else {
+//                    _uiState.value = UiState.Error("Query error: ${change.error.message}")
+                    Log.e("LiveQuery", "Error in live query", change.error)
+                }
+            }
+        } catch (e: Exception) {
+//            _uiState.value = UiState.Error("Failed to start query: ${e.message}")
+            Log.e("LiveQuery", "Failed to start live query", e)
+        }
+    }
+
+    override fun onCleared() {
+        queryChangeListener?.remove()
+        super.onCleared()
     }
 }

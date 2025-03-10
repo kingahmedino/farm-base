@@ -54,6 +54,7 @@ fun FarmerListScreen(
     onEditFarmer: (Farmer) -> Unit
 ) {
     val farmers by viewModel.allFarmers.collectAsState()
+    val results by viewModel.resultsState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -163,6 +164,10 @@ fun FarmerListScreen(
                         farmer,
                         onEditClick = onEditFarmer
                     )
+                }
+
+                items(results) { result ->
+                    Text(result.toJSON())
                 }
             }
         }
