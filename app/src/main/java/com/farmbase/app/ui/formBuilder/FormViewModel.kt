@@ -1,10 +1,15 @@
 package com.farmbase.app.ui.formBuilder
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.couchbase.lite.CouchbaseLiteException
+import com.couchbase.lite.MutableDocument
+import com.farmbase.app.database.couchbase.DBManager
 import com.farmbase.app.models.FormData
+import com.farmbase.app.models.FormInputType
 import com.farmbase.app.ui.formBuilder.utils.Resource
 import com.farmbase.app.useCase.FormBuilderUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FormViewModel @Inject constructor(
-    private val formBuilderUseCases: FormBuilderUseCases
+    private val formBuilderUseCases: FormBuilderUseCases,
+    private val dbManager: DBManager
 ) : ViewModel() {
 
     private val _formData = MutableStateFlow<Resource<FormData>>(Resource.Loading())
@@ -38,6 +44,16 @@ class FormViewModel @Inject constructor(
 
             (_formData.value as? Resource.Success)?.data?.let { formData ->
                 _formFieldStates.putAll(formBuilderUseCases.initializeFormStateUseCase(formData))
+
+                // Save form information in CouchbaseDB
+                val database = dbManager.getDatabase()
+                val formsCollection = database.createCollection("forms")
+
+                val document = MutableDocument()
+                document.setString("name", formData.name)
+                document.setString("id", formData.id)
+
+                formsCollection.save(document)
             }
         }
     }
@@ -92,9 +108,34 @@ class FormViewModel @Inject constructor(
             it.isError.value && it.isVisible.value  // Only check visible fields
         } ?: false
 
-    fun getFormDataToBeUploaded(): String? {
-        return (_formData.value as? Resource.Success)?.data?.let { formData ->
-            Json.encodeToString(formBuilderUseCases.streamlineFormDataUseCase(formData))
+    fun saveForm() {
+        val formData = (_formData.value as? Resource.Success)?.data ?: return
+
+        val streamlinedData = formBuilderUseCases.streamlineFormDataUseCase(formData)
+        val json = Json.encodeToString(streamlinedData)
+        Log.d("FormViewModel", "Form Data to be uploaded from FormContent: $json")
+
+        val database = dbManager.getDatabase()
+        database.inBatch<CouchbaseLiteException> {
+            val collection = database.createCollection(formData.name.toCollectionName())
+            val mutableDocument = MutableDocument()
+
+            formData.screens.flatMap { it.sections }
+                .flatMap { it.components }
+                .forEach { component ->
+                    when (component.type) {
+                        FormInputType.NUMBER -> {
+                            mutableDocument.setDouble(component.id, component.answer?.toDoubleOrNull() ?: 0.0)
+                        }
+                        else -> {
+                            mutableDocument.setString(component.id, component.answer.orEmpty())
+                        }
+                    }
+                }
+
+            collection.save(mutableDocument)
         }
     }
+
+    private fun String.toCollectionName(): String = trim().replace(" ", "_")
 }
