@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UploadFormData(
-    val id: String,
+    val formId: String,
     val userRelatedData: String = "",
     val screens: List<UploadScreen>
 )

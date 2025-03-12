@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters
 class SyncWorker(
     context: Context,
     params: WorkerParameters,
-    private val orchestrator: SyncOrchestrator
+    private val orchestrator: CouchbaseSyncOrchestrator
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         return try {
