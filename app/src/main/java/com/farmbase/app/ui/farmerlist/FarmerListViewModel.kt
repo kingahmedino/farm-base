@@ -33,11 +33,12 @@ import kotlin.random.Random
 
 @HiltViewModel
 class FarmerListViewModel @Inject constructor(
-   private val repository: FarmerRepository,
-   private val dbManager: DBManager,
+    private val repository: FarmerRepository,
+    private val dbManager: DBManager,
 ) : ViewModel() {
     private val database: Database = dbManager.getDatabase()
-    private var queryChangeListener: ListenerToken? = null
+    private var formsChangeListener: ListenerToken? = null
+    private var queryChangeListeners = mutableListOf<ListenerToken?>()
 
     init {
         startLiveQuery()
@@ -182,32 +183,58 @@ class FarmerListViewModel @Inject constructor(
 
     private fun startLiveQuery() {
         try {
-            val collection = database.getCollection("New_Form_6th_March")
-
+            val collection = database.createCollection("forms")
+            // Get all forms in app
             val query = QueryBuilder
-                .select(SelectResult.all())
-                .from(DataSource.collection(collection!!))
-                .orderBy(Ordering.property("short_answer_51945").ascending())
+                .select(
+                    SelectResult.property("id"),
+                    SelectResult.property("name"),
+                    SelectResult.property("priority")
+                )
+                .from(DataSource.collection(collection))
 
-            queryChangeListener = query.addChangeListener { change ->
-                if (change.error == null) {
-                    val results = change.results!!.allResults()
+            formsChangeListener = query.addChangeListener { formsChange ->
+                if (formsChange.error == null) {
 
-                    // Update state flow
-                    _resultsState.value = results
+                    for (result in formsChange.results!!) {
+                        val formName = result.getString("name") ?: continue
+                        val formCollection = database.createCollection(formName)
+
+                        val formQuery = QueryBuilder
+                            .select(SelectResult.all())
+                            .from(DataSource.collection(formCollection))
+
+                        queryChangeListeners.add(
+                            formQuery.addChangeListener { change ->
+                                if (change.error == null) {
+                                    val results = change.results!!.allResults()
+
+                                    // Update state flow
+                                    _resultsState.value = results
+                                } else {
+                                    Log.e("LiveQuery", "Error in live query", change.error)
+                                }
+                            }
+                        )
+                    }
                 } else {
 //                    _uiState.value = UiState.Error("Query error: ${change.error.message}")
-                    Log.e("LiveQuery", "Error in live query", change.error)
+                    Log.e("LiveQuery", "Error in live query", formsChange.error)
                 }
             }
+
+            // Register a change listener for them
+            query.execute().use { resultSet ->
+
+            }
+
         } catch (e: Exception) {
-//            _uiState.value = UiState.Error("Failed to start query: ${e.message}")
             Log.e("LiveQuery", "Failed to start live query", e)
         }
     }
 
     override fun onCleared() {
-        queryChangeListener?.remove()
+        queryChangeListeners.map { e -> e?.remove() }
         super.onCleared()
     }
 }

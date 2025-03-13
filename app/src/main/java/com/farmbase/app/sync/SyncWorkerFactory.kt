@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters
 import javax.inject.Inject
 
 class SyncWorkerFactory @Inject constructor(
-    private val orchestrator: SyncOrchestrator,
+    private val orchestrator: CouchbaseSyncOrchestrator,
 ) : WorkerFactory() {
 
     override fun createWorker(

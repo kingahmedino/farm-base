@@ -10,7 +10,7 @@ class StreamlineFormDataUseCase {
     operator fun invoke(formData: FormData): UploadFormData {
         // Convert FormData to UploadFormData
         return UploadFormData(
-            id = formData.id,
+            formId = formData.id,
             userRelatedData = "logged in user data",
             screens = formData.screens.map { screen ->
                 UploadScreen(
