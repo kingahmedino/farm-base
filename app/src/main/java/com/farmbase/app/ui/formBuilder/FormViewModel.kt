@@ -10,8 +10,11 @@ import com.couchbase.lite.MutableDocument
 import com.farmbase.app.database.couchbase.DBManager
 import com.farmbase.app.models.FormData
 import com.farmbase.app.models.FormInputType
+import com.farmbase.app.models.SyncMetadata
+import com.farmbase.app.sync.CouchbaseSyncOrchestrator.CollectionSyncConfig
 import com.farmbase.app.ui.formBuilder.utils.Resource
 import com.farmbase.app.useCase.FormBuilderUseCases
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,9 +52,18 @@ class FormViewModel @Inject constructor(
                 val database = dbManager.getDatabase()
                 val formsCollection = database.createCollection("forms")
 
+                val priorities = listOf(
+                    CollectionSyncConfig.SyncPriority.HIGH,
+                    CollectionSyncConfig.SyncPriority.MEDIUM,
+                    CollectionSyncConfig.SyncPriority.LOW
+                )
+
                 val document = MutableDocument()
-                document.setString("name", formData.name)
+                val formDataJson = Gson().toJson(formData)
                 document.setString("id", formData.id)
+                document.setString("name", formData.name.toCollectionName())
+                document.setString("json", formDataJson)
+                document.setString("priority", priorities.random().name)
 
                 formsCollection.save(document)
             }
@@ -83,10 +95,26 @@ class FormViewModel @Inject constructor(
                 }
 
                 val shouldBeVisible = when (visibility.condition.lowercase()) {
-                    "equals" -> controllingField?.value?.value.equals(visibility.value, ignoreCase = true)
-                    "not_equals" -> !controllingField?.value?.value.equals(visibility.value, ignoreCase = true)
-                    "contains" -> controllingField?.value?.value?.contains(visibility.value, ignoreCase = true) ?: false
-                    "not_contains" -> !controllingField?.value?.value?.contains(visibility.value, ignoreCase = true)!!
+                    "equals" -> controllingField?.value?.value.equals(
+                        visibility.value,
+                        ignoreCase = true
+                    )
+
+                    "not_equals" -> !controllingField?.value?.value.equals(
+                        visibility.value,
+                        ignoreCase = true
+                    )
+
+                    "contains" -> controllingField?.value?.value?.contains(
+                        visibility.value,
+                        ignoreCase = true
+                    ) ?: false
+
+                    "not_contains" -> !controllingField?.value?.value?.contains(
+                        visibility.value,
+                        ignoreCase = true
+                    )!!
+
                     else -> true
                 }
 
@@ -119,18 +147,12 @@ class FormViewModel @Inject constructor(
         database.inBatch<CouchbaseLiteException> {
             val collection = database.createCollection(formData.name.toCollectionName())
             val mutableDocument = MutableDocument()
+                .setString("syncStatus", SyncMetadata.SyncStatus.UNSYNCED.name)
 
             formData.screens.flatMap { it.sections }
                 .flatMap { it.components }
                 .forEach { component ->
-                    when (component.type) {
-                        FormInputType.NUMBER -> {
-                            mutableDocument.setDouble(component.id, component.answer?.toDoubleOrNull() ?: 0.0)
-                        }
-                        else -> {
-                            mutableDocument.setString(component.id, component.answer.orEmpty())
-                        }
-                    }
+                    mutableDocument.setString(component.id, component.answer.orEmpty())
                 }
 
             collection.save(mutableDocument)
