@@ -198,9 +198,7 @@ class FarmerListViewModel @Inject constructor(
 
                     for (result in formsChange.results!!) {
                         val formName = result.getString("name") ?: continue
-                        val validFormName = formName.replace("\\s+".toRegex(), "_") // Replace spaces with underscores
-
-                        val formCollection = database.createCollection(validFormName)
+                        val formCollection = database.createCollection(formName)
 
                         val formQuery = QueryBuilder
                             .select(SelectResult.all())
