@@ -8,4 +8,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hyper_text_link">#FF0078D4</color>
+
+
+    <color name="cafitech_dark_green">#367015</color>
+    <color name="cafitech_light_green">#59C903</color>
+
+    <color name="cafitech_dark_yellow">#367015</color>
+    <color name="cafitech_light_yellow">#59C903</color>
+
+    <color name="cafitech_dark_red">#FF4B4B</color>
+    <color name="cafitech_light_red">#FF7F7F</color>
+
+
+
 </resources>
