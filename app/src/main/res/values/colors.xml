@@ -16,4 +16,5 @@
     <color name="selected_card_color">#33FFF59D</color>
     <color name="selected_card_content_color">#FF9600</color>
     <color name="red">#FF4B4B</color>
+    <color name="top_bar_icon_tint">#323232</color>
 </resources>
