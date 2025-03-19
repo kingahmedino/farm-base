@@ -15,4 +15,5 @@
     <color name="disabled">#6675748F</color>
     <color name="selected_card_color">#33FFF59D</color>
     <color name="selected_card_content_color">#FF9600</color>
+    <color name="red">#FF4B4B</color>
 </resources>

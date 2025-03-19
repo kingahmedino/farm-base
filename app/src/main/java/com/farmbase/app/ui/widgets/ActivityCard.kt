@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,50 +54,72 @@ fun ActivityCard(
             .fillMaxWidth()
             .clickable { onClick() }
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically // ensures text is centered relative to image
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(iconUrl ?: icon)
-                    .placeholder(icon) // placeholder image while loading
-                    .error(icon) // error image if loading fails
-                    .dispatcher(Dispatchers.IO) // not sure if this is needed need to test this
-                    .build(),
-                contentDescription = "Card Image",
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Row(
                 modifier = Modifier
-                    .height(72.dp)
-                    .width(72.dp),
-                contentScale = ContentScale.Crop
-            )
-
-            // spacer for separation
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(
-                modifier = Modifier.weight(1f), // takes remaining space
-                verticalArrangement = Arrangement.Center // centers text in the available space
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically // ensures text is centered relative to image
             ) {
-                Text(
-                    text = headerText,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(
-                        id = R.color.black_text
-                    )
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(iconUrl ?: icon)
+                        .placeholder(icon) // placeholder image while loading
+                        .error(icon) // error image if loading fails
+                        .dispatcher(Dispatchers.IO) // not sure if this is needed need to test this
+                        .build(),
+                    contentDescription = "Card Image",
+                    modifier = Modifier
+                        .height(72.dp)
+                        .width(72.dp),
+                    contentScale = ContentScale.Crop
                 )
 
-                descriptionText?.let {
-                    Spacer(modifier = Modifier.height(8.dp))
+                // spacer for separation
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f).padding(end = if (count>0) 25.dp else 0.dp), // takes remaining space
+                    verticalArrangement = Arrangement.Center // centers text in the available space
+                ) {
                     Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = headerText,
+                        style = MaterialTheme.typography.labelLarge,
                         color = if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(
                             id = R.color.black_text
                         )
                     )
+
+                    descriptionText?.let {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(
+                                id = R.color.black_text
+                            )
+                        )
+                    }
+                }
+            }
+            if (count > 0) {
+                Card(
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 12.dp, end = 12.dp),
+                    colors = CardDefaults.cardColors(containerColor = colorResource(R.color.red))
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.size(24.dp),
+                    ) {
+                        Text(
+                            text = count.toString(),
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
             }
         }
