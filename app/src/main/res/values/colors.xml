@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hyper_text_link">#FF0078D4</color>
+    <color name="green">#59C903</color>
+    <color name="gray">#75748F</color>
+    <color name="black_text">#252244</color>
+    <color name="yellow">#F8DF3F</color>
+    <color name="disabled">#6675748F</color>
 </resources>
