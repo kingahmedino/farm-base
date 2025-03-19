@@ -112,7 +112,7 @@ fun ActivityCard(
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(25.dp),
                     ) {
                         Text(
                             text = count.toString(),
