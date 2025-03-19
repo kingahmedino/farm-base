@@ -103,25 +103,34 @@ fun ActivityCard(
                 }
             }
             if (count > 0) {
-                Card(
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 12.dp, end = 12.dp),
-                    colors = CardDefaults.cardColors(containerColor = colorResource(R.color.red))
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.size(25.dp),
-                    ) {
-                        Text(
-                            text = count.toString(),
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                }
+               CountCard(modifier = Modifier
+                   .align(Alignment.TopEnd)
+                   .padding(top = 12.dp, end = 12.dp),
+                   count = count)
             }
+        }
+    }
+}
+
+@Composable
+fun CountCard(
+    modifier: Modifier,
+    count: Int
+){
+    Card(
+        shape = CircleShape,
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = colorResource(R.color.red))
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.size(25.dp),
+        ) {
+            Text(
+                text = count.toString(),
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
