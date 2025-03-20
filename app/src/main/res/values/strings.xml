@@ -6,4 +6,6 @@
     <string name="personal_information">Personal Information</string>
     <string name="hectare">Hectare</string>
     <string name="my_schedule">My Schedule</string>
+    <string name="homepage_desc">View the details, performance, activities to execute, and red flags to solve on the homepage.\nThe rank and count of red flags logged is also</string>
+    <string name="see_more">" See more"</string>
 </resources>
