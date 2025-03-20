@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.1"
+browser = "1.5.0"
 kotlin = "1.9.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -26,6 +27,7 @@ cameraX = "1.4.1"
 security = "1.1.0-alpha06"
 
 [libraries]
+androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
