@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -145,12 +146,13 @@ fun CountCard(
         // center the text inside the card
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.size(25.dp),
+            modifier = Modifier.size(30.dp),
         ) {
             Text(
                 text = count.toString(),
                 color = Color.White,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
             )
         }
     }

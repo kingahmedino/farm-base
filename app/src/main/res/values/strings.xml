@@ -2,4 +2,8 @@
     <string name="app_name">FarmBase</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="homepage_name">%s Homepage</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="hectare">Hectare</string>
+    <string name="my_schedule">My Schedule</string>
 </resources>
