@@ -140,6 +140,11 @@ dependencies {
     implementation(libs.camerax.extensions)
     implementation(libs.material.icons.extended)
 
+
     // browser
     implementation(libs.androidx.browser)
+
+    // Security
+    implementation(libs.androidx.security.crypto)
+
 }
