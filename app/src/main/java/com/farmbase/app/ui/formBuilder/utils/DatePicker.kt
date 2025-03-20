@@ -95,12 +95,15 @@ fun showDatePicker(
 ) {
     val calendar = Calendar.getInstance()
 
+    // Convert the display format to Java SimpleDateFormat pattern
+    val javaDateFormat = convertToJavaDateFormat(dateFormat)
+
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
             val calendarInstance = Calendar.getInstance()
             calendarInstance.set(year, month, dayOfMonth)
-            val simpleDateFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
+            val simpleDateFormat = SimpleDateFormat(javaDateFormat, Locale.getDefault())
             val formattedDate = simpleDateFormat.format(calendarInstance.time)
             onDateSelected(formattedDate)
         },
@@ -111,17 +114,31 @@ fun showDatePicker(
 
     // Parse and set minDate
     minDate?.let {
-        val parsedMinDate = parseDate(it, dateFormat)
+        val parsedMinDate = parseDate(it, javaDateFormat)
         parsedMinDate?.let { datePickerDialog.datePicker.minDate = it.time }
     }
 
     // Parse and set maxDate
     maxDate?.let {
-        val parsedMaxDate = parseDate(it, dateFormat)
+        val parsedMaxDate = parseDate(it, javaDateFormat)
         parsedMaxDate?.let { datePickerDialog.datePicker.maxDate = it.time }
     }
 
     datePickerDialog.show()
+}
+
+/**
+ * Converts display format strings to Java SimpleDateFormat patterns
+ */
+fun convertToJavaDateFormat(displayFormat: String): String {
+    return when (displayFormat) {
+        "DD-MM-YYYY" -> "dd-MM-yyyy"
+        "MM-DD-YYYY" -> "MM-dd-yyyy"
+        "YYYY-MM-DD" -> "yyyy-MM-dd"
+        "DD/MM/YYYY" -> "dd/MM/yyyy"
+        "MM/DD/YYYY" -> "MM/dd/yyyy"
+        else -> displayFormat // Pass through if not one of the standard formats
+    }
 }
 
 /**
@@ -139,4 +156,3 @@ fun parseDate(date: String, format: String): Date? {
         null
     }
 }
-

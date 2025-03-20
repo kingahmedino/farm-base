@@ -73,3 +73,10 @@ val surfaceContainerLowDark = Color(0xFF191D13)
 val surfaceContainerDark = Color(0xFF1D2117)
 val surfaceContainerHighDark = Color(0xFF272B21)
 val surfaceContainerHighestDark = Color(0xFF32362B)
+
+val bgLightYellow = Color(0xFFFDEFA9)
+val bgDarkYellow = Color(0xFFFFEB3B)
+
+val PLCodingGreen = Color(0xff00f15e)
+val PLCodingLightGray = Color(0xff262626)
+val PLCodingGray = Color(0xff1c1c1c)
