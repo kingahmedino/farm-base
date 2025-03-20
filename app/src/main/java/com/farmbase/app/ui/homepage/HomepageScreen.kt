@@ -69,16 +69,32 @@ fun Homepage() {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = stringResource(
-                        R.string.execute_portfolio_activities,
+                        R.string.execute_user_portfolio_activities,
                         "Poultry Hub Lead"
                     ), style = MaterialTheme.typography.labelLarge
                 )
-
                 Spacer(modifier = Modifier.height(12.dp))
-
+                ActivityCardList()
+                Spacer(modifier = Modifier.height(12.dp))
+                HorizontalDivider(thickness = 1.dp, color = colorResource(R.color.gray))
+                Spacer(modifier = Modifier.height(12.dp))
+                ActivityCardList()
+                Spacer(modifier = Modifier.height(12.dp))
+                HorizontalDivider(thickness = 1.dp, color = colorResource(R.color.gray))
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(
+                        R.string.execute_user_activities,
+                        "Poultry Hub Lead"
+                    ), style = MaterialTheme.typography.labelLarge
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                ActivityCardList()
+                Spacer(modifier = Modifier.height(12.dp))
+                HorizontalDivider(thickness = 1.dp, color = colorResource(R.color.gray))
+                Spacer(modifier = Modifier.height(12.dp))
                 ActivityCardList()
             }
-            // Spacer(modifier = Modifier.height(12.dp))
 
         }
 
