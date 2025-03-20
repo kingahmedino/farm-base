@@ -8,4 +8,5 @@
     <string name="my_schedule">My Schedule</string>
     <string name="homepage_desc">View the details, performance, activities to execute, and red flags to solve on the homepage.\nThe rank and count of red flags logged is also</string>
     <string name="see_more">" See more"</string>
+    <string name="execute_portfolio_activities">Execute %s Portfolio Activities</string>
 </resources>
