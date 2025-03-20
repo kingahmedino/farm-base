@@ -30,29 +30,7 @@ fun ActivityCardList() {
         )
     }
 
-   /* LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(activityList.size) { index ->
-            val item = activityList[index]
-
-            ActivityCard(
-                icon = item.icon,
-                headerText = item.headerText,
-                descriptionText = item.descText,
-                isSelected = item.isSelected,
-                onClick = {
-                    val selectedItem = activityList[index]
-                    activityList.replaceAll { item ->
-                        item.copy(isSelected = if (item == selectedItem) !item.isSelected else false)
-                    }
-                }
-            )
-        }
-    }*/
-
-    Column( // Changed from LazyColumn to Column
+    Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
