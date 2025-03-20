@@ -85,7 +85,7 @@ fun UserData(
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically // ensures text is centered relative to image
             ) {
-                // loads an image from URL or fallback resource
+                // loads users image
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(image)
@@ -108,6 +108,7 @@ fun UserData(
                         .padding(end = if (rfCount > 0) 25.dp else 0.dp), // takes remaining space
                     verticalArrangement = Arrangement.Center // centers text in the available space
                 ) {
+                    // display user name
                     Text(
                         text = userName,
                         style = MaterialTheme.typography.bodyMedium,
@@ -115,6 +116,7 @@ fun UserData(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // display users id
                     Text(
                         text = userId,
                         style = MaterialTheme.typography.bodyMedium,
@@ -122,6 +124,7 @@ fun UserData(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // display user role
                     Text(
                         text = userRole,
                         style = MaterialTheme.typography.bodyMedium,
@@ -129,6 +132,7 @@ fun UserData(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // display hectare size
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -168,6 +172,9 @@ fun UserData(
     }
 }
 
+/**
+ * Displays additional user details that can be clicked
+ */
 @Composable
 fun ExtraUserData() {
     Card(
@@ -180,12 +187,14 @@ fun ExtraUserData() {
                 .fillMaxWidth()
                 .padding(16.dp)) {
 
+            // personal information
             Column(modifier = Modifier.width(80.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally // ensures icon and text are centered
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_personal_info),
                     contentDescription = stringResource(R.string.personal_information),
-                    tint = Color.Unspecified,
+                    tint = Color.Unspecified, // uses default icon color
                     modifier = Modifier.size(50.dp)
                 )
 
@@ -202,11 +211,12 @@ fun ExtraUserData() {
 
 
             Column(modifier = Modifier.width(80.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally // ensures icon and text are centered
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_my_schedule),
                     contentDescription = stringResource(R.string.my_schedule),
-                    tint = Color.Unspecified,
+                    tint = Color.Unspecified, // uses default icon color
                     modifier = Modifier.size(50.dp)
                 )
 
