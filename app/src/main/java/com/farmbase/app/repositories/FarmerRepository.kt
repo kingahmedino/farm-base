@@ -85,7 +85,7 @@ class FarmerRepository(
         WorkManager.getInstance()
             .beginUniqueWork(
                 "sync_database",
-                ExistingWorkPolicy.REPLACE,
+                ExistingWorkPolicy.KEEP,
                 syncRequest
             ).enqueue()
     }

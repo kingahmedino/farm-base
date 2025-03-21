@@ -211,6 +211,7 @@ class FarmerListViewModel @Inject constructor(
 
                                     // Update state flow
                                     _resultsState.value = results
+                                    syncData()
                                 } else {
                                     Log.e("LiveQuery", "Error in live query", change.error)
                                 }
