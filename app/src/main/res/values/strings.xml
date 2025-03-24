@@ -10,4 +10,7 @@
     <string name="see_more">" See more"</string>
     <string name="execute_user_portfolio_activities">Execute %s Portfolio Activities</string>
     <string name="execute_user_activities">Execute %s Activities</string>
+    <string name="user_dashboard">%s Dashboard</string>
+    <string name="user_history">%s History</string>
+    <string name="my_portfolio">My Portfolio</string>
 </resources>
