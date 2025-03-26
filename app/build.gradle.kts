@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.serialization)
     kotlin("kapt")
+    alias(libs.plugins.compose.compiler)
 }
 
 val envFile = rootProject.file("env.properties")
@@ -36,6 +37,8 @@ android {
         buildConfigField("String", "IMG_HIPPO_API_KEY", envProperties["IMG_HIPPO_API_KEY"].toString())
         buildConfigField("String", "IMG_HIPPO_BASE_URL", envProperties["IMG_HIPPO_BASE_URL"].toString())
         buildConfigField("String", "FORM_BUILDER_BASE_URL", envProperties["FORM_BUILDER_URL"].toString())
+        /*buildConfigField("String", "USER_NAME", envProperties["USER_NAME"].toString())
+        buildConfigField("String", "PASSWORD", envProperties["PASSWORD"].toString())*/
     }
 
     buildTypes {
@@ -58,9 +61,7 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.7"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
