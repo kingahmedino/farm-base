@@ -5,12 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.work.Configuration
-import androidx.work.WorkManager
-import com.farmbase.app.ui.navigation.Screen
-import com.farmbase.app.ui.navigation.farmerNavGraph
+import com.farmbase.app.ui.navigation.HomepageNavigation
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,13 +19,19 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FarmBaseTheme {
-                val navController = rememberNavController()
+                /*val navController = rememberNavController()
                 NavHost(
                     navController = navController,
                     startDestination = Screen.FarmerList.route
                 ) {
                     farmerNavGraph(navController)
-                }
+                }*/
+
+                val navHostController = rememberNavController()
+                HomepageNavigation(
+                    navHostController = navHostController,
+                    startDestination = "Homepage"
+                )
             }
         }
     }
