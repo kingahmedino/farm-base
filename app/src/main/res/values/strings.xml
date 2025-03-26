@@ -13,4 +13,8 @@
     <string name="user_dashboard">%s Dashboard</string>
     <string name="user_history">%s History</string>
     <string name="my_portfolio">My Portfolio</string>
+    <string name="select_program">Select Program</string>
+    <string name="select_homepage">Select Homepage</string>
+    <string name="homepage">Homepage</string>
+    <string name="select_program_desc">Please select a programs below.\nClick on the back button without selecting a program to return to the previous page</string>
 </resources>
