@@ -3,6 +3,7 @@ package com.farmbase.app.ui.widgets
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
@@ -22,7 +23,7 @@ import com.farmbase.app.R
 
 @Composable
 fun TopBar(modifier: Modifier, onBackClick: () -> Unit) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.statusBarsPadding()) {
         Row(modifier = Modifier.align(Alignment.TopStart), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBackClick) {
                 Icon(
