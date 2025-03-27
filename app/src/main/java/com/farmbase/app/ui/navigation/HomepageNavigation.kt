@@ -1,13 +1,15 @@
 package com.farmbase.app.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.farmbase.app.ui.homepage.HomepageDetailScreen
+import com.farmbase.app.ui.homepage.HomepageScreen
+import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
 
 @Composable
@@ -21,13 +23,24 @@ fun HomepageNavigation(navHostController: NavHostController, startDestination: S
             composable(route = NavigationDestinations.SelectProgram.route) {
                 SelectProgramScreen(
                     onNextButtonClicked = {
-                        navHostController.navigateToSingleTop(NavigationDestinations.Homepage("Poultry Hub Lead"))
+                        navHostController.navigateToSingleTop(NavigationDestinations.SelectHomepage)
+                    }
+                )
+            }
+            composable<NavigationDestinations.SelectHomepage> {
+                SelectHomepageScreen(
+                    onBackButtonClicked = {
+                        navHostController.navigateUp()
+                    },
+                    onNextButtonClicked = {
+                        navHostController.navigateToScreen(
+                            NavigationDestinations.Homepage("Poultry Hub Lead"))
                     }
                 )
             }
             composable<NavigationDestinations.Homepage> {
                 val argument = it.toRoute<NavigationDestinations.Homepage>()
-                HomepageDetailScreen(
+                HomepageScreen(
                     role = argument.role,
                     onBackButtonClicked = { navHostController.navigateUp()}
                 )
@@ -39,7 +52,6 @@ fun HomepageNavigation(navHostController: NavHostController, startDestination: S
 /**
  * Extension function for `NavHostController` to navigate to a route with specific behavior.
  * Ensures the navigation is handled in a way that avoids duplicate destinations and restores the state.
- *
  * @param route The destination route to navigate to.
  */
 fun NavHostController.navigateToSingleTop(route: NavigationDestinations) {
@@ -52,4 +64,24 @@ fun NavHostController.navigateToSingleTop(route: NavigationDestinations) {
         restoreState = true // Restore previously saved state when navigating back
     }
 }
+
+/**
+ * Extension function for [NavController] to navigate to a specific screen.
+ * Ensures that the same destination is not launched multiple times and preserves state.
+ * @param route The destination screen to navigate to.
+ */
+fun NavController.navigateToScreen(route: NavigationDestinations) {
+    return this.navigate(route) { // Navigate to the specified route
+        launchSingleTop = true // Prevents multiple copies of the same destination from being created
+
+        restoreState = true // Restores the previously saved state if available
+
+        popBackStack(
+            route,
+            inclusive = false, // keeps the destination in the stack instead of removing it
+            saveState = true // saves the state of the previous destination before popping
+        )
+    }
+}
+
 
