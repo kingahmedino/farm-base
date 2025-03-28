@@ -22,7 +22,7 @@ fun HomepageScreen(
     viewModel: HomepageViewModel = hiltViewModel()
 ) {
     LaunchedEffect(role) {
-        viewModel.updateRole(role)
+        viewModel.updateHistoryList(role)
     }
 
     val portfolioActivityList by viewModel.portfolioActivityList.collectAsStateWithLifecycle()

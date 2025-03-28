@@ -15,8 +15,6 @@ import javax.inject.Inject
 class HomepageViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ):ViewModel() {
-    private val _role = MutableStateFlow("")
-    val role: StateFlow<String> = _role
 
     // update selected activity card
     private val _selectedActivityCard = MutableStateFlow<Any?>(null)
@@ -60,20 +58,7 @@ class HomepageViewModel @Inject constructor(
     )
     val portfolioList: StateFlow<List<ActivityCardItem>> = _portfolioList.asStateFlow()
 
-    private val _historyList = MutableStateFlow(
-        listOf(
-            ActivityCardItem(
-                id = "8",
-                icon = R.drawable.ic_back,
-                headerText = context.getString(R.string.user_dashboard, role.value)
-            ),
-            ActivityCardItem(
-                id = "9",
-                icon = R.drawable.ic_back,
-                headerText = context.getString(R.string.user_history, role.value)
-            ),
-        )
-    )
+    private val _historyList = MutableStateFlow<List<ActivityCardItem>>(emptyList())
     val historyList: StateFlow<List<ActivityCardItem>> = _historyList.asStateFlow()
 
     /**
@@ -110,7 +95,23 @@ class HomepageViewModel @Inject constructor(
         }
     }
 
-    fun updateRole(role: String) {
-        _role.value = role
+    /**
+     * Updates the history list with activity card items based on the provided role.
+     * This function creates a list of activity items, using the role to format the header text.*
+     * @param role the role to be displayed in the header text of the activity cards.
+     */
+     fun updateHistoryList(role: String) {
+         _historyList.value = listOf(
+             ActivityCardItem(
+                 id = "8",
+                 icon = R.drawable.ic_back,
+                 headerText = context.getString(R.string.user_dashboard, role)
+             ),
+             ActivityCardItem(
+                 id = "9",
+                 icon = R.drawable.ic_back,
+                 headerText = context.getString(R.string.user_history, role)
+             ),
+         )
     }
 }
