@@ -13,4 +13,11 @@ object Constants {
         "Peppers",
         "Flowers"
     )
+
+    enum class ActivityType {
+        PORTFOLIO_ACTIVITY,
+        ACTIVITY,
+        PORTFOLIO,
+        HISTORY
+    }
 }

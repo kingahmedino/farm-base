@@ -3,7 +3,7 @@ package com.farmbase.app.ui.homepage
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.farmbase.app.R
-import com.farmbase.app.ui.widgets.ActivityItem
+import com.farmbase.app.utils.ActivityCardItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,57 +24,57 @@ class HomepageViewModel @Inject constructor(
 
     private val _portfolioActivityList = MutableStateFlow(
         listOf(
-            ActivityItem(id = 1, icon = R.drawable.ic_personal_info, headerText = "Poultry OSO"),
-            ActivityItem(
-                id = 2,
+            ActivityCardItem(id = "1", icon = R.drawable.ic_personal_info, headerText = "Poultry OSO"),
+            ActivityCardItem(
+                id = "2",
                 icon = R.drawable.ic_personal_info,
                 headerText = "ELPM",
                 count = 3
             ),
-            ActivityItem(
-                id = 3,
+            ActivityCardItem(
+                id = "3",
                 icon = R.drawable.ic_my_schedule,
                 headerText = "Poultry Mother Officer"
             )
         )
     )
-    val portfolioActivityList: StateFlow<List<ActivityItem>> = _portfolioActivityList.asStateFlow()
+    val portfolioActivityList: StateFlow<List<ActivityCardItem>> = _portfolioActivityList.asStateFlow()
 
     private val _activityList = MutableStateFlow(
         listOf(
-            ActivityItem(id = 4, icon = R.drawable.ic_back, headerText = "Poultry OSO"),
-            ActivityItem(id = 5, icon = R.drawable.ic_back, headerText = "ELPM", count = 13),
-            ActivityItem(id = 6, icon = R.drawable.ic_back, headerText = "Poultry Mother Officer")
+            ActivityCardItem(id = "4", icon = R.drawable.ic_back, headerText = "Poultry OSO"),
+            ActivityCardItem(id = "5", icon = R.drawable.ic_back, headerText = "ELPM", count = 13),
+            ActivityCardItem(id = "6", icon = R.drawable.ic_back, headerText = "Poultry Mother Officer")
         )
     )
-    val activityList: StateFlow<List<ActivityItem>> = _activityList.asStateFlow()
+    val activityList: StateFlow<List<ActivityCardItem>> = _activityList.asStateFlow()
 
     private val _portfolioList = MutableStateFlow(
         listOf(
-            ActivityItem(
-                id = 7,
+            ActivityCardItem(
+                id = "7",
                 icon = R.drawable.ic_back,
                 headerText = context.getString(R.string.my_portfolio)
             )
         )
     )
-    val portfolioList: StateFlow<List<ActivityItem>> = _portfolioList.asStateFlow()
+    val portfolioList: StateFlow<List<ActivityCardItem>> = _portfolioList.asStateFlow()
 
     private val _historyList = MutableStateFlow(
         listOf(
-            ActivityItem(
-                id = 8,
+            ActivityCardItem(
+                id = "8",
                 icon = R.drawable.ic_back,
                 headerText = context.getString(R.string.user_dashboard, role.value)
             ),
-            ActivityItem(
-                id = 9,
+            ActivityCardItem(
+                id = "9",
                 icon = R.drawable.ic_back,
                 headerText = context.getString(R.string.user_history, role.value)
             ),
         )
     )
-    val historyList: StateFlow<List<ActivityItem>> = _historyList.asStateFlow()
+    val historyList: StateFlow<List<ActivityCardItem>> = _historyList.asStateFlow()
 
     /**
      * update activity card selected
@@ -101,7 +101,7 @@ class HomepageViewModel @Inject constructor(
      * */
     fun cardStateChange(itemSelected: Any?, item: Any?): Boolean {
         return when (itemSelected) {
-            is ActivityItem -> {
+            is ActivityCardItem -> {
                 item == itemSelected
             }
             else -> {
