@@ -11,8 +11,10 @@ import com.farmbase.app.database.ProjectDao
 import com.farmbase.app.database.StorageDao
 import com.farmbase.app.database.couchbase.DBManager
 import com.farmbase.app.network.FormBuilderApiService
+import com.farmbase.app.network.ProgramConfigApiService
 import com.farmbase.app.repositories.FarmerRepository
 import com.farmbase.app.repositories.FormBuilderRepository
+import com.farmbase.app.repositories.ProgramConfigRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -105,5 +107,13 @@ object AppModule {
         formBuilderApiService: FormBuilderApiService
     ): FormBuilderRepository {
         return FormBuilderRepository(formBuilderApiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProgramConfigRepository(
+        programConfigApiService: ProgramConfigApiService
+    ): ProgramConfigRepository {
+        return ProgramConfigRepository(programConfigApiService)
     }
 }
