@@ -1,9 +1,11 @@
 package com.farmbase.app.di
 
 import com.farmbase.app.repositories.FormBuilderRepository
+import com.farmbase.app.repositories.ProgramConfigRepository
 import com.farmbase.app.useCase.FormBuilderUseCases
 import com.farmbase.app.useCase.GetFormDataByIdUseCase
 import com.farmbase.app.useCase.GetFormDataUseCase
+import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
 import com.farmbase.app.useCase.InitializeFormStateUseCase
 import com.farmbase.app.useCase.StreamlineFormDataUseCase
 import com.farmbase.app.useCase.UpdateFormFieldUseCase
@@ -56,5 +58,10 @@ object UseCaseModule {
             streamlineFormDataUseCase,
             getFormDataByIdUseCase
         )
+    }
+
+    @Provides
+    fun provideGetProgramConfigByIDUseCase(repository: ProgramConfigRepository): GetProgramConfigByIDUseCase {
+        return GetProgramConfigByIDUseCase(repository)
     }
 }
