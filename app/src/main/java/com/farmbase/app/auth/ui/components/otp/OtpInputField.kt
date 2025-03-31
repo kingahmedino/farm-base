@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -17,12 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import com.farmbase.app.R
 import com.farmbase.app.ui.theme.FarmBaseTheme
 
 @Composable
@@ -62,11 +67,12 @@ fun OtpInputField(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = Color.Gray
+                color = colorResource(R.color.hyper_text_link),
+                shape = RoundedCornerShape(12.dp) // Rounded corners
             ),
-            //.background(PLCodingLightGray),
-        contentAlignment = Alignment.Center
-    ) {
+        contentAlignment = Alignment.Center // Ensures child components are centered
+    )
+    {
         BasicTextField(
             value = text,
             onValueChange = { newText ->

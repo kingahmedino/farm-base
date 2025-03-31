@@ -13,7 +13,10 @@
 
     <string name="pin_mismatch">Pin Mismatch</string>
     <string name="pin_mismatch_subtext">You have entered incorrect login details. Kindly check and re-enter the correct details.</string>
-
+    <string name="confirm_security_pin">Confirm Security Pin</string>
+    <string name="confirm_your_4_digit_security_pin_to_proceed">Confirm your 4-digit security pin to proceed</string>
+    <string name="welcome_user_create_your_security_pin">Welcome User, Create your Security Pin</string>
+    <string name="create_your_4_digit_security_pin_to_proceed">Create your 4-digit security pin to proceed.</string>
 
 
 </resources>

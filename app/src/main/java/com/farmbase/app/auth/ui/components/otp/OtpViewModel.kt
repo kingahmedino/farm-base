@@ -1,6 +1,7 @@
 package com.farmbase.app.auth.ui.components.otp
 
 import androidx.lifecycle.ViewModel
+import com.farmbase.app.utils.HashHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +16,7 @@ class OtpViewModel @Inject constructor(): ViewModel() {
     private val _state = MutableStateFlow(OtpState())
     val state = _state.asStateFlow()
 
+    // hashed otp code data
     var firstOtpCodeData : String = ""
     val secondOtpCodeData = 0
 
@@ -67,7 +69,12 @@ class OtpViewModel @Inject constructor(): ViewModel() {
 
                // newCode.joinToString("") == VALID_OTP_CODE
 
-                newCode.joinToString("") == firstOtpCodeData
+              val newCodeAsString = newCode.joinToString("")
+                val hashedNewCode = HashHelper.sha256(newCodeAsString)
+
+
+             //   newCode.joinToString("") == firstOtpCodeData
+                hashedNewCode == firstOtpCodeData
             } else null
         ) }
     }

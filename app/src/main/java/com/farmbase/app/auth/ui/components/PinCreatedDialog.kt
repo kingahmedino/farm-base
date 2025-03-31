@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -179,7 +181,7 @@ fun BottomSheetDialog(
 }
 
 
-@Composable
+/*@Composable
 fun PinCreatedDialog(
     dialogOpened: Boolean,
     onNextClicked: () -> Unit,
@@ -253,7 +255,93 @@ fun PinCreatedDialog(
             }
         )
     }
+}*/
+
+@Composable
+fun PinCreatedDialog(
+    dialogOpened: Boolean,
+    onNextClicked: () -> Unit,
+    onDialogClosed: () -> Unit,
+    userPinCreationSuccess: Boolean
+) {
+    if (dialogOpened) {
+        val colors = if (userPinCreationSuccess) {
+            AlertDialogInfo(
+                columnBackground = bgLightYellow,
+                text = Color.Black,
+                button = bgDarkYellow,
+                buttonText = Color.Black,
+                dialogText = stringResource(R.string.pin_created_successfully),
+                dialogSubText = stringResource(R.string.pin_created_successfully_subtext)
+            )
+        } else {
+            AlertDialogInfo(
+                columnBackground = colorResource(R.color.cafitech_light_red),
+                text = colorResource(R.color.cafitech_dark_red),
+                button = colorResource(R.color.cafitech_dark_red),
+                buttonText = Color.White,
+                dialogText = stringResource(R.string.pin_mismatch),
+                dialogSubText = stringResource(R.string.pin_mismatch_subtext)
+            )
+        }
+
+        Dialog(onDismissRequest = onDialogClosed) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter // Moves the dialog content to the bottom
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(colors.columnBackground, shape = RoundedCornerShape(16.dp))
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = colors.dialogText,
+                        fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.text
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = colors.dialogSubText,
+                        fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                        fontWeight = FontWeight.Normal,
+                        color = colors.text
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            onNextClicked()
+                            onDialogClosed()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = colors.button),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = stringResource(R.string.next),
+                                color = colors.buttonText,
+                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowForwardIos,
+                                contentDescription = null,
+                                tint = colors.buttonText
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 
 @Preview(showBackground = true)

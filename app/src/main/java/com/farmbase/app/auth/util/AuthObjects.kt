@@ -11,7 +11,9 @@ import com.farmbase.app.R
 object AuthObjects {
 
     fun launchWebsite(context: Context){
-        val URL = "https://iam-service-frontend-v25.agric-os.com/"
+//        val URL = "https://iam-service-frontend-v25.agric-os.com/"
+     //   val URL = "https://iam-service-frontend-v25.agric-os.com?mobile_redirect_uri=intent://deeplink/success#Intent;scheme=yourapp;package=com.farmbase.app"
+        val URL = "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app"
 
         val customizeChromeIntent = CustomTabsIntent.Builder()
             // set Color of the Toolbar
