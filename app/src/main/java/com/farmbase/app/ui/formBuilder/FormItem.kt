@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.farmbase.app.models.Country
+import com.farmbase.app.models.Countries
 import com.farmbase.app.models.FormElementData
 import com.farmbase.app.models.FormInputType
 import com.farmbase.app.ui.formBuilder.utils.AutoCompleteTextField
@@ -308,7 +308,7 @@ fun FormItem(
                     AutoCompleteTextField(
                         selectedValue = fieldState.value.value,
                         suggestions = elementData.options ?: if(elementData.label == "Country") {
-                            Country.getAllCountryNames()
+                            Countries.getAllCountryNames()
                         } else {
                             emptyList()
                         },

@@ -1,6 +1,6 @@
 package com.farmbase.app.models
 
-enum class Country(val countryIso: String, val countryName: String, val countryCode: String) {
+enum class Countries(val countryIso: String, val countryName: String, val countryCode: String) {
     Andorra("AD", "Andorra", "+376"), UnitedArabEmirates(
         "AE",
         "United Arab Emirates",
