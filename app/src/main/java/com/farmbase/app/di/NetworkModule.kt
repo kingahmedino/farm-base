@@ -3,6 +3,7 @@ package com.farmbase.app.di
 import com.farmbase.app.BuildConfig
 import com.farmbase.app.network.FormBuilderApiService
 import com.farmbase.app.network.ImageUploadApi
+import com.farmbase.app.network.ProgramConfigApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,6 +53,17 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("configServiceRetrofit")
+    fun provideConfigRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.CONFIG_SERVICE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
     fun provideImageUploadApi(@Named("imageUploadRetrofit") retrofit: Retrofit): ImageUploadApi {
         return retrofit.create(ImageUploadApi::class.java)
     }
@@ -61,4 +73,11 @@ object NetworkModule {
     fun provideFormBuilderApi(@Named("formBuilderRetrofit") retrofit: Retrofit): FormBuilderApiService {
         return retrofit.create(FormBuilderApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideProgramConfigApi(@Named("configServiceRetrofit") retrofit: Retrofit): ProgramConfigApiService {
+        return retrofit.create(ProgramConfigApiService::class.java)
+    }
+
 }
