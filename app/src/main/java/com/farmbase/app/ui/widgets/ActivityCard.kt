@@ -83,7 +83,7 @@ fun ActivityCard(
                     modifier = Modifier
                         .height(72.dp)
                         .width(72.dp),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.FillBounds
                 )
 
                 // spacer for separation
