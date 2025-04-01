@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,14 +31,16 @@ import com.farmbase.app.R
 import com.farmbase.app.auth.util.AuthObjects.launchWebsite
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
     val context = LocalContext.current
 
-    Scaffold (
-        content = {paddingValues ->
+//    Scaffold (
+//        content = {
+         //   paddingValues ->
 
             Column(modifier = modifier
-                .padding(paddingValues)
+                //.padding(paddingValues)
+                .padding(innerPadding)
                 .fillMaxSize()
                 .background(
                 colorResource(R.color.cafitech_dark_green)
@@ -67,8 +70,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-        }
-    )
+//        }
+//    )
 
 
 }
@@ -78,6 +81,6 @@ fun SplashScreen(modifier: Modifier = Modifier) {
 @Composable
 @Preview
 fun SplashScreenPreview() {
-   SplashScreen()
+//   SplashScreen()
 }
 

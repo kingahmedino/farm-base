@@ -2,6 +2,7 @@ package com.farmbase.app.auth.ui.components.otp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +34,7 @@ import com.farmbase.app.auth.ui.screens.SplashScreen
 
 @Composable
 fun OtpScreen1(
+    innerPadding: PaddingValues,
     state: OtpState,
     focusRequesters: List<FocusRequester>,
     onAction: (OtpAction) -> Unit,
@@ -42,13 +44,14 @@ fun OtpScreen1(
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
 
-    Scaffold(
-
-        content = {paddingValues ->
+//    Scaffold(
+//
+//        content = {
+//            paddingValues ->
 
             Column(
                 modifier = modifier
-                    .padding(paddingValues)
+//                    .padding(innerPadding)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
@@ -106,8 +109,8 @@ fun OtpScreen1(
                 }
             }
 
-        }
-    )
+//        }
+//    )
 
 }
 

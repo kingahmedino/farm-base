@@ -3,6 +3,7 @@ package com.farmbase.app.ui.navigation
 import FarmerRegistrationScreen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -76,7 +77,7 @@ sealed class Screen(val route: String) {
 
 }
 
-fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
+fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: PaddingValues) {
 
     composable(
       //  Screen.OtpScreen1.route
@@ -90,9 +91,9 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
 
     ) { navBackStackEntry ->
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-        ) { innerPadding ->
+//        Scaffold(
+//            modifier = Modifier.fillMaxSize(),
+//        ) { innerPadding ->
 
             // otp
             val viewModel: OtpViewModel = hiltViewModel(navBackStackEntry) // Retain ViewModel
@@ -139,9 +140,8 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
 //                    Text(text = "Refresh Token: $refreshToken")
 
 
-
-
             OtpScreen1(
+                innerPadding = innerPadding,
                 onClick = {
 //                    viewModel.firstOtpCodeData = state.code.toString()
 //                    navController.navigate(Screen.OtpScreen2.route)
@@ -180,7 +180,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
       // box and column
         //  }}
 
-        }
+      // scaffold  }
     }
 
     composable(Screen.OtpScreen2.route, arguments = listOf(
@@ -249,7 +249,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
     }
 
     composable(Screen.Auth.route) {
-        SplashScreen()
+        SplashScreen(innerPadding = innerPadding)
     }
 
     composable(Screen.FarmerList.route) {

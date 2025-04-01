@@ -42,12 +42,12 @@ fun OtpScreen2(
     focusRequesters: List<FocusRequester>,
     onAction: (OtpAction) -> Unit,
     modifier: Modifier = Modifier,
-    onClick : () -> Unit,
+    onClick: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel()
 ) {
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
-    
+
     val context = LocalContext.current
 
     // hashed otp code
@@ -55,80 +55,84 @@ fun OtpScreen2(
 
 //    Toast.makeText(context, "${otpCode}", Toast.LENGTH_SHORT).show()
 
-    Scaffold(
-        content = {paddingValues ->
-            Column(
-                modifier = modifier
-                    .padding(paddingValues)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
+//    Scaffold(
+//        content = {paddingValues ->
 
-                DoubleText(mainText = R.string.confirm_security_pin, subText = R.string.confirm_your_4_digit_security_pin_to_proceed)
+    Column(
+        modifier = modifier
+//                    .padding(paddingValues)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
 
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-                ) {
-                    state.code.forEachIndexed { index, number ->
-                        OtpInputField(
-                            number = number,
-                            focusRequester = focusRequesters[index],
-                            onFocusChanged = { isFocused ->
-                                if (isFocused) {
-                                    onAction(OtpAction.OnChangeFieldFocused(index))
-                                }
-                            },
-                            onNumberChanged = { newNumber ->
-                                onAction(OtpAction.OnEnterNumber(newNumber, index))
-                            },
-                            onKeyboardBack = {
-                                onAction(OtpAction.OnKeyboardBack)
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f)
-                        )
-                    }
-                }
+        DoubleText(
+            mainText = R.string.confirm_security_pin,
+            subText = R.string.confirm_your_4_digit_security_pin_to_proceed
+        )
 
-                Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.cafitech_light_green)
-
-                    ),
-                    onClick = onClick,
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(stringResource(R.string.next))
-                }
-
-                state.isValid?.let { isValid ->
-                    LaunchedEffect(isValid) {
-                        dialogOpened = true
-                        userPinCreationSuccess = isValid
-                    }
-
-                    PinCreatedDialog(
-                        dialogOpened = dialogOpened,
-                        onNextClicked = {
-                            // Handle what happens when Next is clicked
-                        },
-                        onDialogClosed = {
-                            dialogOpened = false
-                        },
-                        userPinCreationSuccess = userPinCreationSuccess
-                    )
-                }
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        ) {
+            state.code.forEachIndexed { index, number ->
+                OtpInputField(
+                    number = number,
+                    focusRequester = focusRequesters[index],
+                    onFocusChanged = { isFocused ->
+                        if (isFocused) {
+                            onAction(OtpAction.OnChangeFieldFocused(index))
+                        }
+                    },
+                    onNumberChanged = { newNumber ->
+                        onAction(OtpAction.OnEnterNumber(newNumber, index))
+                    },
+                    onKeyboardBack = {
+                        onAction(OtpAction.OnKeyboardBack)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f)
+                )
             }
         }
-    )
 
+        Button(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.cafitech_light_green)
+
+            ),
+            onClick = onClick,
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(stringResource(R.string.next))
+        }
+
+        state.isValid?.let { isValid ->
+            LaunchedEffect(isValid) {
+                dialogOpened = true
+                userPinCreationSuccess = isValid
+            }
+
+            PinCreatedDialog(
+                dialogOpened = dialogOpened,
+                onNextClicked = {
+                    // Handle what happens when Next is clicked
+                },
+                onDialogClosed = {
+                    dialogOpened = false
+                },
+                userPinCreationSuccess = userPinCreationSuccess
+            )
+        }
+    }
+
+//        }
+//    )
 
 
 }

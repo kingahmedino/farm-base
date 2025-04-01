@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,6 +41,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.work.Configuration
 import androidx.work.WorkManager
+import com.farmbase.app.auth.globalsnackbar.ObserveAsEvents
+import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
+import com.farmbase.app.auth.globalsnackbar.SnackbarController
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
 import com.farmbase.app.auth.ui.components.otp.OtpAction
@@ -108,22 +112,63 @@ class MainActivity : ComponentActivity() {
         setContent {
             FarmBaseTheme {
 
+                // global snack bar
+
+                val snackbarHostState = remember {
+                    SnackbarHostState()
+                }
+
+                val scope = rememberCoroutineScope()
+                ObserveAsEvents(
+                    flow = SnackbarController.events,
+                    snackbarHostState
+                ) { event ->
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+
+                        val result = snackbarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action?.name,
+                            duration = SnackbarDuration.Long
+                        )
+
+                        if(result == SnackbarResult.ActionPerformed) {
+                            event.action?.action?.invoke()
+                        }
+                    }
+                }
+
+                // global snack bar
+
+                // CheckInternetConnectivity
                 CheckInternetConnectivity()
-              //  wshshs()
 
 
                 val navController = rememberNavController()
                 val showExitDialog = remember { mutableStateOf(false) }
 
                 // Handle deep link navigation
+//                LaunchedEffect(intent) {
+//                    intent?.data?.let { uri ->
+//                        val status = uri.pathSegments.getOrNull(0) ?: ""
+//                        val accessToken = intent.getStringExtra("accessToken") ?: ""
+//                        val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+//
+//                        navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken") {
+//                            popUpTo("home") { inclusive = true }
+//                        }
+//                    }
+//                }
+
                 LaunchedEffect(intent) {
                     intent?.data?.let { uri ->
                         val status = uri.pathSegments.getOrNull(0) ?: ""
                         val accessToken = intent.getStringExtra("accessToken") ?: ""
                         val refreshToken = intent.getStringExtra("refreshToken") ?: ""
-
                         navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken") {
-                            popUpTo("home") { inclusive = true }
+                            // Remove the popUpTo call, or replace it with a valid route
+                            // popUpTo("home") { inclusive = true }
+                            launchSingleTop = true;
                         }
                     }
                 }
@@ -152,19 +197,36 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                NavHost(
-                    navController = navController,
-                       startDestination = Screen.Auth.route
-//                    startDestination = Screen.OtpScreen1.route
-                ) {
-                    farmerNavGraph(navController)
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+
+                    NavHost(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding),
+                        startDestination = Screen.Auth.route
+//                     startDestination = Screen.OtpScreen1.route
+                    ) {
+                        farmerNavGraph(navController, innerPadding)
+                    }
+
                 }
+
+
             }
         }
     }
 
     @Composable
-    private fun CheckInternetConnectivity(connectivityViewModel : ConnectivityViewModel = hiltViewModel()){
+    private fun CheckInternetConnectivity(
+        connectivityViewModel : ConnectivityViewModel = hiltViewModel(),
+        snackBarViewModel : SnackBarViewModel = hiltViewModel()
+        ){
 
         val isConnected by connectivityViewModel.isConnected.collectAsStateWithLifecycle()
         val context = LocalContext.current
@@ -183,7 +245,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                Toast.makeText(context, "I am $isConnected", Toast.LENGTH_SHORT).show()
+                snackBarViewModel.showSnackbar()
+//                Toast.makeText(context, "I am $isConnected", Toast.LENGTH_SHORT).show()
             }
             
             initialConnectionState = false // Update initial state after first composition
