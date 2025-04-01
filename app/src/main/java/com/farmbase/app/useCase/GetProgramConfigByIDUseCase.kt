@@ -7,7 +7,7 @@ import com.farmbase.app.ui.formBuilder.utils.Resource
 class GetProgramConfigByIDUseCase(private val repository: ProgramConfigRepository) {
     suspend operator fun invoke(id: String): Resource<ProgramConfig> {
         return try {
-            Resource.Success(repository.getFormDataById(id))
+           repository.getProgramConfigByProgramId(id)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Unknown error occurred")
         }

@@ -10,7 +10,7 @@ interface ProgramConfigApiService{
     @GET("/program/download/{program_id}")
     suspend fun getProgramConfigByProgramId(
         @Path("program_id") programId: String
-    ) : ProgramConfig
+    ) : ProgramConfigResponse
 
     @GET("program/download/roles-program")
     suspend fun getProgramDataByRoles(
@@ -22,4 +22,10 @@ data class ProgramDataResponse(
     val status: Boolean,
     val message: String,
     val data: List<ProgramData>
+)
+
+data class ProgramConfigResponse(
+    val status: Boolean,
+    val message: String,
+    val data: ProgramConfig
 )
