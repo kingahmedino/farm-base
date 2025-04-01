@@ -37,8 +37,7 @@ android {
         buildConfigField("String", "IMG_HIPPO_API_KEY", envProperties["IMG_HIPPO_API_KEY"].toString())
         buildConfigField("String", "IMG_HIPPO_BASE_URL", envProperties["IMG_HIPPO_BASE_URL"].toString())
         buildConfigField("String", "FORM_BUILDER_BASE_URL", envProperties["FORM_BUILDER_URL"].toString())
-        /*buildConfigField("String", "USER_NAME", envProperties["USER_NAME"].toString())
-        buildConfigField("String", "PASSWORD", envProperties["PASSWORD"].toString())*/
+        buildConfigField("String", "CONFIG_SERVICE_URL", envProperties["CONFIG_SERVICE_URL"].toString())
     }
 
     buildTypes {
