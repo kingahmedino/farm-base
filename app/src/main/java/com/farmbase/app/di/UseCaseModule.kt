@@ -6,6 +6,7 @@ import com.farmbase.app.useCase.FormBuilderUseCases
 import com.farmbase.app.useCase.GetFormDataByIdUseCase
 import com.farmbase.app.useCase.GetFormDataUseCase
 import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
+import com.farmbase.app.useCase.GetProgramDataByRolesUseCase
 import com.farmbase.app.useCase.InitializeFormStateUseCase
 import com.farmbase.app.useCase.StreamlineFormDataUseCase
 import com.farmbase.app.useCase.UpdateFormFieldUseCase
@@ -63,5 +64,10 @@ object UseCaseModule {
     @Provides
     fun provideGetProgramConfigByIDUseCase(repository: ProgramConfigRepository): GetProgramConfigByIDUseCase {
         return GetProgramConfigByIDUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetProgramDataByRoleUseCase(repository: ProgramConfigRepository): GetProgramDataByRolesUseCase {
+        return GetProgramDataByRolesUseCase(repository)
     }
 }
