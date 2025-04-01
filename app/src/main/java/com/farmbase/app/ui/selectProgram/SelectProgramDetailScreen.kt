@@ -36,7 +36,10 @@ fun ProgramDetailScreen(
             TopBar(modifier = Modifier.fillMaxWidth()){}
         },
         bottomBar = { NextButton(
-            onClick = {onNextButtonClicked()},
+            onClick = {
+                viewModel.saveProgramIdToSharedPrefs()
+                onNextButtonClicked()
+                      },
             enabled = selectedActivityCard != null,
             modifier = Modifier
                 .fillMaxWidth()

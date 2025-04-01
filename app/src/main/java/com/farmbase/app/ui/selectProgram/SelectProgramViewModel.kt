@@ -1,5 +1,7 @@
 package com.farmbase.app.ui.selectProgram
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
@@ -7,7 +9,10 @@ import com.farmbase.app.models.ProgramData
 import com.farmbase.app.ui.formBuilder.utils.Resource
 import com.farmbase.app.useCase.GetProgramDataByRolesUseCase
 import com.farmbase.app.utils.ActivityCardItem
+import com.farmbase.app.utils.Constants
+import com.farmbase.app.utils.SharedPreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectProgramViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val programDataUseCase: GetProgramDataByRolesUseCase,
 ):ViewModel() {
     private val roles =  listOf("67e00ad59b2b98774577c62a", "67e038e0b4320cde3f1cc247" )
@@ -82,5 +88,12 @@ class SelectProgramViewModel @Inject constructor(
                 _selectedActivityCard.value = selectedCard
             }
         }
+    }
+
+    /** Save selected program id using shared preference */
+    fun saveProgramIdToSharedPrefs() {
+        _selectedActivityCard.value?.let {
+            SharedPreferencesManager(context = context ).encryptedPut(
+                Constants.SELECTED_PROGRAM_ID, it.id) }
     }
 }

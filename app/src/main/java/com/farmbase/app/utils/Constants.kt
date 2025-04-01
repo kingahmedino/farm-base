@@ -1,6 +1,8 @@
 package com.farmbase.app.utils
 
 object Constants {
+    const val SELECTED_PROGRAM_ID = "selected_program_id"
+
     val SPECIALTY_CROPS = listOf(
         "Herbs",
         "Lettuce",
