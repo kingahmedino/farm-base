@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -83,8 +84,8 @@ class SelectHomepageViewModel @Inject constructor(
      */
     private fun getSortedRoles() {
         viewModelScope.launch {
-            getSortedRolesUseCase.execute(description = context.getString(R.string.my_homepage_desc)).collect { sortedList ->
-                _entityList.value = sortedList
+            getSortedRolesUseCase.execute(description = context.getString(R.string.my_homepage_desc)).collectLatest { sortedList ->
+                if(sortedList.isNotEmpty()) { _entityList.value = sortedList }
             }
         }
     }
