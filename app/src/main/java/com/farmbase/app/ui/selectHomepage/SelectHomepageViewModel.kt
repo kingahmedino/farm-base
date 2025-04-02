@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
+import com.farmbase.app.useCase.GetSortedRolesUseCase
 import com.farmbase.app.utils.ActivityCardItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -13,15 +14,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SelectHomepageViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val getSortedRolesUseCase: GetSortedRolesUseCase,
 ):ViewModel() {
     // update selected activity card
     private val _selectedActivityCard = MutableStateFlow<ActivityCardItem?>(null)
     val selectedActivityCard = _selectedActivityCard.asStateFlow()
+
+    init {
+        getSortedRoles()
+    }
 
     private val _mainList = MutableStateFlow(
         listOf(
@@ -38,29 +45,10 @@ class SelectHomepageViewModel @Inject constructor(
     )
     private val mainList: StateFlow<List<ActivityCardItem>> = _mainList.asStateFlow()
 
-
-    private val _entityList = MutableStateFlow(
-        listOf(
-            ActivityCardItem(id = "3",
-                icon = R.drawable.ic_my_schedule,
-                headerText = "My Poultry OSO",
-                descText = context.getString(R.string.learning_videos_desc)
-            ),
-            ActivityCardItem(id = "4",
-                icon = R.drawable.ic_personal_info,
-                headerText = "My ELPM",
-                descText = context.getString(R.string.my_homepage_desc)),
-            ActivityCardItem(id = "5",
-                icon = R.drawable.ic_back,
-                headerText = "My Poultry Mother Officer",
-                descText = context.getString(R.string.my_homepage_desc)),
-            ActivityCardItem(id = "6",
-                icon = R.drawable.ic_next,
-                headerText = "My Poultry Intern",
-                descText = context.getString(R.string.my_homepage_desc)),
-        )
-    )
+    // holds the list of all roles assigned to the user
+    private val _entityList = MutableStateFlow<List<ActivityCardItem>>(emptyList())
     private val entityList: StateFlow<List<ActivityCardItem>> = _entityList.asStateFlow()
+
 
     /**
      * Combines two lists of ActivityCardItem into a single StateFlow.
@@ -75,12 +63,12 @@ class SelectHomepageViewModel @Inject constructor(
         main + entity // merge both lists
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+
     /** Updates the selected activity card when a card is clicked
-     *  If the clicked card is already selected, set it to null.
-     *  Otherwise, it sets the clicked card as the selected one.
      */
     fun updateSelectedCard(selectedCard: ActivityCardItem) {
         when {
+            // If the clicked card is already selected, set it to null
             selectedCard == _selectedActivityCard.value -> {
                 _selectedActivityCard.value = null
             }
@@ -89,4 +77,17 @@ class SelectHomepageViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * Retrieves sorted roles from the use case and updates the entity list
+     */
+    private fun getSortedRoles() {
+        viewModelScope.launch {
+            getSortedRolesUseCase.execute(description = context.getString(R.string.my_homepage_desc)).collect { sortedList ->
+                _entityList.value = sortedList
+            }
+        }
+    }
+
 }
+

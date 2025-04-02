@@ -4,28 +4,39 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
+import com.farmbase.app.models.ProgramConfig
 import com.farmbase.app.models.ProgramData
+import com.farmbase.app.models.RoleEntity
+import com.farmbase.app.repositories.RoleRepository
 import com.farmbase.app.ui.formBuilder.utils.Resource
+import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
 import com.farmbase.app.useCase.GetProgramDataByRolesUseCase
 import com.farmbase.app.utils.ActivityCardItem
 import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.SharedPreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class SelectProgramViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val programDataUseCase: GetProgramDataByRolesUseCase,
+    private val programConfigUseCase: GetProgramConfigByIDUseCase,
+    private val roleRepository: RoleRepository
 ):ViewModel() {
     private val roles =  listOf("67e00ad59b2b98774577c62a", "67e038e0b4320cde3f1cc247" )
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
     val programData: StateFlow<Resource<List<ProgramData>>> = _programData.asStateFlow()
+
+    private val _programConfig = MutableStateFlow<Resource<ProgramConfig>>(Resource.Loading())
+    val programConfig: StateFlow<Resource<ProgramConfig>> = _programConfig.asStateFlow()
 
     init {
         fetchProgramDetails()
@@ -95,4 +106,30 @@ class SelectProgramViewModel @Inject constructor(
             SharedPreferencesManager(context = context ).encryptedPut(
                 Constants.SELECTED_PROGRAM_ID, it.id) }
     }
+
+    fun saveData(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            _programConfig.value = programConfigUseCase.invoke("67a5a8ef7b4f3b17d961564c")
+
+            (_programConfig.value as? Resource.Success)?.data?.let { programConfigs ->
+                val roles = programConfigs.roles.map {
+                    RoleEntity(
+                        roleId = it.roleId,
+                        name = it.name,
+                        abbreviation = it.abbreviation,
+                        childPortfolio = it.childPortfolios.joinToString()
+                    )
+                }
+
+                // Inserting data on the IO dispatcher
+                withContext(Dispatchers.IO) {
+                    roleRepository.insertFarmer(roles)
+                }
+
+                // Call the success callback after insertion on the main thread
+                onSuccess()
+            }
+        }
+    }
+
 }
