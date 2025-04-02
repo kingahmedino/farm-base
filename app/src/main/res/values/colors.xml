@@ -19,4 +19,17 @@
     <color name="top_bar_icon_tint">#323232</color>
     <color name="light_gray">#D9D9D9</color>
     <color name="light_blue">#3FA6DC</color>
+
+
+    <color name="cafitech_dark_green">#367015</color>
+    <color name="cafitech_light_green">#59C903</color>
+
+    <color name="cafitech_dark_yellow">#367015</color>
+    <color name="cafitech_light_yellow">#59C903</color>
+
+    <color name="cafitech_dark_red">#FF4B4B</color>
+    <color name="cafitech_light_red">#FF7F7F</color>
+
+
+
 </resources>

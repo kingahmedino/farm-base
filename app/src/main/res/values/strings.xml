@@ -25,4 +25,23 @@
     <string name="learning_videos_desc">Select media to learn more about any desired process.</string>
     <string name="my_homepage_desc">View your performance, activities to execute, and red flags to solve.</string>
     <string name="my_homepage">My Homepage</string>
+
+    <string name="cafitech">CAFI Tech</string>
+    <string name="ecosystem">ECOSYSTEM</string>
+
+    <string name="login">Login</string>
+    <string name="next">Next</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="pin_created_successfully">Pin Created Successfully</string>
+    <string name="pin_created_successfully_subtext">Your unique pin has been successfully created, proceed to carry out your activities</string>
+
+    <string name="pin_mismatch">Pin Mismatch</string>
+    <string name="pin_mismatch_subtext">You have entered incorrect login details. Kindly check and re-enter the correct details.</string>
+    <string name="confirm_security_pin">Confirm Security Pin</string>
+    <string name="confirm_your_4_digit_security_pin_to_proceed">Confirm your 4-digit security pin to proceed</string>
+    <string name="welcome_user_create_your_security_pin">Welcome User, Create your Security Pin</string>
+    <string name="create_your_4_digit_security_pin_to_proceed">Create your 4-digit security pin to proceed.</string>
+
+
 </resources>
