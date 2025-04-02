@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
+import com.farmbase.app.models.ActivityEntity
 import com.farmbase.app.models.ProgramConfig
 import com.farmbase.app.models.ProgramData
 import com.farmbase.app.models.RoleEntity
+import com.farmbase.app.repositories.ActivityEntityRepository
 import com.farmbase.app.repositories.RoleRepository
 import com.farmbase.app.ui.formBuilder.utils.Resource
 import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
@@ -29,13 +31,14 @@ class SelectProgramViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val programDataUseCase: GetProgramDataByRolesUseCase,
     private val programConfigUseCase: GetProgramConfigByIDUseCase,
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+    private val activityEntityRepository: ActivityEntityRepository
 ):ViewModel() {
     private val roles =  listOf("67e00ad59b2b98774577c62a", "67e038e0b4320cde3f1cc247" )
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
     val programData: StateFlow<Resource<List<ProgramData>>> = _programData.asStateFlow()
 
-    private val _programConfig = MutableStateFlow<Resource<ProgramConfig>>(Resource.Loading())
+    private val _programConfig = MutableStateFlow<Resource<ProgramConfig>>(Resource.Error(""))
     val programConfig: StateFlow<Resource<ProgramConfig>> = _programConfig.asStateFlow()
 
     init {
@@ -109,6 +112,7 @@ class SelectProgramViewModel @Inject constructor(
 
     fun saveData(onSuccess: () -> Unit) {
         viewModelScope.launch {
+            _programConfig.value = Resource.Loading()
             _programConfig.value = programConfigUseCase.invoke("67a5a8ef7b4f3b17d961564c")
 
             (_programConfig.value as? Resource.Success)?.data?.let { programConfigs ->
@@ -121,9 +125,26 @@ class SelectProgramViewModel @Inject constructor(
                     )
                 }
 
+                val activities = programConfigs.activities.map {
+                    ActivityEntity(
+                        activityId = it.activityId,
+                        name = it.name,
+                        entity = it.entity.joinToString(),
+                        entityType = it.entityType,
+                        facialVerificationFlag = it.facialVerificationFlag,
+                        locationCheckFlag = it.locationCheckFlag,
+                        formId = it.formId,
+                        daysToLate = it.daysToLate,
+                        daysToVeryLate = it.daysToVeryLate,
+                        scheduledActivityFlag = it.scheduledActivityFlag,
+
+                    )
+                }
+
                 // Inserting data on the IO dispatcher
                 withContext(Dispatchers.IO) {
                     roleRepository.insertFarmer(roles)
+                    activityEntityRepository.insertActivities(activities)
                 }
 
                 // Call the success callback after insertion on the main thread
