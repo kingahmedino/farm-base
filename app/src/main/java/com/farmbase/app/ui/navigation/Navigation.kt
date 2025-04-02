@@ -132,51 +132,52 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 //                modifier = Modifier.fillMaxSize().padding(innerPadding),
 //                contentAlignment = Alignment.Center
 //            ) {
-//                Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                    /** hide $status $accessToken $refreshToken**/
+//                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//
+//                    /** hide $status $accessToken $refreshToken**/
 //                    Text(text = "Status: $status")
 //                    Text(text = "Access Token: $accessToken")
 //                    Text(text = "Refresh Token: $refreshToken")
 
 
-            OtpScreen1(
-                innerPadding = innerPadding,
-                onClick = {
+                    OtpScreen1(
+                        innerPadding = innerPadding,
+                        onClick = {
 //                    viewModel.firstOtpCodeData = state.code.toString()
 //                    navController.navigate(Screen.OtpScreen2.route)
 
-                    val otpCode =
-                        state.code.joinToString("") // Convert the list of digits to a string
+                            val otpCode =
+                                state.code.joinToString("") // Convert the list of digits to a string
 
-                    val hashed4DigitCode = HashHelper.sha256(otpCode)
+                            val hashed4DigitCode = HashHelper.sha256(otpCode)
 
-                   // viewModel.firstOtpCodeData = otpCode
-                    navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
+                            // viewModel.firstOtpCodeData = otpCode
+                            navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
 
-                },
+                        },
 
-                state = state,
-                focusRequesters = focusRequesters,
-                onAction = { action ->
-                    when (action) {
-                        is OtpAction.OnEnterNumber -> {
-                            if (action.number != null) {
-                                focusRequesters[action.index].freeFocus()
+                        state = state,
+                        focusRequesters = focusRequesters,
+                        onAction = { action ->
+                            when (action) {
+                                is OtpAction.OnEnterNumber -> {
+                                    if (action.number != null) {
+                                        focusRequesters[action.index].freeFocus()
+                                    }
+                                }
+
+                                else -> Unit
                             }
-                        }
+                            viewModel.onAction(action)
+                        },
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .consumeWindowInsets(innerPadding)
+                    )
 
-                        else -> Unit
-                    }
-                    viewModel.onAction(action)
-                },
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-            )
-
-            // otp
-
+                    // otp
+               // }
       // box and column
         //  }}
 

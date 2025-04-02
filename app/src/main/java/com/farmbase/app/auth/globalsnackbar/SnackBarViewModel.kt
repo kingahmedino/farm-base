@@ -13,15 +13,24 @@ class SnackBarViewModel @Inject constructor(): ViewModel() {
         viewModelScope.launch {
             SnackbarController.sendEvent(
                 event = SnackbarEvent(
-                    message = "Hello from ViewModel",
+                    message = "Internet Connection Lost",
                     action = SnackbarAction(
-                        name = "Click me!",
+                        name = "Okay!",
                         action = {
+
+                            dismissSnackbar()
+                            // SnackbarController.dismissSnackbar()
 
                         }
                     )
                 )
             )
+        }
+    }
+
+    fun dismissSnackbar() {
+        viewModelScope.launch {
+            SnackbarController.dismissSnackbar()  // Call the dismiss function
         }
     }
 

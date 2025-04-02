@@ -119,6 +119,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val scope = rememberCoroutineScope()
+
                 ObserveAsEvents(
                     flow = SnackbarController.events,
                     snackbarHostState
@@ -135,6 +136,12 @@ class MainActivity : ComponentActivity() {
                         if(result == SnackbarResult.ActionPerformed) {
                             event.action?.action?.invoke()
                         }
+                    }
+                }
+
+                ObserveAsEvents(flow = SnackbarController.dismissEvents, snackbarHostState) {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss() // Dismiss from ViewModel
                     }
                 }
 
