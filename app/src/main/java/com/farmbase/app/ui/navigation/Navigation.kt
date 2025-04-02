@@ -1,7 +1,6 @@
 package com.farmbase.app.ui.navigation
 
 import FarmerRegistrationScreen
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +20,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -37,6 +35,9 @@ import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.farmerlist.FarmerListScreen
 import com.farmbase.app.ui.formBuilder.FormBuilder
+import com.farmbase.app.ui.homepage.HomepageScreen
+import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
+import com.farmbase.app.ui.selectProgram.SelectProgramScreen
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
 import kotlinx.serialization.encodeToString
@@ -74,8 +75,15 @@ sealed class Screen(val route: String) {
 
     data object Login : Screen("login")
 
-    data object Homepage : Screen("hompage")
+    data object SelectProgram : Screen("selectProgram")
 
+    data object SelectHomepage : Screen("selectHomepage")
+
+    data object MyHomepage : Screen("myHomepage?role={role}"){
+        fun createRoute(role: String): String {
+            return "myHomepage?role=$role"
+        }
+    }
 
     data object FarmerList : Screen("farmerList")
     data object FarmerRegistration : Screen("farmerRegistration?farmerJson={farmerJson}") {
@@ -288,7 +296,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                     // save access and refresh token in encrypted shared prefs
 
                     // navigate
-                    navController.navigate(Screen.Homepage.route)
+                    navController.navigate(Screen.SelectProgram.route)
 //                    Toast.makeText(context, "$accessToken |||| $refreshToken", Toast.LENGTH_LONG).show()
                 },
 
@@ -325,8 +333,34 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 //        SplashScreen(innerPadding = innerPadding)
     }
 
-    composable(Screen.Homepage.route) {
-//        SplashScreen(innerPadding = innerPadding)
+    composable(Screen.SelectProgram.route) {
+        SelectProgramScreen(
+            onNextButtonClicked = {navController.navigate(Screen.SelectHomepage.route)}
+        )
+    }
+
+    composable(Screen.SelectHomepage.route) {
+        SelectHomepageScreen(
+            onBackButtonClicked = { navController.navigateUp() },
+            onNextButtonClicked = {navController.navigate(Screen.MyHomepage.createRoute("Poultry Hub Lead"))}
+        )
+    }
+
+    composable(Screen.MyHomepage.route,
+        arguments = listOf(
+            navArgument("role") {
+                type = NavType.StringType
+                nullable = false
+                defaultValue = ""
+            }
+        )
+    ) { entry ->
+        val role = entry.arguments?.getString("role")
+        HomepageScreen(
+            onBackButtonClicked = { navController.navigateUp() },
+            role = role?:""
+
+        )
     }
 
 
