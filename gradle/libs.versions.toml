@@ -24,7 +24,7 @@ coroutines = "1.10.0"
 couchbase = "3.2.1"
 cameraX = "1.4.1"
 security = "1.1.0-alpha06"
-
+browser = "1.5.0"
 datastorePreferences = "1.1.1"
 
 
