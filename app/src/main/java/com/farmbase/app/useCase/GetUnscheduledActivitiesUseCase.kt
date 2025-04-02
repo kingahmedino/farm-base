@@ -3,6 +3,7 @@ package com.farmbase.app.useCase
 import com.farmbase.app.R
 import com.farmbase.app.repositories.ActivityEntityRepository
 import com.farmbase.app.utils.ActivityCardItem
+import com.farmbase.app.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
@@ -27,7 +28,8 @@ class GetUnscheduledActivitiesUseCase @Inject constructor(
                     ActivityCardItem(
                         id = role.activityId,
                         icon = R.drawable.ic_my_schedule,
-                        headerText = role.name
+                        headerText = role.name,
+                        activityType = Constants.ActivityType.ACTIVITY
                     )
                 }
             }

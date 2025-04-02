@@ -3,6 +3,7 @@ package com.farmbase.app.useCase
 import com.farmbase.app.R
 import com.farmbase.app.repositories.RoleRepository
 import com.farmbase.app.utils.ActivityCardItem
+import com.farmbase.app.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
@@ -31,7 +32,8 @@ class GetSortedRolesUseCase @Inject constructor(
                         id = role.roleId,
                         icon = R.drawable.ic_my_schedule,
                         headerText = role.name,
-                        descText = description
+                        descText = description,
+                        activityType = Constants.ActivityType.PORTFOLIO_ACTIVITY
                     )
                 }
             }

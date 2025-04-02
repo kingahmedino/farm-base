@@ -1,5 +1,6 @@
 package com.farmbase.app.di
 
+import com.farmbase.app.repositories.ActivityEntityRepository
 import com.farmbase.app.repositories.FormBuilderRepository
 import com.farmbase.app.repositories.ProgramConfigRepository
 import com.farmbase.app.repositories.RoleRepository
@@ -9,6 +10,7 @@ import com.farmbase.app.useCase.GetFormDataUseCase
 import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
 import com.farmbase.app.useCase.GetProgramDataByRolesUseCase
 import com.farmbase.app.useCase.GetSortedRolesUseCase
+import com.farmbase.app.useCase.GetUnscheduledActivitiesUseCase
 import com.farmbase.app.useCase.InitializeFormStateUseCase
 import com.farmbase.app.useCase.StreamlineFormDataUseCase
 import com.farmbase.app.useCase.UpdateFormFieldUseCase
@@ -76,5 +78,10 @@ object UseCaseModule {
     @Provides
     fun provideGetSortedRolesUseCase(repository: RoleRepository): GetSortedRolesUseCase {
         return GetSortedRolesUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetUnscheduledActivitiesUseCase(repository: ActivityEntityRepository): GetUnscheduledActivitiesUseCase {
+        return GetUnscheduledActivitiesUseCase(repository)
     }
 }
