@@ -269,6 +269,12 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                     // set start destination
 
                     // save access and refresh token in encrypted shared prefs
+
+                    SharedPreferencesManager(context).encryptedPut(
+                        key = "user4digitToken",
+                        value = otpCode
+                    )
+
                     SharedPreferencesManager(context).encryptedPut(
                         key = "accessToken",
                         value = accessToken
