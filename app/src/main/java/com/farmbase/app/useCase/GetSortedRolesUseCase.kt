@@ -18,7 +18,7 @@ class GetSortedRolesUseCase @Inject constructor(
      * Executes the use case to fetch, sort, and map roles to ActivityCardItem.
      * @return Flow of a list of ActivityCardItem sorted by the number of child portfolios.
      */
-    fun execute(description: String): Flow<List<ActivityCardItem>> {
+    fun execute(description: String?): Flow<List<ActivityCardItem>> {
         // fetch roles from the repository as a flow and transform them
         return roleRepository.getAllRoles()
             .mapNotNull { roles ->
