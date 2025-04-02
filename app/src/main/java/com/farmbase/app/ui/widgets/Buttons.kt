@@ -34,7 +34,7 @@ import com.farmbase.app.R
 @Composable
 fun NextButton(
     onClick: () -> Unit,
-    enabled: Boolean = true,
+    enabled: Boolean,
     modifier: Modifier
 ) {
     OutlinedButton(
@@ -103,5 +103,39 @@ fun BackButton(
             style = MaterialTheme.typography.labelLarge
         )
 
+    }
+}
+
+@Composable
+fun NextButtonEnabled(
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    modifier: Modifier,
+    buttonColor: Int =  R.color.green,
+    buttonTextColor: Int = R.color.white,
+    iconTint: Int = R.color.white
+) {
+    OutlinedButton(
+        modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        onClick = onClick,
+        enabled = enabled,
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = colorResource(buttonColor),
+        ),
+        border = BorderStroke(1.dp, colorResource(id = buttonColor)),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.corner_radius_standard)),
+    ) {
+        Text(
+            text =  stringResource(id = R.string.next),
+            color = colorResource(id = buttonTextColor),
+            style = MaterialTheme.typography.labelLarge
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        // display an icon indicating "next"
+        Icon(
+            painter = painterResource(id = R.drawable.ic_next),
+            contentDescription = null,
+            tint = colorResource(id = iconTint)
+        )
     }
 }
