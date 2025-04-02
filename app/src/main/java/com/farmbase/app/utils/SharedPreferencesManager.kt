@@ -8,6 +8,7 @@ import com.google.gson.Gson
 
 
 class SharedPreferencesManager(private val context: Context) {
+
     private val masterKey: MasterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()

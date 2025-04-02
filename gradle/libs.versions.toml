@@ -26,6 +26,9 @@ couchbase = "3.2.1"
 cameraX = "1.4.1"
 security = "1.1.0-alpha06"
 
+datastorePreferences = "1.1.1"
+
+
 [libraries]
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -70,6 +73,9 @@ camerax-view = { module = "androidx.camera:camera-view", version.ref = "cameraX"
 camerax-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraX" }
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version = "1.5.1" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security" }
+
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

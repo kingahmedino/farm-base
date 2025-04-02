@@ -2,6 +2,7 @@ package com.farmbase.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -41,6 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.work.Configuration
 import androidx.work.WorkManager
+import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.globalsnackbar.ObserveAsEvents
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.globalsnackbar.SnackbarController
@@ -112,6 +114,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             FarmBaseTheme {
 
+                val context = LocalContext.current
+
+                val viewmodel: StartDestinationViewModel = hiltViewModel()
+                val getData by viewmodel.getData.collectAsStateWithLifecycle()
+
                 // global snack bar
 
                 val snackbarHostState = remember {
@@ -169,14 +176,21 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(intent) {
                     intent?.data?.let { uri ->
+
                         val status = uri.pathSegments.getOrNull(0) ?: ""
                         val accessToken = intent.getStringExtra("accessToken") ?: ""
                         val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+
+                        Log.d("TAG", "status: $status")
+                        Log.d("TAG", "accessToken: $accessToken")
+                        Log.d("TAG", "refreshToken: $refreshToken")
+
                         navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken") {
                             // Remove the popUpTo call, or replace it with a valid route
                             // popUpTo("home") { inclusive = true }
                             launchSingleTop = true;
                         }
+
                     }
                 }
 
@@ -216,7 +230,10 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
-                        startDestination = Screen.Auth.route
+
+                        startDestination = getStartDestination(getData.finished)
+
+                     //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
                     ) {
                         farmerNavGraph(navController, innerPadding)
@@ -237,7 +254,6 @@ class MainActivity : ComponentActivity() {
 
         val isConnected by connectivityViewModel.isConnected.collectAsStateWithLifecycle()
         val context = LocalContext.current
-
 
         val snackbarHostState = remember { SnackbarHostState() }
         val coroutineScope = rememberCoroutineScope()
@@ -274,6 +290,15 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    fun getStartDestination(checkStartDestination: Boolean) : String{
+
+        // true as per completed on boarding
+        if (checkStartDestination) return Screen.Login.route
+
+        // false as per not completed on boarding
+        else return Screen.Auth.route
     }
 
 
