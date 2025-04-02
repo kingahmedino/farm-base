@@ -7,11 +7,15 @@ import kotlinx.coroutines.flow.Flow
 class RoleRepository(
     private val roleDao: RoleEntityDao,
 ) {
-    suspend fun insertFarmer(roles: List<RoleEntity>) {
+    suspend fun insertRoles(roles: List<RoleEntity>) {
         roleDao.insertRoles(roles)
     }
 
     fun getAllRoles(): Flow<List<RoleEntity>> {
         return roleDao.selectAllRoles()
+    }
+
+    suspend fun replaceRoles(roles: List<RoleEntity>){
+        roleDao.replaceRoles(roles)
     }
 }

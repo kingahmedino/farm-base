@@ -141,13 +141,13 @@ class SelectProgramViewModel @Inject constructor(
                     )
                 }
 
-                // Inserting data on the IO dispatcher
+                // delete previous data and insert new one
                 withContext(Dispatchers.IO) {
-                    roleRepository.insertFarmer(roles)
-                    activityEntityRepository.insertActivities(activities)
+                    roleRepository.replaceRoles(roles)
+                    activityEntityRepository.replaceActivities(activities)
                 }
 
-                // Call the success callback after insertion on the main thread
+                // call the success callback after insertion on the main thread
                 onSuccess()
             }
         }

@@ -14,4 +14,8 @@ class ActivityEntityRepository(
     fun getAllUnscheduledActivities(): Flow<List<ActivityEntity>> {
         return activityEntityDao.selectAllUnscheduledActivities()
     }
+
+    suspend fun replaceActivities(activities: List<ActivityEntity>) {
+        activityEntityDao.replaceActivities(activities)
+    }
 }
