@@ -40,6 +40,31 @@ data class Role(
     val childPortfolios: List<String>
 )
 
+data class Activity(
+    @SerializedName("activity_id")
+    val activityId: String,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("entity")
+    val entity: List<String>,
+    @SerializedName("entity_type")
+    val entityType: String,
+    @SerializedName("facial_verification_flag")
+    val facialVerificationFlag: Int,
+    @SerializedName("location_check_flag")
+    val locationCheckFlag: Int,
+    @SerializedName("form_id")
+    val formId: String,
+    @SerializedName("days_to_late")
+    val daysToLate: Int,
+    @SerializedName("days_to_very_late")
+    val daysToVeryLate: Int,
+    @SerializedName("scheduled_activity_flag")
+    val scheduledActivityFlag: Int
+)
+
+
+
 data class Currency(
     val name: String,
     @SerializedName("iso_code")
@@ -118,7 +143,7 @@ data class ProgramConfig(
     val icons: List<Icon>,
     val program: Program,
     val roles: List<Role>,
-    val activities: List<String>,
+    val activities: List<Activity>,
     val country: Country,
     val coverageAreas: List<CoverageArea>,
     val program_phase: List<String>,
