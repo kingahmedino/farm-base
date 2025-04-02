@@ -34,7 +34,7 @@ class SelectProgramViewModel @Inject constructor(
     private val roleRepository: RoleRepository,
     private val activityEntityRepository: ActivityEntityRepository
 ):ViewModel() {
-    private val roles =  listOf("67e00ad59b2b98774577c62a", "67e038e0b4320cde3f1cc247" )
+    private val roles =  listOf("67dc9c05778ca40c93d19200" )
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
     val programData: StateFlow<Resource<List<ProgramData>>> = _programData.asStateFlow()
 
@@ -113,7 +113,7 @@ class SelectProgramViewModel @Inject constructor(
     fun saveData(onSuccess: () -> Unit) {
         viewModelScope.launch {
             _programConfig.value = Resource.Loading()
-            _programConfig.value = programConfigUseCase.invoke("67a5a8ef7b4f3b17d961564c")
+            _programConfig.value = programConfigUseCase.invoke(_selectedActivityCard.value?.id?:"")
 
             (_programConfig.value as? Resource.Success)?.data?.let { programConfigs ->
                 val roles = programConfigs.roles.map {
