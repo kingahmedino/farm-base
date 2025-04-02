@@ -38,7 +38,7 @@ fun ProgramDetailScreen(
         bottomBar = { NextButton(
             onClick = {
                 viewModel.saveProgramIdToSharedPrefs()
-                onNextButtonClicked()
+                viewModel.saveData { onNextButtonClicked() }
                       },
             enabled = selectedActivityCard != null,
             modifier = Modifier
