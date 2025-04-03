@@ -1,7 +1,6 @@
 package com.farmbase.app.database
 
 import android.content.Context
-import androidx.compose.material.icons.Icons
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -11,6 +10,7 @@ import com.farmbase.app.models.Employee
 import com.farmbase.app.models.Equipment
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.models.Harvest
+import com.farmbase.app.models.Icons
 import com.farmbase.app.models.Project
 import com.farmbase.app.models.RoleEntity
 import com.farmbase.app.models.Storage

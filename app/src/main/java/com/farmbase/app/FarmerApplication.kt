@@ -5,6 +5,7 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.farmbase.app.di.AppModule
 import com.farmbase.app.repositories.FormBuilderRepository
+import com.farmbase.app.repositories.IconsRepository
 import com.farmbase.app.sync.CouchbaseSyncOrchestrator
 import com.farmbase.app.sync.SyncWorkerFactory
 import dagger.hilt.android.HiltAndroidApp
@@ -15,6 +16,8 @@ class FarmerApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var formBuilderRepository: FormBuilderRepository
+    @Inject
+    lateinit var iconsRepository: IconsRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -29,7 +32,8 @@ class FarmerApplication : Application(), Configuration.Provider {
                                 applicationContext
                             ),
                             formBuilderRepository
-                        )
+                        ),
+                        iconsRepository = iconsRepository
                     )
                 )
                 .build()
@@ -45,7 +49,8 @@ class FarmerApplication : Application(), Configuration.Provider {
                             applicationContext
                         ),
                         formBuilderRepository
-                    )
+                    ),
+                    iconsRepository
                 )
             )
             .build()

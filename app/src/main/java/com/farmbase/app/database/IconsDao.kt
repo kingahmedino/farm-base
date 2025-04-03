@@ -16,6 +16,9 @@ interface IconsDao {
     @Query("Select * from icons where downloadStatus = :downloadStatus")
     suspend fun getAllIconsToDownload(downloadStatus: Constants.IconsDownloadStatus): List<Icons>
 
+    @Query("UPDATE icons SET downloadStatus = :status WHERE iconId = :iconId")
+    suspend fun updateIconStatus(iconId: String, status: Constants.IconsDownloadStatus)
+
     @Query("Delete from icons")
     suspend fun deleteAllIcons()
 
