@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.ui.widgets.BottomSheet
-import com.farmbase.app.ui.widgets.NextButtonEnabled
+import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,10 +67,7 @@ fun OtpScreen2(
         buttonTextColor = buttonTextColor,
         iconTint = iconTint,
         onDismissRequest = { dialogOpened = false },
-        onButtonClick = { if(userPinCreationSuccess) {
-            onClick } else {
-                dialogOpened = false }
-        }
+        onButtonClick = { if(userPinCreationSuccess) { onClick() } else { dialogOpened = false } }
     )
 
 
@@ -88,9 +85,9 @@ fun OtpScreen2(
         topBar = {
             TopBar(modifier = Modifier.fillMaxWidth()){ onBackButtonClicked() }
         },
-        bottomBar = { NextButtonEnabled(
+        bottomBar = { NextButton(
             onClick = { dialogOpened = true } ,
-
+            enabled = state.code.all { it != null },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)) }
