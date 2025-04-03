@@ -61,7 +61,7 @@ fun OtpScreen1(
                     subText = R.string.create_your_4_digit_security_pin_to_proceed)
 
                 Row(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
@@ -90,7 +90,7 @@ fun OtpScreen1(
                 Button(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(top = 48.dp, bottom = 10.dp, start = 24.dp, end = 24.dp),
+                        .padding(top = 48.dp, start = 24.dp, end = 24.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(R.color.cafitech_light_green)
 

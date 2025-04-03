@@ -127,6 +127,18 @@ class MainActivity : ComponentActivity() {
 
                 val scope = rememberCoroutineScope()
 
+                // Collect session timeout event and show Snackbar
+                LaunchedEffect(Unit) {
+                    sessionManager.sessionTimeoutFlow.collect {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "User inactive for 30 seconds",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }
+
                 ObserveAsEvents(
                     flow = SnackbarController.events,
                     snackbarHostState
@@ -180,12 +192,14 @@ class MainActivity : ComponentActivity() {
                         val status = uri.pathSegments.getOrNull(0) ?: ""
                         val accessToken = intent.getStringExtra("accessToken") ?: ""
                         val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+                        val resetPin = intent.getBooleanExtra("resetPin", false)
 
                         Log.d("TAG", "status: $status")
                         Log.d("TAG", "accessToken: $accessToken")
                         Log.d("TAG", "refreshToken: $refreshToken")
+                        Log.d("TAG", "resetPin: $resetPin")
 
-                        navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken") {
+                        navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
                             // Remove the popUpTo call, or replace it with a valid route
                             // popUpTo("home") { inclusive = true }
                             launchSingleTop = true;
@@ -294,11 +308,13 @@ class MainActivity : ComponentActivity() {
 
     fun getStartDestination(checkStartDestination: Boolean) : String{
 
-        // true as per completed on boarding
-        if (checkStartDestination) return Screen.Login.route
+//        // true as per completed on boarding
+//        if (checkStartDestination) return Screen.Login.route
+//
+//        // false as per not completed on boarding
+//        else return Screen.Auth.route
 
-        // false as per not completed on boarding
-        else return Screen.Auth.route
+        return Screen.Auth.route
     }
 
 

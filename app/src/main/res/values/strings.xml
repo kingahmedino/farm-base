@@ -30,7 +30,6 @@
     <string name="ecosystem">ECOSYSTEM</string>
 
     <string name="login">Login</string>
-    <string name="next">Next</string>
     <string name="cancel">Cancel</string>
 
     <string name="pin_created_successfully">Pin Created Successfully</string>
@@ -42,6 +41,9 @@
     <string name="confirm_your_4_digit_security_pin_to_proceed">Confirm your 4-digit security pin to proceed</string>
     <string name="welcome_user_create_your_security_pin">Welcome User, Create your Security Pin</string>
     <string name="create_your_4_digit_security_pin_to_proceed">Create your 4-digit security pin to proceed.</string>
+
+    <string name="enter_security_pin">Enter Security Pin</string>
+    <string name="enter_security_pin_subtext">Enter Your Security Pin To Proceed.</string>
 
 
 </resources>

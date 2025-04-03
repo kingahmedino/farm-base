@@ -72,7 +72,7 @@ fun OtpScreen2(
         )
 
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
@@ -96,6 +96,24 @@ fun OtpScreen2(
                         .aspectRatio(1f)
                 )
             }
+
+            state.isValid?.let { isValid ->
+                LaunchedEffect(isValid) {
+                    dialogOpened = true
+                    userPinCreationSuccess = isValid
+                }
+
+                PinCreatedDialog(
+                    dialogOpened = dialogOpened,
+                    onNextClicked = {
+                        // Handle what happens when Next is clicked
+                    },
+                    onDialogClosed = {
+                        dialogOpened = false
+                    },
+                    userPinCreationSuccess = userPinCreationSuccess
+                )
+            }
         }
 
         Button(
@@ -110,24 +128,6 @@ fun OtpScreen2(
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(stringResource(R.string.next))
-        }
-
-        state.isValid?.let { isValid ->
-            LaunchedEffect(isValid) {
-                dialogOpened = true
-                userPinCreationSuccess = isValid
-            }
-
-            PinCreatedDialog(
-                dialogOpened = dialogOpened,
-                onNextClicked = {
-                    // Handle what happens when Next is clicked
-                },
-                onDialogClosed = {
-                    dialogOpened = false
-                },
-                userPinCreationSuccess = userPinCreationSuccess
-            )
         }
     }
 
