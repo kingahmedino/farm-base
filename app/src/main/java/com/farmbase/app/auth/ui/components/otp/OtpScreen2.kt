@@ -98,7 +98,12 @@ fun OtpScreen2(
 
                 PinCreatedDialog(
                     dialogOpened = dialogOpened,
-                    onNextClicked = onClick,
+                    onNextClicked = { isSuccessful ->
+                        // Handle what happens when Next is clicked
+                        if (isSuccessful) {
+                            onClick()
+                        }
+                    },
                     onDialogClosed = {
                         dialogOpened = false
                     },
