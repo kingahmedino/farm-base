@@ -331,7 +331,8 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                 modifier = Modifier
                     .padding(innerPadding)
                     .consumeWindowInsets(innerPadding),
-                viewModel = viewModel
+                viewModel = viewModel,
+                onBackButtonClicked = { navController.popBackStack() }
             )
             // otp
 

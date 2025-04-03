@@ -1,19 +1,15 @@
 package com.farmbase.app.auth.ui.components.otp
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,15 +22,15 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
-import com.farmbase.app.auth.ui.components.PinCreatedDialog
+import com.farmbase.app.ui.widgets.BottomSheet
+import com.farmbase.app.ui.widgets.NextButtonEnabled
+import com.farmbase.app.ui.widgets.TopBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OtpScreen2(
     state: OtpState,
@@ -43,10 +39,38 @@ fun OtpScreen2(
     onAction: (OtpAction) -> Unit,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    onBackButtonClicked: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel()
 ) {
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
+
+    val sheetState = rememberModalBottomSheetState()
+
+
+    val headerText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully) else stringResource(R.string.pin_mismatch)
+    val decText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully_subtext) else stringResource(R.string.pin_mismatch_subtext)
+    val textColor = if(userPinCreationSuccess) colorResource(R.color.black_text) else colorResource(R.color.cafitech_dark_red)
+    val backgroundColor = if(userPinCreationSuccess) colorResource(R.color.light_yellow) else colorResource(R.color.cafitech_light_red)
+    val buttonColor = if(userPinCreationSuccess) R.color.yellow else R.color.cafitech_dark_red
+    val buttonTextColor = if(userPinCreationSuccess) R.color.black_text else R.color.white
+    val iconTint = if(userPinCreationSuccess) R.color.black_text else R.color.white
+
+    BottomSheet(
+        sheetState = sheetState,
+        showBottomSheet = dialogOpened,
+        sheetColor = backgroundColor,
+        headerText = headerText,
+        descText = decText,
+        textColor = textColor,
+        buttonColor = buttonColor,
+        buttonTextColor = buttonTextColor,
+        iconTint = iconTint,
+        onDismissRequest = { dialogOpened = false },
+        onButtonClick = { // Handle what happens when Next is clicked
+        }
+    )
+
 
     val context = LocalContext.current
 
@@ -58,76 +82,64 @@ fun OtpScreen2(
 //    Scaffold(
 //        content = {paddingValues ->
 
-    Column(
-        modifier = modifier
-//                    .padding(paddingValues)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
+    Scaffold(modifier = Modifier,
+        topBar = {
+            TopBar(modifier = Modifier.fillMaxWidth()){ onBackButtonClicked() }
+        },
+        bottomBar = { NextButtonEnabled(
+            onClick =  onClick,
 
-        DoubleText(
-            mainText = R.string.confirm_security_pin,
-            subText = R.string.confirm_your_4_digit_security_pin_to_proceed
-        )
-
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-        ) {
-            state.code.forEachIndexed { index, number ->
-                OtpInputField(
-                    number = number,
-                    focusRequester = focusRequesters[index],
-                    onFocusChanged = { isFocused ->
-                        if (isFocused) {
-                            onAction(OtpAction.OnChangeFieldFocused(index))
-                        }
-                    },
-                    onNumberChanged = { newNumber ->
-                        onAction(OtpAction.OnEnterNumber(newNumber, index))
-                    },
-                    onKeyboardBack = {
-                        onAction(OtpAction.OnKeyboardBack)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                )
-            }
-        }
-
-        Button(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.cafitech_light_green)
+                .padding(16.dp)) }
+    ) {paddingValues ->
 
-            ),
-            onClick = onClick,
-            shape = RoundedCornerShape(8.dp)
+        Column(
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(stringResource(R.string.next))
-        }
 
-        state.isValid?.let { isValid ->
-            LaunchedEffect(isValid) {
-                dialogOpened = true
-                userPinCreationSuccess = isValid
+            DoubleText(
+                mainText = R.string.confirm_security_pin,
+                subText = R.string.confirm_your_4_digit_security_pin_to_proceed
+            )
+
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            ) {
+                state.code.forEachIndexed { index, number ->
+                    OtpInputField(
+                        number = number,
+                        focusRequester = focusRequesters[index],
+                        onFocusChanged = { isFocused ->
+                            if (isFocused) {
+                                onAction(OtpAction.OnChangeFieldFocused(index))
+                            }
+                        },
+                        onNumberChanged = { newNumber ->
+                            onAction(OtpAction.OnEnterNumber(newNumber, index))
+                        },
+                        onKeyboardBack = {
+                            onAction(OtpAction.OnKeyboardBack)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    )
+                }
             }
 
-            PinCreatedDialog(
-                dialogOpened = dialogOpened,
-                onNextClicked = {
-                    // Handle what happens when Next is clicked
-                },
-                onDialogClosed = {
-                    dialogOpened = false
-                },
-                userPinCreationSuccess = userPinCreationSuccess
-            )
+            state.isValid?.let { isValid ->
+                LaunchedEffect(isValid) {
+                    dialogOpened = true
+                    userPinCreationSuccess = isValid
+                }
+            }
         }
     }
 
