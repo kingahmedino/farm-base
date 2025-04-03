@@ -241,19 +241,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
 
-                    NavHost(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding),
+                    if (getData.finished != null) {
+                        NavHost(
+                            navController = navController,
+                            modifier = Modifier.padding(innerPadding),
 
-                        startDestination = getStartDestination(getData.finished)
+                            startDestination = getStartDestination(getData.finished)
 
-                     //   startDestination = Screen.Auth.route
+                            //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
-                    ) {
-                        farmerNavGraph(navController, innerPadding)
-                    }
+                        ) {
+                            farmerNavGraph(navController, innerPadding)
+                        }
 
-                }
+                    }
+                    }
 
 
             }
@@ -306,7 +308,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun getStartDestination(checkStartDestination: Boolean) : String{
+    fun getStartDestination(checkStartDestination: Boolean?) : String{
+        if (checkStartDestination == null ||  !checkStartDestination) return Screen.Auth.route
 
 //        // true as per completed on boarding
 //        if (checkStartDestination) return Screen.Login.route
@@ -314,7 +317,7 @@ class MainActivity : ComponentActivity() {
 //        // false as per not completed on boarding
 //        else return Screen.Auth.route
 
-        return Screen.Auth.route
+        return Screen.Homepage.route
     }
 
 
