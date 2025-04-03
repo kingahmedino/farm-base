@@ -67,7 +67,9 @@ fun OtpScreen2(
         buttonTextColor = buttonTextColor,
         iconTint = iconTint,
         onDismissRequest = { dialogOpened = false },
-        onButtonClick = { // Handle what happens when Next is clicked
+        onButtonClick = { if(userPinCreationSuccess) {
+            onClick } else {
+                dialogOpened = false }
         }
     )
 
@@ -87,7 +89,7 @@ fun OtpScreen2(
             TopBar(modifier = Modifier.fillMaxWidth()){ onBackButtonClicked() }
         },
         bottomBar = { NextButtonEnabled(
-            onClick =  onClick,
+            onClick = { dialogOpened = true } ,
 
             modifier = Modifier
                 .fillMaxWidth()
@@ -136,7 +138,6 @@ fun OtpScreen2(
 
             state.isValid?.let { isValid ->
                 LaunchedEffect(isValid) {
-                    dialogOpened = true
                     userPinCreationSuccess = isValid
                 }
             }
