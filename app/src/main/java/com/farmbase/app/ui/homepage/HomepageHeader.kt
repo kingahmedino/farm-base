@@ -34,7 +34,7 @@ fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Uni
         Spacer(modifier = Modifier.height(16.dp))
 
         UserInfoCard(
-            image = R.drawable.ic_placeholder_image,
+            image = R.drawable.ic_launcher_foreground,
             userName = "Ahmed Musa",
             userId = "T-1939u9u94",
             userRole = role,
