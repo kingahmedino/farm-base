@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
 import com.farmbase.app.models.ActivityEntity
+import com.farmbase.app.models.Icons
 import com.farmbase.app.models.ProgramConfig
 import com.farmbase.app.models.ProgramData
 import com.farmbase.app.models.RoleEntity
 import com.farmbase.app.repositories.ActivityEntityRepository
+import com.farmbase.app.repositories.IconsRepository
 import com.farmbase.app.repositories.RoleRepository
 import com.farmbase.app.ui.formBuilder.utils.Resource
 import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
@@ -32,7 +34,8 @@ class SelectProgramViewModel @Inject constructor(
     private val programDataUseCase: GetProgramDataByRolesUseCase,
     private val programConfigUseCase: GetProgramConfigByIDUseCase,
     private val roleRepository: RoleRepository,
-    private val activityEntityRepository: ActivityEntityRepository
+    private val activityEntityRepository: ActivityEntityRepository,
+    private val iconsRepository: IconsRepository
 ):ViewModel() {
     private val roles =  listOf("67dc9c05778ca40c93d19200" )
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
@@ -141,10 +144,18 @@ class SelectProgramViewModel @Inject constructor(
                     )
                 }
 
+                val icons = programConfigs.icons.map {
+                    Icons(
+                        iconId = it.iconId,
+                        iconUrl = it.iconUrl
+                    )
+                }
+
                 // delete previous data and insert new one
                 withContext(Dispatchers.IO) {
                     roleRepository.replaceRoles(roles)
                     activityEntityRepository.replaceActivities(activities)
+                    iconsRepository.replaceIcons(icons)
                 }
 
                 // call the success callback after insertion on the main thread
