@@ -3,7 +3,6 @@ package com.farmbase.app.ui.widgets
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +38,8 @@ fun NextButton(
     buttonText: String = stringResource(id = R.string.next),
 ) {
     OutlinedButton(
-        modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        // modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        modifier = modifier.height(dimensionResource(R.dimen.button_height)),
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(
@@ -81,7 +81,8 @@ fun BackButton(
     shouldIconShow: Boolean = true
 ) {
     OutlinedButton(
-        modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        //modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        modifier = modifier.height(dimensionResource(R.dimen.button_height)),
         onClick = onClick,
         colors = ButtonDefaults.outlinedButtonColors(
             // set a consistent yellow background for the back button
@@ -121,7 +122,8 @@ fun NextButtonEnabled(
     iconTint: Int = R.color.white
 ) {
     OutlinedButton(
-        modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        //modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
+        modifier = modifier.height(dimensionResource(R.dimen.button_height)),
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.outlinedButtonColors(

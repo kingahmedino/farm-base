@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
@@ -45,7 +44,8 @@ fun TopBar(modifier: Modifier, onBackClick: () -> Unit) {
     )
     var shouldMenuShow by remember { mutableStateOf(false) }
 
-    Box(modifier = modifier.statusBarsPadding()) {
+    Box(modifier =  modifier //modifier.statusBarsPadding()
+            ) {
         Row(modifier = Modifier.align(Alignment.TopStart), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onBackClick) {
                 Icon(
