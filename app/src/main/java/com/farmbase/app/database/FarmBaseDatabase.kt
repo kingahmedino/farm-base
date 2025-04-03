@@ -1,6 +1,7 @@
 package com.farmbase.app.database
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -27,6 +28,7 @@ import com.farmbase.app.models.SyncMetadata
         SyncMetadata::class,
         RoleEntity::class,
         ActivityEntity::class,
+        Icons::class,
                ],
     version = 1
 )
@@ -41,6 +43,7 @@ abstract class FarmBaseDatabase : RoomDatabase() {
     abstract fun syncMetadataDao(): SyncMetadataDao
     abstract fun roleEntityDao(): RoleEntityDao
     abstract fun activityEntityDao(): ActivityEntityDao
+    abstract fun iconsDao(): IconsDao
 
     companion object {
         @Volatile

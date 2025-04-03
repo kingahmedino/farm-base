@@ -68,6 +68,12 @@ import javax.inject.Inject
 //        setContent {
 //            FarmBaseTheme {
 //
+//                /*val navHostController = rememberNavController()
+//               HomepageNavigation(
+//                       navHostController = navHostController,
+//                        startDestination = "Homepage"
+//                   )*/
+//
 //                val navController = rememberNavController()
 //
 //                //  otpScreen1
@@ -231,7 +237,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
 
-                        startDestination = getStartDestination(getData.finished)
+                        startDestination = Screen.SelectProgram.route
 
                      //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route

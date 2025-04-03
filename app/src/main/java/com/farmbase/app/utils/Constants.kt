@@ -22,4 +22,10 @@ object Constants {
         PORTFOLIO,
         HISTORY
     }
+
+    enum class IconsDownloadStatus {
+        FAILED,
+        SUCCESSFUL,
+        IN_VIEW
+    }
 }

@@ -8,6 +8,7 @@ import com.farmbase.app.database.EquipmentDao
 import com.farmbase.app.database.FarmBaseDatabase
 import com.farmbase.app.database.FarmerDao
 import com.farmbase.app.database.HarvestDao
+import com.farmbase.app.database.IconsDao
 import com.farmbase.app.database.ProjectDao
 import com.farmbase.app.database.StorageDao
 import com.farmbase.app.database.couchbase.DBManager
@@ -17,6 +18,7 @@ import com.farmbase.app.network.ProgramConfigApiService
 import com.farmbase.app.repositories.ActivityEntityRepository
 import com.farmbase.app.repositories.FarmerRepository
 import com.farmbase.app.repositories.FormBuilderRepository
+import com.farmbase.app.repositories.IconsRepository
 import com.farmbase.app.repositories.ProgramConfigRepository
 import com.farmbase.app.repositories.RoleRepository
 import dagger.Module
@@ -144,5 +146,17 @@ object AppModule {
     @Singleton
     fun provideActivityEntityRepository(activityEntityDao: ActivityEntityDao): ActivityEntityRepository {
         return ActivityEntityRepository(activityEntityDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideIconDao(database: FarmBaseDatabase): IconsDao {
+        return database.iconsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideIconRepository(iconDao: IconsDao): IconsRepository {
+        return IconsRepository(iconDao)
     }
 }
