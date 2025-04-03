@@ -27,10 +27,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.farmbase.app.R
 import kotlinx.coroutines.Dispatchers
+import java.io.File
 
 /**
  * A composable function that displays an activity card with an image,
@@ -46,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
  */
 @Composable
 fun ActivityCard(
+    iconFile: File? = null,
     iconUrl: String? = null,
     icon: Int,
     headerText: String,
@@ -54,6 +57,9 @@ fun ActivityCard(
     count: Int = 0,
     onClick: () -> Unit,
 ) {
+    val imageUri = iconFile.takeIf { it?.exists() == true }?.toUri()
+    val data = imageUri ?: iconUrl?: icon
+
     // card container with rounded corners and border color based on selection state
     Card(shape = RoundedCornerShape(10.dp),
         border = BorderStroke(width = 1.dp, color =if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(id = R.color.gray)),
@@ -74,7 +80,7 @@ fun ActivityCard(
                 // loads an image from URL or fallback resource
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(iconUrl ?: icon)
+                        .data(data)
                         .placeholder(icon) // placeholder image while loading
                         .error(icon) // error image if loading fails
                         .dispatcher(Dispatchers.IO) // not sure if this is needed need to test this

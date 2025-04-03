@@ -1,5 +1,7 @@
 package com.farmbase.app.utils
 
+import java.io.File
+
 /**
  * Represents an activity card item used in the UI.
  * Each card contains an identifier, icon, text details, selection status, and an optional count.
@@ -21,4 +23,6 @@ data class ActivityCardItem(
     val isSelected: Boolean = false,
     // optional count value associated with the card
     val count: Int = 0,
+
+    val iconFile: File? = null,
 )

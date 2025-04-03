@@ -84,7 +84,7 @@ class SelectHomepageViewModel @Inject constructor(
      */
     private fun getSortedRoles() {
         viewModelScope.launch {
-            getSortedRolesUseCase.execute(description = context.getString(R.string.my_homepage_desc)).collectLatest { sortedList ->
+            getSortedRolesUseCase.execute(description = context.getString(R.string.my_homepage_desc), context = context).collectLatest { sortedList ->
                 if(sortedList.isNotEmpty()) { _entityList.value = sortedList }
             }
         }

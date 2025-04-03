@@ -1,11 +1,14 @@
 package com.farmbase.app.useCase
 
+import android.content.Context
+import android.os.Environment
 import com.farmbase.app.R
 import com.farmbase.app.repositories.RoleRepository
 import com.farmbase.app.utils.ActivityCardItem
 import com.farmbase.app.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapNotNull
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -19,7 +22,7 @@ class GetSortedRolesUseCase @Inject constructor(
      * Executes the use case to fetch, sort, and map roles to ActivityCardItem.
      * @return Flow of a list of ActivityCardItem sorted by the number of child portfolios.
      */
-    fun execute(description: String?): Flow<List<ActivityCardItem>> {
+    fun execute(description: String?, context: Context): Flow<List<ActivityCardItem>> {
         // fetch roles from the repository as a flow and transform them
         return roleRepository.getAllRoles()
             .mapNotNull { roles ->
@@ -27,13 +30,16 @@ class GetSortedRolesUseCase @Inject constructor(
                 roles.sortedByDescending { role ->
                     role.childPortfolio.split(",").size
                 }.map { role ->
+                    val directory = File(context.getExternalFilesDir( Environment.DIRECTORY_PICTURES), "Icons")
+                    val filePath =  File(directory, "${role.roleId}.jpg")
                     // map each RoleEntity to an ActivityCardItem to be displayed in the UI
                     ActivityCardItem(
                         id = role.roleId,
-                        icon = R.drawable.ic_my_schedule,
+                        icon = R.drawable.ic_my_portfolio,
                         headerText = role.name,
                         descText = description,
-                        activityType = Constants.ActivityType.PORTFOLIO_ACTIVITY
+                        activityType = Constants.ActivityType.PORTFOLIO_ACTIVITY,
+                        iconFile = filePath
                     )
                 }
             }

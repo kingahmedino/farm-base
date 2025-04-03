@@ -98,7 +98,7 @@ class IconDownloadWorker(
         try {
             // get the destination directory (Pictures directory)
             // val picturesDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val picturesDirectory = File(context.getExternalFilesDir( Environment.DIRECTORY_PICTURES), "FarmBase/Icons")
+            val picturesDirectory = File(context.getExternalFilesDir( Environment.DIRECTORY_PICTURES), "Icons")
             val iconFile = File(picturesDirectory, "$filename.jpg")
 
             // check if the directory exists, and create it if it doesn't

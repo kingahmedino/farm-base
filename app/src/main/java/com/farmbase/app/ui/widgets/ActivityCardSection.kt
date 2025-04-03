@@ -34,6 +34,7 @@ fun LazyListScope.activityCardSection(
         key = { it.id }
     ) { item ->
         ActivityCard(
+            iconFile = item.iconFile,
             iconUrl = item.iconUrl,
             icon = item.icon,
             headerText = item.headerText,

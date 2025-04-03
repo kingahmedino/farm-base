@@ -111,7 +111,7 @@ class HomepageViewModel @Inject constructor(
 
     private fun getPortfolioActivityList() {
         viewModelScope.launch {
-            getSortedRolesUseCase.execute(description = null).collectLatest { sortedList ->
+            getSortedRolesUseCase.execute(description = null, context = context).collectLatest { sortedList ->
                 if(sortedList.isNotEmpty()) { _portfolioActivityList.value = sortedList }
             }
         }
@@ -119,7 +119,7 @@ class HomepageViewModel @Inject constructor(
 
     private fun getActivityList() {
         viewModelScope.launch {
-            getUnscheduledActivitiesUseCase.execute().collectLatest { activityList ->
+            getUnscheduledActivitiesUseCase.execute(context = context).collectLatest { activityList ->
                 if(activityList.isNotEmpty()) { _activityList.value = activityList }
             }
         }
