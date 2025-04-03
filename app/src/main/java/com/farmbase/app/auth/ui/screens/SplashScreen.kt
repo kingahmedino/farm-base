@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.farmbase.app.R
 import com.farmbase.app.auth.util.AuthObjects.launchWebsite
+import com.farmbase.app.ui.theme.FredokaFontFamily
+import com.farmbase.app.ui.widgets.NextButtonEnabled
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
@@ -50,24 +53,22 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
 
                 Spacer(modifier = modifier.fillMaxWidth().height(24.dp))
 
-                Text(stringResource(R.string.cafitech), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                Text(stringResource(R.string.ecosystem), fontSize = 32.sp, color = Color.White, modifier = modifier.padding(top = 12.dp), fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.cafitech), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold, fontFamily = FredokaFontFamily)
+                Text(stringResource(R.string.ecosystem), fontSize = 32.sp, color = Color.White, modifier = modifier.padding(top = 12.dp), fontWeight = FontWeight.Bold, fontFamily = FredokaFontFamily)
 
-                Button(
+                Spacer(modifier = modifier.fillMaxWidth().height(48.dp))
+
+                NextButtonEnabled(
                     modifier = modifier.fillMaxWidth()
-                        .padding(top= 48.dp, start = 24.dp, end = 24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.cafitech_light_green)
-
-                    ),
+                        .padding(horizontal = 24.dp),
+                    buttonColor = R.color.cafitech_light_green,
                     onClick = {
                         // do nothing
                         launchWebsite(context = context)
                     },
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(stringResource(R.string.login))
-                }
+                    buttonText = stringResource(R.string.login),
+                    shouldIconShow = false
+                )
             }
 
 //        }

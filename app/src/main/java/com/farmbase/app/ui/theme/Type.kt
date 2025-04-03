@@ -26,6 +26,10 @@ val FeatherFontFamily = FontFamily(
     Font(R.font.feather_bold, FontWeight.Bold)
 )
 
+val FredokaFontFamily = FontFamily(
+    Font(R.font.fredoka_semibold, FontWeight.Bold)
+)
+
 val baseline = Typography()
 
 val Typography = Typography(
