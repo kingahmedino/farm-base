@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ fun DoubleText(
             text = stringResource(mainText),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,  // Align text to the start (left)
+            style = MaterialTheme.typography.labelLarge,
             modifier = Modifier
                 .padding(start = 10.dp, end = 10.dp)
                 .align(Alignment.Start)  // Ensures left alignment
@@ -35,6 +37,7 @@ fun DoubleText(
         Text(
             text = stringResource(subText),
             textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                 .align(Alignment.Start)

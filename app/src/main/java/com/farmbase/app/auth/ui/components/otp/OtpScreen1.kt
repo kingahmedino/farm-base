@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.auth.ui.screens.SplashScreen
+import com.farmbase.app.ui.widgets.NextButton
 
 @Composable
 fun OtpScreen1(
@@ -51,7 +54,7 @@ fun OtpScreen1(
 
             Column(
                 modifier = modifier
-//                    .padding(innerPadding)
+                    .padding(horizontal = 8.dp)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
@@ -65,6 +68,7 @@ fun OtpScreen1(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                 ) {
+                    Spacer(modifier = Modifier.size(8.dp))
                     state.code.forEachIndexed { index, number ->
                         OtpInputField(
                             number = number,
@@ -84,22 +88,17 @@ fun OtpScreen1(
                                 .weight(1f)
                                 .aspectRatio(1f)
                         )
+                        Spacer(modifier = Modifier.size(8.dp))
                     }
                 }
 
-                Button(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.cafitech_light_green)
-
-                    ),
+                NextButton(
                     onClick = onClick,
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(stringResource(R.string.next))
-                }
+                    enabled = state.code.all { it != null },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
 
                 state.isValid?.let { isValid ->
                     LaunchedEffect(isValid) {

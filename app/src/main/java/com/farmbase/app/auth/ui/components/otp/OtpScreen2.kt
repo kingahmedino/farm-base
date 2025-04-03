@@ -1,6 +1,5 @@
 package com.farmbase.app.auth.ui.components.otp
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,11 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,16 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.auth.ui.components.PinCreatedDialog
+import com.farmbase.app.ui.widgets.NextButton
 
 @Composable
 fun OtpScreen2(
@@ -60,7 +51,7 @@ fun OtpScreen2(
 
     Column(
         modifier = modifier
-//                    .padding(paddingValues)
+            .padding(horizontal = 8.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -76,6 +67,7 @@ fun OtpScreen2(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
+            Spacer(modifier = Modifier.size(8.dp))
             state.code.forEachIndexed { index, number ->
                 OtpInputField(
                     number = number,
@@ -95,6 +87,7 @@ fun OtpScreen2(
                         .weight(1f)
                         .aspectRatio(1f)
                 )
+                Spacer(modifier = Modifier.size(8.dp))
             }
 
             state.isValid?.let { isValid ->
@@ -105,9 +98,7 @@ fun OtpScreen2(
 
                 PinCreatedDialog(
                     dialogOpened = dialogOpened,
-                    onNextClicked = {
-                        // Handle what happens when Next is clicked
-                    },
+                    onNextClicked = onClick,
                     onDialogClosed = {
                         dialogOpened = false
                     },
@@ -116,19 +107,13 @@ fun OtpScreen2(
             }
         }
 
-        Button(
-            modifier = modifier
+        NextButton(
+            onClick = {},
+            enabled = state.code.all { it != null },
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.cafitech_light_green)
-
-            ),
-            onClick = onClick,
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(stringResource(R.string.next))
-        }
+                .padding(16.dp)
+        )
     }
 
 //        }

@@ -197,8 +197,8 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                             viewModel.onAction(action)
                         },
                         modifier = Modifier
-                            .padding(innerPadding)
-                            .consumeWindowInsets(innerPadding)
+//                            .padding(innerPadding)
+//                            .consumeWindowInsets(innerPadding)
                     )
 
                     // otp
@@ -312,9 +312,9 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                     }
                     viewModel.onAction(action)
                 },
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding),
+                modifier = Modifier,
+//                    .padding(innerPadding)
+//                    .consumeWindowInsets(innerPadding),
                 viewModel = viewModel
             )
             // otp
