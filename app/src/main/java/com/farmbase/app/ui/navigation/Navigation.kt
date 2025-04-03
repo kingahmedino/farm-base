@@ -1,6 +1,7 @@
 package com.farmbase.app.ui.navigation
 
 import FarmerRegistrationScreen
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,11 +34,13 @@ import com.farmbase.app.auth.ui.components.otp.OtpScreen2
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.models.Farmer
+import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
 import com.farmbase.app.ui.farmerlist.FarmerListScreen
 import com.farmbase.app.ui.formBuilder.FormBuilder
 import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
+import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
 import kotlinx.serialization.encodeToString
@@ -74,6 +77,8 @@ sealed class Screen(val route: String) {
 
 
     data object Login : Screen("login")
+
+    data object ConfirmAction : Screen("confirmActionScreen")
 
     data object SelectProgram : Screen("selectProgram")
 
@@ -293,10 +298,18 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                         value = refreshToken
                     )
 
+                    val programId = SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
+                    Log.d("Program Id", programId.toString())
+
                     // save access and refresh token in encrypted shared prefs
 
                     // navigate
-                    navController.navigate(Screen.SelectProgram.route)
+                    if (programId.isNullOrBlank()) {
+                        navController.navigate(Screen.SelectProgram.route)
+                    } else {
+                        navController.navigate(Screen.ConfirmAction.route)
+                    }
+
 //                    Toast.makeText(context, "$accessToken |||| $refreshToken", Toast.LENGTH_LONG).show()
                 },
 
@@ -331,6 +344,14 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 
     composable(Screen.Login.route) {
 //        SplashScreen(innerPadding = innerPadding)
+    }
+
+    composable(Screen.ConfirmAction.route) {
+        ConfirmActionScreen(
+            onBackButtonClicked = { navController.navigateUp() },
+            onContinueClicked = { navController.navigate(Screen.SelectHomepage.route) },
+            onSelectAnotherClicked = { navController.navigate(Screen.SelectProgram.route) }
+        )
     }
 
     composable(Screen.SelectProgram.route) {

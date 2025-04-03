@@ -35,7 +35,8 @@ import com.farmbase.app.R
 fun NextButton(
     onClick: () -> Unit,
     enabled: Boolean,
-    modifier: Modifier
+    modifier: Modifier,
+    buttonText: String = stringResource(id = R.string.next),
 ) {
     OutlinedButton(
         modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
@@ -52,7 +53,7 @@ fun NextButton(
     ) {
         // display button text correct style ans color based on the buttons state
         Text(
-            text =  stringResource(id = R.string.next),
+            text =  buttonText,
             color = if (enabled) Color.White else colorResource(id = R.color.disabled),
             style = MaterialTheme.typography.labelLarge
         )
@@ -75,7 +76,9 @@ fun NextButton(
 @Composable
 fun BackButton(
     onClick: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    buttonText: String = stringResource(id = R.string.back),
+    shouldIconShow: Boolean = true
 ) {
     OutlinedButton(
         modifier = modifier.navigationBarsPadding().height(dimensionResource(R.dimen.button_height)),
@@ -90,16 +93,18 @@ fun BackButton(
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.corner_radius_standard)),
     ) {
         // display back button icon
-        Icon(
-            painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = null,
-        )
+        if (shouldIconShow) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = null,
+            )
 
-        Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
+        }
 
         // display the button text
         Text(
-            text =  stringResource(id = R.string.back),
+            text =  buttonText,
             style = MaterialTheme.typography.labelLarge
         )
 
