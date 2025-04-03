@@ -34,7 +34,7 @@ fun HomepageDetailScreen(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { HomepageHeader(role, showDialog, onDialogDismiss = { showDialog = false }) }
+        item { HomepageHeader(role, showDialog, onDialogDismiss = { showDialog = false }, onTextClicked = { showDialog = true }) }
 
         sections.forEach { (title, lists) ->
             item { ActivityCardTitle(title = title) }

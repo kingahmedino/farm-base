@@ -15,7 +15,7 @@ import com.farmbase.app.R
 import com.farmbase.app.ui.widgets.ClickableText
 
 @Composable
-fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Unit) {
+fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Unit, onTextClicked: () -> Unit) {
     Column {
         Text(
             text = stringResource(R.string.homepage_name, role),
@@ -25,7 +25,7 @@ fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Uni
         ClickableText(
             text = stringResource(R.string.homepage_desc),
             clickableText = stringResource(R.string.see_more)
-        ) { onDialogDismiss() }
+        ) { onTextClicked() }
 
         if (showDialog) {
             HomepageSeeMoreDialog(onDismissRequest = onDialogDismiss)
