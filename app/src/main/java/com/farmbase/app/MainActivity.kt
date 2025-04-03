@@ -237,9 +237,11 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier.padding(innerPadding),
 
-                        startDestination = Screen.SelectProgram.route
+                        //startDestination = Screen.SelectProgram.route
 
-                     //   startDestination = Screen.Auth.route
+                        startDestination = getStartDestination(getData.finished)
+
+                        //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
                     ) {
                         farmerNavGraph(navController, innerPadding)
