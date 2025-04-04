@@ -37,7 +37,7 @@ class SelectProgramViewModel @Inject constructor(
     private val activityEntityRepository: ActivityEntityRepository,
     private val iconsRepository: IconsRepository
 ):ViewModel() {
-    private val roles =  listOf("67dc9c05778ca40c93d19200" )
+    private val roles =  listOf("67e2a58ae3e8530a0e3acd4d" )
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
     val programData: StateFlow<Resource<List<ProgramData>>> = _programData.asStateFlow()
 
@@ -51,7 +51,7 @@ class SelectProgramViewModel @Inject constructor(
     /** This function fetches the details of available programs
      * and updates the program list state.
      * */
-    private fun fetchProgramDetails() {
+    fun fetchProgramDetails() {
         viewModelScope.launch {
             // set the program data to a loading state while the data is being fetched
             _programData.value = Resource.Loading()

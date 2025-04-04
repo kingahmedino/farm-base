@@ -48,21 +48,20 @@ fun HomepageScreen(
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
 
-    if (showBottomSheet) {
-        BottomSheet(
-            sheetState = sheetState,
-            showBottomSheet = showBottomSheet,
-            sheetColor = colorResource(R.color.light_yellow),
-            headerText = "Work in Progress",
-            descText = "This feature is still been worked on",
-            textColor = colorResource(R.color.black_text),
-            buttonColor = R.color.yellow,
-            buttonTextColor = R.color.black_text,
-            iconTint = R.color.black_text,
-            onDismissRequest = { showBottomSheet = false },
-            onButtonClick = { showBottomSheet = false }
-        )
-    }
+
+    BottomSheet(
+        sheetState = sheetState,
+        showBottomSheet = showBottomSheet,
+        sheetColor = colorResource(R.color.light_yellow),
+        headerText = "Work in Progress",
+        descText = "This feature is still been worked on",
+        textColor = colorResource(R.color.black_text),
+        buttonColor = R.color.yellow,
+        buttonTextColor = R.color.black_text,
+        iconTint = R.color.black_text,
+        onDismissRequest = { showBottomSheet = false },
+        onButtonClick = { showBottomSheet = false }
+    )
 
 
     Scaffold(

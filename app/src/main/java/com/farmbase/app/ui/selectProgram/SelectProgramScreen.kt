@@ -28,7 +28,8 @@ fun SelectProgramScreen(
 
         is Resource.Error -> {
             ErrorScreen(
-                message = "Unable to fetch program information"
+                message = "Unable to fetch program information",
+                onRetryClicked = { viewModel.fetchProgramDetails() }
             )
         }
     }

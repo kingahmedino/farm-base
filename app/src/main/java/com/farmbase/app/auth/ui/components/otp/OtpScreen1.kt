@@ -2,7 +2,6 @@ package com.farmbase.app.auth.ui.components.otp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,11 +60,10 @@ fun OtpScreen1(
             Spacer(modifier = Modifier.height(54.dp))
 
             Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.Center
             ) {
-                Spacer(modifier = Modifier.size(8.dp))
                 state.code.forEachIndexed { index, number ->
                     OtpInputField(
                         number = number,
@@ -82,11 +79,10 @@ fun OtpScreen1(
                         onKeyboardBack = {
                             onAction(OtpAction.OnKeyboardBack)
                         },
-                        modifier = Modifier
+                        modifier = Modifier.padding(8.dp)
                             .weight(1f)
                             .aspectRatio(1f)
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
                 }
             }
 
