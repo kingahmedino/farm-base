@@ -9,12 +9,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -34,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -242,26 +246,50 @@ class MainActivity : ComponentActivity() {
                     snackbarHost = {
                         SnackbarHost(
                             hostState = snackbarHostState
-                        )
+                        ){
+                            Snackbar(
+                                modifier = Modifier.padding(12.dp),
+                                containerColor = MaterialTheme.colorScheme.background,
+                                dismissAction = {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(horizontal = 12.dp)
+                                            .clickable(onClick = {it.dismiss()}),
+                                        text = it.visuals.actionLabel ?: "",
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
+                            ) {
+                                Text(
+                                    text = it.visuals.message,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    style = MaterialTheme.typography.bodyMedium
+
+                                )
+                            }
+                        }
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
 
-                    NavHost(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding),
+                    if (getData.finished != null) {
+                        NavHost(
+                            navController = navController,
+                            modifier = Modifier.padding(innerPadding),
 
-                        //startDestination = Screen.SelectProgram.route
+                            //startDestination = Screen.SelectProgram.route
 
                         startDestination = getStartDestination(getData.finished)
 
                         //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
-                    ) {
-                        farmerNavGraph(navController, innerPadding)
-                    }
+                        ) {
+                            farmerNavGraph(navController, innerPadding)
+                        }
 
-                }
+                    }
+                    }
 
 
             }
@@ -299,7 +327,32 @@ class MainActivity : ComponentActivity() {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            snackbarHost = { SnackbarHost(snackbarHostState) } // Attach SnackbarHost
+            snackbarHost = {
+                // turn to reusable composable later
+                SnackbarHost(snackbarHostState){
+                    Snackbar(
+                        modifier = Modifier.padding(12.dp),
+                        containerColor = MaterialTheme.colorScheme.background,
+                        dismissAction = {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .clickable(onClick = {it.dismiss()}),
+                                text = it.visuals.actionLabel ?: "",
+                                color = MaterialTheme.colorScheme.secondary,
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = it.visuals.message,
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.bodyMedium
+
+                        )
+                    }
+                }
+            } // Attach SnackbarHost
         ) { innerPadding ->
             Box(
                 modifier = Modifier
@@ -314,7 +367,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun getStartDestination(checkStartDestination: Boolean) : String{
+    fun getStartDestination(checkStartDestination: Boolean?) : String{
+        if (checkStartDestination == null ||  !checkStartDestination) return Screen.Auth.route
 
 //        // true as per completed on boarding
 //        if (checkStartDestination) return Screen.Login.route
@@ -322,7 +376,7 @@ class MainActivity : ComponentActivity() {
 //        // false as per not completed on boarding
 //        else return Screen.Auth.route
 
-        return Screen.Auth.route
+        return Screen.Homepage.route
     }
 
 

@@ -20,7 +20,7 @@ class StartDestinationViewModel @Inject constructor(private val startDestination
          startDestinationRepo.getDataStore().stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = StartDestinationModel(false)
+            initialValue = StartDestinationModel(null)
         )
 
 
