@@ -28,16 +28,14 @@ fun DoubleText(
             text = stringResource(mainText),
             style = MaterialTheme.typography.labelLarge,
             textAlign = TextAlign.Start,  // Align text to the start (left)
-            style = MaterialTheme.typography.labelLarge,
             modifier = Modifier
                 .padding(start = 10.dp, end = 10.dp)
                 .align(Alignment.Start)  // Ensures left alignment
         )
         Text(
             text = stringResource(subText),
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Start,
             style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
             modifier = Modifier
                 .padding(top = 10.dp, start = 10.dp, end = 10.dp)
                 .align(Alignment.Start)
