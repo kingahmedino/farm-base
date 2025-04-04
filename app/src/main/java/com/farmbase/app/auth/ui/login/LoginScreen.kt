@@ -1,9 +1,12 @@
 package com.farmbase.app.auth.ui.login
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
@@ -33,126 +38,10 @@ import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpInputField
 import com.farmbase.app.auth.ui.components.otp.OtpState
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
+import com.farmbase.app.auth.util.AuthObjects.launchForgotPasswordWebsite
+import com.farmbase.app.auth.util.AuthObjects.launchWebsite
 import com.farmbase.app.utils.HashHelper
-
-/*@Composable
-fun LoginScreen(
-    innerPadding: PaddingValues,
-    state: OtpState,
-    focusRequesters: List<FocusRequester>,
-    onAction: (OtpAction) -> Unit,
-    modifier: Modifier = Modifier,
-    onClick : () -> Unit,
-    viewModel: OtpViewModel = hiltViewModel()
-) {
-    var dialogOpened by remember { mutableStateOf(false) }
-    var userPinCreationSuccess by remember { mutableStateOf(false) }
-
-//    Scaffold(
-//
-//        content = {
-//            paddingValues ->
-
-    // hashed otp code
-//    viewModel.firstOtpCodeData = state.code.joinToString("")
-
-    val otpCode =
-        state.code.joinToString("") // Convert the list of digits to a string
-
-//       val hashed4DigitCode = HashHelper.sha256(otpCode)
-
-    // viewModel.firstOtpCodeData = otpCode
-//          navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
-    val hashed4DigitCode = HashHelper.sha256(otpCode)
-    viewModel.firstOtpCodeData = hashed4DigitCode
-
-    Column(
-        modifier = modifier
-//                    .padding(innerPadding)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-
-        DoubleText(mainText = R.string.enter_security_pin,
-            subText = R.string.enter_security_pin_subtext)
-
-        Row(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-        ) {
-            state.code.forEachIndexed { index, number ->
-                OtpInputField(
-                    number = number,
-                    focusRequester = focusRequesters[index],
-                    onFocusChanged = { isFocused ->
-                        if (isFocused) {
-                            onAction(OtpAction.OnChangeFieldFocused(index))
-                        }
-                    },
-                    onNumberChanged = { newNumber ->
-                        onAction(OtpAction.OnEnterNumber(newNumber, index))
-                    },
-                    onKeyboardBack = {
-                        onAction(OtpAction.OnKeyboardBack)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                )
-            }
-
-            state.isValid?.let { isValid ->
-                LaunchedEffect(isValid) {
-                    dialogOpened = true
-                    userPinCreationSuccess = isValid
-                }
-
-                PinCreatedDialog(
-                    dialogOpened = dialogOpened,
-                    onNextClicked = {
-                        // Handle what happens when Next is clicked
-                    },
-                    onDialogClosed = {
-                        dialogOpened = false
-                    },
-                    userPinCreationSuccess = userPinCreationSuccess
-                )
-            }
-        }
-
-        Button(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.cafitech_light_green)
-
-            ),
-            onClick = onClick,
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(stringResource(R.string.next))
-        }
-
-        state.isValid?.let { isValid ->
-            LaunchedEffect(isValid) {
-                dialogOpened = true
-                userPinCreationSuccess = isValid
-            }
-        }
-    }
-
-//        }
-//    )
-
-}*/
+import com.farmbase.app.utils.SharedPreferencesManager
 
 @Composable
 fun LoginScreen(
@@ -167,86 +56,105 @@ fun LoginScreen(
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
 
-    val otpCode = state.code.joinToString("") // Convert the list of digits to a string
+    val context = LocalContext.current
 
-    viewModel.firstOtpCodeData = otpCode
+    val savedHashedOtp = SharedPreferencesManager(context).encryptedGet(key = "userOtp")
+//
+    var otpCode = state.code.joinToString("")
+
+    val hashedOtpCde = HashHelper.sha256(otpCode)
+
 
     Column(
         modifier = modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Top Section
+        DoubleText(
+            mainText = R.string.enter_security_pin,
+            subText = R.string.enter_security_pin_subtext
+        )
 
-        DoubleText(mainText = R.string.enter_security_pin,
-            subText = R.string.enter_security_pin_subtext)
 
-        Row(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        // Middle Section
+        Column(
+            modifier = Modifier.padding(top = 100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            state.code.forEachIndexed { index, number ->
-                OtpInputField(
-                    number = number,
-                    focusRequester = focusRequesters[index],
-                    onFocusChanged = { isFocused ->
-                        if (isFocused) {
-                            onAction(OtpAction.OnChangeFieldFocused(index))
-                        }
-                    },
-                    onNumberChanged = { newNumber ->
-                        onAction(OtpAction.OnEnterNumber(newNumber, index))
-                    },
-                    onKeyboardBack = {
-                        onAction(OtpAction.OnKeyboardBack)
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                )
-            }
-
-            // Show Pin Created Dialog if OTP is valid
-            state.isValid?.let { isValid ->
-                LaunchedEffect(isValid) {
-                    dialogOpened = true
-                    userPinCreationSuccess = isValid
+            Row(
+                modifier = Modifier.padding(bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+            ) {
+                state.code.forEachIndexed { index, number ->
+                    OtpInputField(
+                        number = number,
+                        focusRequester = focusRequesters[index],
+                        onFocusChanged = { isFocused ->
+                            if (isFocused) {
+                                onAction(OtpAction.OnChangeFieldFocused(index))
+                            }
+                        },
+                        onNumberChanged = { newNumber ->
+                            onAction(OtpAction.OnEnterNumber(newNumber, index))
+                        },
+                        onKeyboardBack = {
+                            onAction(OtpAction.OnKeyboardBack)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    )
                 }
 
-                PinCreatedDialog(
-                    dialogOpened = dialogOpened,
-                    onNextClicked = {
-                        // Handle what happens when Next is clicked
-                    },
-                    onDialogClosed = {
-                        dialogOpened = false
-                    },
-                    userPinCreationSuccess = userPinCreationSuccess
-                )
+                state.isValid?.let { isValid ->
+
+                    if (hashedOtpCde == savedHashedOtp)
+                    {
+                        Toast.makeText(context, "Yessss", Toast.LENGTH_SHORT).show()
+
+                    }
+                    else {
+                        Toast.makeText(context, "Nooo", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
             }
+
+            Text(
+                text = "Forgot Your Pin?",
+                style = TextStyle(color = Color.Blue),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .clickable {
+//                        launchWebsite(context = context)
+                        launchForgotPasswordWebsite(context = context)
+                    }
+            )
         }
 
+        Spacer(modifier = Modifier.weight(1f)) // Pushes the Button to the bottom
+
+        // Bottom Section
         Button(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp, start = 24.dp, end = 24.dp),
+                .padding(bottom = 24.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.cafitech_light_green)
             ),
-            onClick = onClick,
+            onClick = {
+
+
+            },
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(stringResource(R.string.next))
         }
-
-        state.isValid?.let { isValid ->
-            LaunchedEffect(isValid) {
-                dialogOpened = true
-                userPinCreationSuccess = isValid
-            }
-        }
     }
 }
+
 
 
