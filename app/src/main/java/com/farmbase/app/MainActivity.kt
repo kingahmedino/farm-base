@@ -111,7 +111,7 @@ import javax.inject.Inject
 //    }
 //}
 
-@AndroidEntryPoint
+/*@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
@@ -253,18 +253,13 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
 
                     if (getData.finished != null) {
-
-                        val startDestination = remember(getData.finished) {
-                            getStartDestination(getData.finished)
-                        }
-
                         NavHost(
                             navController = navController,
                             modifier = Modifier.padding(innerPadding),
 
                             //startDestination = Screen.SelectProgram.route
 
-                        startDestination = startDestination
+                        startDestination = getStartDestination(getData.finished)
 
                         //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
@@ -396,6 +391,255 @@ class MainActivity : ComponentActivity() {
 
     // session manager
 
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        sessionManager.onUserInteraction()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sessionManager.startSessionTimer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sessionManager.stopSessionTimer()
+    }
+}*/
+
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sessionManager: SessionManager
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            FarmBaseTheme {
+
+                val context = LocalContext.current
+
+                val viewmodel: StartDestinationViewModel = hiltViewModel()
+                val getData by viewmodel.getData.collectAsStateWithLifecycle()
+
+                // global snack bar
+                val snackbarHostState = remember {
+                    SnackbarHostState()
+                }
+                val scope = rememberCoroutineScope()
+
+                // Collect session timeout event and show Snackbar
+                LaunchedEffect(Unit) {
+                    sessionManager.sessionTimeoutFlow.collect {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "User inactive for 30 seconds",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }
+                }
+
+                ObserveAsEvents(
+                    flow = SnackbarController.events,
+                    snackbarHostState
+                ) { event ->
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+
+                        val result = snackbarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action?.name,
+                            duration = SnackbarDuration.Long
+                        )
+
+                        if (result == SnackbarResult.ActionPerformed) {
+                            event.action?.action?.invoke()
+                        }
+                    }
+                }
+
+                ObserveAsEvents(flow = SnackbarController.dismissEvents, snackbarHostState) {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss() // Dismiss from ViewModel
+                    }
+                }
+
+                // global snack bar
+
+                // CheckInternetConnectivity
+                CheckInternetConnectivity()
+
+                val navController = rememberNavController()
+                val showExitDialog = remember { mutableStateOf(false) }
+
+                // State to track if getStartDestination has been called
+                var startDestination by remember { mutableStateOf<String?>(null) }
+
+                // Call getStartDestination only once
+                if (startDestination == null && getData.finished != null) {
+                    startDestination = getStartDestination(getData.finished)
+                }
+
+                // Back press handler
+                BackHandler {
+                    showExitDialog.value = true
+                }
+
+                // Show exit confirmation dialog
+                if (showExitDialog.value) {
+                    AlertDialog(
+                        onDismissRequest = { showExitDialog.value = false },
+                        title = { Text("Exit App") },
+                        text = { Text("Are you sure you want to close the app?") },
+                        confirmButton = {
+                            TextButton(onClick = { finish() }) {
+                                Text("Yes")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showExitDialog.value = false }) {
+                                Text("No")
+                            }
+                        }
+                    )
+                }
+
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(
+                            hostState = snackbarHostState
+                        ) {
+                            Snackbar(
+                                modifier = Modifier.padding(12.dp),
+                                containerColor = MaterialTheme.colorScheme.background,
+                                dismissAction = {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(horizontal = 12.dp)
+                                            .clickable(onClick = { it.dismiss() }),
+                                        text = it.visuals.actionLabel ?: "",
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                }
+                            ) {
+                                Text(
+                                    text = it.visuals.message,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
+                    if (startDestination != null) {
+                        NavHost(
+                            navController = navController,
+                            modifier = Modifier.padding(innerPadding),
+                            startDestination = startDestination!!
+                        ) {
+                            farmerNavGraph(navController, innerPadding)
+                        }
+
+                        LaunchedEffect(intent) {
+                            intent?.data?.let { uri ->
+                                val status = uri.pathSegments.getOrNull(0) ?: ""
+                                val accessToken = intent.getStringExtra("accessToken") ?: ""
+                                val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+                                val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
+
+                                Log.d("TAG", "status: $status")
+                                Log.d("TAG", "accessToken: $accessToken")
+                                Log.d("TAG", "refreshToken: $refreshToken")
+                                Log.d("TAG", "resetPin: $resetPin")
+
+                                navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
+                                    launchSingleTop = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CheckInternetConnectivity(
+        connectivityViewModel: ConnectivityViewModel = hiltViewModel(),
+        snackBarViewModel: SnackBarViewModel = hiltViewModel()
+    ) {
+        val isConnected by connectivityViewModel.isConnected.collectAsStateWithLifecycle()
+        val context = LocalContext.current
+        val snackbarHostState = remember { SnackbarHostState() }
+        val coroutineScope = rememberCoroutineScope()
+        var initialConnectionState by remember { mutableStateOf(true) } // Track initial state
+
+        LaunchedEffect(isConnected) {
+            if (!isConnected && !initialConnectionState) { // Only show if not connected AND not initial
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "No Internet Connection",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                snackBarViewModel.showSnackbar()
+            }
+            initialConnectionState = false // Update initial state after first composition
+        }
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = {
+                // turn to reusable composable later
+                SnackbarHost(snackbarHostState) {
+                    Snackbar(
+                        modifier = Modifier.padding(12.dp),
+                        containerColor = MaterialTheme.colorScheme.background,
+                        dismissAction = {
+                            Text(
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .clickable(onClick = { it.dismiss() }),
+                                text = it.visuals.actionLabel ?: "",
+                                color = MaterialTheme.colorScheme.secondary,
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = it.visuals.message,
+                            color = MaterialTheme.colorScheme.secondary,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            } // Attach SnackbarHost
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Connected? $isConnected"
+                )
+            }
+        }
+    }
+
+    fun getStartDestination(checkStartDestination: Boolean?): String {
+        return if (checkStartDestination == null || !checkStartDestination) Screen.Auth.route
+        else Screen.Login.route
+    }
+
+    // session manager
     override fun onUserInteraction() {
         super.onUserInteraction()
         sessionManager.onUserInteraction()
