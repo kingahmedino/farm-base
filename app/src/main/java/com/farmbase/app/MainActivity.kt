@@ -373,8 +373,8 @@ class MainActivity : ComponentActivity() {
 
     fun getStartDestination(checkStartDestination: Boolean?) : String {
         if (checkStartDestination == null ||  !checkStartDestination) return Screen.Auth.route
-
-         else return Screen.Login.route
+//
+//         else return Screen.Login.route
 
 
 //        // true as per completed on boarding
@@ -383,7 +383,8 @@ class MainActivity : ComponentActivity() {
 //        // false as per not completed on boarding
 //        else return Screen.Auth.route
 
-        return Screen.ConfirmAction.route
+        return Screen.Auth.route
+//        return Screen.ConfirmAction.route
     }
 
 

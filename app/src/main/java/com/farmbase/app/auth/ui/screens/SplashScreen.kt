@@ -39,44 +39,65 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
 
 //    Scaffold (
 //        content = {
-         //   paddingValues ->
+    //   paddingValues ->
 
-            Column(modifier = modifier
-                //.padding(paddingValues)
+    Column(
+        modifier = modifier
+            //.padding(paddingValues)
 //                .padding(innerPadding)
-                .fillMaxSize()
-                .background(
+            .fillMaxSize()
+            .background(
                 colorResource(R.color.cafitech_dark_green)
-            ), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-                Image(painter = painterResource(R.drawable.group_4), contentDescription = "null")
+        Image(painter = painterResource(R.drawable.group_4), contentDescription = "null")
 
-                Spacer(modifier = modifier.fillMaxWidth().height(24.dp))
+        Spacer(modifier = modifier
+            .fillMaxWidth()
+            .height(24.dp))
 
-                Text(stringResource(R.string.cafitech), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold, fontFamily = FredokaFontFamily)
-                Text(stringResource(R.string.ecosystem), fontSize = 32.sp, color = Color.White, modifier = modifier.padding(top = 12.dp), fontWeight = FontWeight.Bold, fontFamily = FredokaFontFamily)
+        Text(
+            stringResource(R.string.cafitech),
+            fontSize = 32.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FredokaFontFamily
+        )
+        Text(
+            stringResource(R.string.ecosystem),
+            fontSize = 32.sp,
+            color = Color.White,
+            modifier = modifier.padding(top = 12.dp),
+            fontWeight = FontWeight.Bold,
+            fontFamily = FredokaFontFamily
+        )
 
-                Spacer(modifier = modifier.fillMaxWidth().height(48.dp))
+        Spacer(modifier = modifier
+            .fillMaxWidth()
+            .height(48.dp))
 
-                NextButtonEnabled(
-                    modifier = modifier.fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    buttonColor = R.color.cafitech_light_green,
-                    onClick = {
-                        // do nothing
-                        launchWebsite(context = context)
-                    },
-                    buttonText = stringResource(R.string.login),
-                    shouldIconShow = false
-                )
-            }
+        NextButtonEnabled(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            buttonColor = R.color.cafitech_light_green,
+            onClick = {
+                // do nothing
+                launchWebsite(context = context)
+            },
+            buttonText = stringResource(R.string.login),
+            shouldIconShow = false
+        )
+    }
 
 //        }
 //    )
 
 
 }
-
 
 
 @Composable
