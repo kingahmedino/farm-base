@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -54,7 +55,9 @@ import com.farmbase.app.ui.navigation.Screen
 import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import com.farmbase.app.ui.theme.PLCodingGray
+import com.farmbase.app.utils.SharedPreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -192,7 +195,9 @@ class MainActivity : ComponentActivity() {
                         val status = uri.pathSegments.getOrNull(0) ?: ""
                         val accessToken = intent.getStringExtra("accessToken") ?: ""
                         val refreshToken = intent.getStringExtra("refreshToken") ?: ""
-                        val resetPin = intent.getBooleanExtra("resetPin", false)
+                        // val resetPin = intent.getBooleanExtra("resetPin", false)
+                        val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
+
 
                         Log.d("TAG", "status: $status")
                         Log.d("TAG", "accessToken: $accessToken")
@@ -309,12 +314,13 @@ class MainActivity : ComponentActivity() {
     fun getStartDestination(checkStartDestination: Boolean) : String{
 
 //        // true as per completed on boarding
-//        if (checkStartDestination) return Screen.Login.route
+//        if (checkStartDestination) return Scrabeen.Login.route
 //
 //        // false as per not completed on boarding
 //        else return Screen.Auth.route
 
-        return Screen.Auth.route
+//      return Screen.Auth.route
+        return Screen.Login.route
     }
 
 

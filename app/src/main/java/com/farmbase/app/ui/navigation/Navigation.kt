@@ -161,6 +161,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 //                    Text(text = "Status: $status")
 //                    Text(text = "Access Token: $accessToken")
 //                    Text(text = "Refresh Token: $refreshToken")
+//                    Text(text = "resetPin: $resetPin")
 
 
                     OtpScreen1(
@@ -273,11 +274,16 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                     startDestinationViewModel.saveData(setStartDestinationModel)
                     // set start destination
 
+                    val userOtp = state.code.joinToString("")
+
+                    val hashedUserOtp = HashHelper.sha256(userOtp)
+
+
                     // save access and refresh token in encrypted shared prefs
 
                     SharedPreferencesManager(context).encryptedPut(
-                        key = "user4digitToken",
-                        value = otpCode
+                        key = "userOtp",
+                        value = hashedUserOtp
                     )
 
                     SharedPreferencesManager(context).encryptedPut(
@@ -401,7 +407,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     }
 
     composable(Screen.Homepage.route) {
-//        SplashScreen(innerPadding = innerPadding)
+
     }
 
     composable(Screen.FarmerList.route) {
