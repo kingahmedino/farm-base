@@ -177,7 +177,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 
 
                     OtpScreen1(
-                        innerPadding = innerPadding,
                         onClick = {
 //                    viewModel.firstOtpCodeData = state.code.toString()
 //                    navController.navigate(Screen.OtpScreen2.route)
@@ -209,9 +208,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                             }
                             viewModel.onAction(action)
                         },
-                        modifier = Modifier
-//                            .padding(innerPadding)
-//                            .consumeWindowInsets(innerPadding)
                     )
 
                     // otp
@@ -333,9 +329,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                     }
                     viewModel.onAction(action)
                 },
-                modifier = Modifier,
-//                    .padding(innerPadding)
-//                    .consumeWindowInsets(innerPadding),
                 viewModel = viewModel,
                 onBackButtonClicked = { navController.popBackStack() }
             )

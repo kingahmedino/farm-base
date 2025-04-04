@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +40,6 @@ fun OtpScreen2(
     otpCode: String,
     focusRequesters: List<FocusRequester>,
     onAction: (OtpAction) -> Unit,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onBackButtonClicked: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel()
@@ -96,12 +96,11 @@ fun OtpScreen2(
     ) {paddingValues ->
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(paddingValues)
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             DoubleText(
@@ -109,8 +108,10 @@ fun OtpScreen2(
                 subText = R.string.confirm_your_4_digit_security_pin_to_proceed
             )
 
+            Spacer(modifier = Modifier.height(40.dp))
+
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
@@ -144,14 +145,6 @@ fun OtpScreen2(
             }
         }
     }
-
-        NextButton(
-            onClick = {},
-            enabled = state.code.all { it != null },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
 }
 
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -29,11 +30,9 @@ import com.farmbase.app.ui.widgets.TopBar
 
 @Composable
 fun OtpScreen1(
-    innerPadding: PaddingValues,
     state: OtpState,
     focusRequesters: List<FocusRequester>,
     onAction: (OtpAction) -> Unit,
-    modifier: Modifier = Modifier,
     onClick : () -> Unit
 ) {
     var dialogOpened by remember { mutableStateOf(false) }
@@ -44,25 +43,26 @@ fun OtpScreen1(
             TopBar(modifier = Modifier.fillMaxWidth()){ }
         },
         bottomBar = { NextButton(
-            onClick = { onClick } ,
+            onClick = { onClick() } ,
             enabled = state.code.all { it != null },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)) }) {
+                .padding(16.dp)) }
+    ) {paddingValues ->
 
         Column(
-            modifier = modifier
-                .padding(horizontal = 8.dp)
+            modifier = Modifier.padding(paddingValues)
+                .padding(horizontal = 40.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             DoubleText(mainText = R.string.welcome_user_create_your_security_pin,
                 subText = R.string.create_your_4_digit_security_pin_to_proceed)
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
+                modifier = Modifier.padding(horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
