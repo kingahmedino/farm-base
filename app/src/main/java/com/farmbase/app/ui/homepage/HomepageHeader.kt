@@ -8,14 +8,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.farmbase.app.R
 import com.farmbase.app.ui.widgets.ClickableText
+import com.farmbase.app.utils.Functions
+import com.farmbase.app.utils.SharedPreferencesManager
 
 @Composable
 fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Unit, onTextClicked: () -> Unit) {
+    val accessToken = SharedPreferencesManager(LocalContext.current).encryptedGet("accessToken")
+    val userInfo = accessToken?.let { Functions.decodeTokenPayload(it) }
     Column {
         Text(
             text = stringResource(R.string.homepage_name, role),
@@ -35,10 +40,9 @@ fun HomepageHeader(role: String, showDialog: Boolean, onDialogDismiss: () -> Uni
 
         UserInfoCard(
             image = R.drawable.ic_launcher_foreground,
-            userName = "Ahmed Musa",
-            userId = "T-1939u9u94",
-            userRole = role,
-            rfCount = 15
+            userName = "${userInfo?.firstName?:""} ${userInfo?.lastName?:" "}",
+            userId = userInfo?.roleIds?.firstOrNull()?:"",
+            userRole = userInfo?.roles?.firstOrNull()?:"",
         )
 
         Spacer(modifier = Modifier.height(16.dp))
