@@ -1,6 +1,7 @@
 package com.farmbase.app.ui.selectProgram
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.farmbase.app.R
@@ -38,7 +39,7 @@ class SelectProgramViewModel @Inject constructor(
     private val activityEntityRepository: ActivityEntityRepository,
     private val iconsRepository: IconsRepository
 ):ViewModel() {
-    private val roles =  listOf("67e2a58ae3e8530a0e3acd4d" )
+    private var roles = emptyList<String>()
     private val _programData = MutableStateFlow<Resource<List<ProgramData>>>(Resource.Loading())
     val programData: StateFlow<Resource<List<ProgramData>>> = _programData.asStateFlow()
 
@@ -54,6 +55,10 @@ class SelectProgramViewModel @Inject constructor(
      * */
     fun fetchProgramDetails() {
         viewModelScope.launch {
+            val accessToken = SharedPreferencesManager(context).encryptedGet("accessToken")
+            roles = accessToken?.let { Functions.decodeTokenPayload(it) }?.roleIds?: emptyList()
+            Log.d("roles", "$roles")
+
             // set the program data to a loading state while the data is being fetched
             _programData.value = Resource.Loading()
 
@@ -168,10 +173,8 @@ class SelectProgramViewModel @Inject constructor(
     }
 
     private fun saveSelectedRoleId(roleList: List<RoleEntity>) {
-        val accessToken = SharedPreferencesManager(context).encryptedGet("accessToken")
-        val roles = accessToken?.let { Functions.decodeTokenPayload(it) }?.roles?: emptyList()
-
-        val roleId = roleList.firstOrNull{it.roleId in roles}?.roleId
+         val roleId = roleList.firstOrNull{it.roleId in roles}?.roleId
+        Log.d("roles", "$roles $roleId")
 
         if (roleId != null) {
             SharedPreferencesManager(context).encryptedPut(Constants.SELECTED_ROLE_ID, roleId)

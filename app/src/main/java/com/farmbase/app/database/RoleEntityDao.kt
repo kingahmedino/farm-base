@@ -13,8 +13,11 @@ interface RoleEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRoles(roles: List<RoleEntity>)
 
-    @Query("Select * from roles")
-    fun selectAllRoles(): Flow<List<RoleEntity>>
+    @Query("Select childPortfolio from roles where roleId = :roleId")
+    fun getChildPortfolioData(roleId: String): Flow<String>
+
+    @Query("Select * from roles where roleId in (:roles)")
+    fun getRolesById(roles: List<String>): Flow<List<RoleEntity>>
 
     @Query("Delete from roles")
     suspend fun deleteRoleRecords()

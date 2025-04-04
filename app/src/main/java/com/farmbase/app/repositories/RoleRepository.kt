@@ -11,8 +11,12 @@ class RoleRepository(
         roleDao.insertRoles(roles)
     }
 
-    fun getAllRoles(): Flow<List<RoleEntity>> {
-        return roleDao.selectAllRoles()
+    fun getChildPortfolioData(roleId: String): Flow<String>{
+        return roleDao.getChildPortfolioData(roleId)
+    }
+
+    fun getRolesById(roles: List<String>): Flow<List<RoleEntity>> {
+        return roleDao.getRolesById(roles)
     }
 
     suspend fun replaceRoles(roles: List<RoleEntity>){
