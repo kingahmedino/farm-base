@@ -24,7 +24,7 @@ class StartDestinationRepo(private val context: Context) : StartDestinationInter
 
     override suspend fun saveDataStore(startDestinationModel: StartDestinationModel) {
         context.datastore.edit { DS2s ->
-            DS2s[FINISHED] = startDestinationModel.finished
+            DS2s[FINISHED] = startDestinationModel.finished ?: false
 
         }
     }
