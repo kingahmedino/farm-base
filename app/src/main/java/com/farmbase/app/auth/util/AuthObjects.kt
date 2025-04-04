@@ -10,15 +10,15 @@ import com.farmbase.app.R
 
 object AuthObjects {
 
-    fun launchWebsite(context: Context){
-//        val URL = "https://iam-service-frontend-v25.agric-os.com/"
-     //   val URL = "https://iam-service-frontend-v25.agric-os.com?mobile_redirect_uri=intent://deeplink/success#Intent;scheme=yourapp;package=com.farmbase.app"
-        val URL = "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app"
+    fun launchWebsite(context: Context) {
+        val URL =
+            "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app"
 
         val customizeChromeIntent = CustomTabsIntent.Builder()
             // set Color of the Toolbar
             .setDefaultColorSchemeParams(
-                CustomTabColorSchemeParams.Builder().setToolbarColor(ContextCompat.getColor(context, R.color.cafitech_light_green))
+                CustomTabColorSchemeParams.Builder()
+                    .setToolbarColor(ContextCompat.getColor(context, R.color.cafitech_light_green))
                     .build()
             )
             // set Dark mode theme
@@ -33,6 +33,33 @@ object AuthObjects {
             .setShowTitle(true)
             .build()
 
-            customizeChromeIntent.launchUrl(context, Uri.parse(URL))
+        customizeChromeIntent.launchUrl(context, Uri.parse(URL))
+    }
+
+
+    fun launchForgotPasswordWebsite(context: Context) {
+        val URL =
+            "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app&reason=resetPin"
+
+        val customizeChromeIntent = CustomTabsIntent.Builder()
+            // set Color of the Toolbar
+            .setDefaultColorSchemeParams(
+                CustomTabColorSchemeParams.Builder()
+                    .setToolbarColor(ContextCompat.getColor(context, R.color.cafitech_light_green))
+                    .build()
+            )
+            // set Dark mode theme
+            .setColorSchemeParams(
+                CustomTabsIntent.COLOR_SCHEME_DARK, CustomTabColorSchemeParams.Builder()
+                    .setToolbarColor(ContextCompat.getColor(context, R.color.cafitech_dark_green))
+                    .build()
+            )
+            // Auto Hide App Bar
+            .setUrlBarHidingEnabled(true)
+            // Show Title
+            .setShowTitle(true)
+            .build()
+
+        customizeChromeIntent.launchUrl(context, Uri.parse(URL))
     }
 }
