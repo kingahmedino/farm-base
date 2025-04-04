@@ -17,6 +17,7 @@ import com.farmbase.app.useCase.GetProgramConfigByIDUseCase
 import com.farmbase.app.useCase.GetProgramDataByRolesUseCase
 import com.farmbase.app.utils.ActivityCardItem
 import com.farmbase.app.utils.Constants
+import com.farmbase.app.utils.Functions
 import com.farmbase.app.utils.SharedPreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -128,6 +129,8 @@ class SelectProgramViewModel @Inject constructor(
                     )
                 }
 
+                saveSelectedRoleId(roles)
+
                 val activities = programConfigs.activities.map {
                     ActivityEntity(
                         activityId = it.activityId,
@@ -164,4 +167,15 @@ class SelectProgramViewModel @Inject constructor(
         }
     }
 
+    private fun saveSelectedRoleId(roleList: List<RoleEntity>) {
+        val accessToken = SharedPreferencesManager(context).encryptedGet("accessToken")
+        val roles = accessToken?.let { Functions.decodeTokenPayload(it) }?.roles?: emptyList()
+
+        val roleId = roleList.firstOrNull{it.roleId in roles}?.roleId
+
+        if (roleId != null) {
+            SharedPreferencesManager(context).encryptedPut(Constants.SELECTED_ROLE_ID, roleId)
+        }
+
+    }
 }
