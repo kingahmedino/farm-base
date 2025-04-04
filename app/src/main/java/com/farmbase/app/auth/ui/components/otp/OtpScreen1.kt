@@ -52,14 +52,14 @@ fun OtpScreen1(
 
         Column(
             modifier = Modifier.padding(paddingValues)
-                .padding(horizontal = 40.dp)
+                .padding(horizontal = 16.dp)
                 .fillMaxSize(),
         ) {
 
             DoubleText(mainText = R.string.welcome_user_create_your_security_pin,
                 subText = R.string.create_your_4_digit_security_pin_to_proceed)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(54.dp))
 
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
