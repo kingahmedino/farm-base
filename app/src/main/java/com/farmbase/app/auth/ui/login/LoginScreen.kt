@@ -145,10 +145,7 @@ fun LoginScreen(
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.cafitech_light_green)
             ),
-            onClick = {
-
-
-            },
+            onClick = onClick,
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(stringResource(R.string.next))

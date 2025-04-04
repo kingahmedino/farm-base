@@ -349,6 +349,8 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     composable(Screen.Login.route) {
 //        SplashScreen(innerPadding = innerPadding)
 
+        val context = LocalContext.current
+
         // otp
         val viewModel: OtpViewModel = hiltViewModel() // Retain ViewModel
 
@@ -394,6 +396,18 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                 // viewModel.firstOtpCodeData = otpCode
 //                            navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
                 val hashed4DigitCode = HashHelper.sha256(otpCode)
+
+                val programId = SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
+                Log.d("Program Id", programId.toString())
+
+                // save access and refresh token in encrypted shared prefs
+
+                // navigate
+                if (programId.isNullOrBlank()) {
+                    navController.navigate(Screen.SelectProgram.route)
+                } else {
+                    navController.navigate(Screen.ConfirmAction.route)
+                }
 
             },
 
