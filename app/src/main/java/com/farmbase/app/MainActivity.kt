@@ -196,27 +196,6 @@ class MainActivity : ComponentActivity() {
 //                    }
 //                }
 
-                LaunchedEffect(intent) {
-                    intent?.data?.let { uri ->
-
-                        val status = uri.pathSegments.getOrNull(0) ?: ""
-                        val accessToken = intent.getStringExtra("accessToken") ?: ""
-                        val refreshToken = intent.getStringExtra("refreshToken") ?: ""
-                        val resetPin = intent.getBooleanExtra("resetPin", false)
-
-                        Log.d("TAG", "status: $status")
-                        Log.d("TAG", "accessToken: $accessToken")
-                        Log.d("TAG", "refreshToken: $refreshToken")
-                        Log.d("TAG", "resetPin: $resetPin")
-
-                        navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
-                            // Remove the popUpTo call, or replace it with a valid route
-                            // popUpTo("home") { inclusive = true }
-                            launchSingleTop = true;
-                        }
-
-                    }
-                }
 
                 // Back press handler
                 BackHandler {
@@ -288,7 +267,32 @@ class MainActivity : ComponentActivity() {
                             farmerNavGraph(navController, innerPadding)
                         }
 
+                        LaunchedEffect(intent) {
+                            intent?.data?.let { uri ->
+
+                                val status = uri.pathSegments.getOrNull(0) ?: ""
+                                val accessToken = intent.getStringExtra("accessToken") ?: ""
+                                val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+                                // val resetPin = intent.getBooleanExtra("resetPin", false)
+                                val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
+
+                                Log.d("TAG", "status: $status")
+                                Log.d("TAG", "accessToken: $accessToken")
+                                Log.d("TAG", "refreshToken: $refreshToken")
+                                Log.d("TAG", "resetPin: $resetPin")
+
+                                navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
+                                    // Remove the popUpTo call, or replace it with a valid route
+                                    // popUpTo("home") { inclusive = true }
+                                    launchSingleTop = true;
+                                }
+
+                            }
+                        }
+
                     }
+
+
                     }
 
 
@@ -367,8 +371,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun getStartDestination(checkStartDestination: Boolean?) : String{
+    fun getStartDestination(checkStartDestination: Boolean?) : String {
         if (checkStartDestination == null ||  !checkStartDestination) return Screen.Auth.route
+
+         else return Screen.Login.route
+
 
 //        // true as per completed on boarding
 //        if (checkStartDestination) return Screen.Login.route
