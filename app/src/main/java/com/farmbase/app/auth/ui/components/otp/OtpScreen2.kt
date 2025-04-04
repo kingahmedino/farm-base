@@ -108,7 +108,7 @@ fun OtpScreen2(
                 subText = R.string.confirm_your_4_digit_security_pin_to_proceed
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(54.dp))
 
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
