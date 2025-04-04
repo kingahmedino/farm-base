@@ -31,8 +31,6 @@ import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.ui.widgets.BottomSheet
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
-import com.farmbase.app.auth.ui.components.PinCreatedDialog
-import com.farmbase.app.ui.widgets.NextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,6 +97,7 @@ fun OtpScreen2(
 
         Column(
             modifier = modifier
+                .padding(paddingValues)
                 .padding(horizontal = 8.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,10 +152,8 @@ fun OtpScreen2(
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-    }
-
-//        }
-//    )
-
-
 }
+
+
+
+

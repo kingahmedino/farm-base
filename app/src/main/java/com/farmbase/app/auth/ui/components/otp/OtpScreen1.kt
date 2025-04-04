@@ -10,11 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,16 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
-import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.ui.widgets.NextButton
+import com.farmbase.app.ui.widgets.TopBar
 
 @Composable
 fun OtpScreen1(
@@ -47,69 +39,66 @@ fun OtpScreen1(
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
 
-//    Scaffold(
-//
-//        content = {
-//            paddingValues ->
+    Scaffold(modifier = Modifier,
+        topBar = {
+            TopBar(modifier = Modifier.fillMaxWidth()){ }
+        },
+        bottomBar = { NextButton(
+            onClick = { onClick } ,
+            enabled = state.code.all { it != null },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) }) {
 
-            Column(
-                modifier = modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            DoubleText(mainText = R.string.welcome_user_create_your_security_pin,
+                subText = R.string.create_your_4_digit_security_pin_to_proceed)
+
+            Row(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
-
-                DoubleText(mainText = R.string.welcome_user_create_your_security_pin,
-                    subText = R.string.create_your_4_digit_security_pin_to_proceed)
-
-                Row(
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 250.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-                ) {
+                Spacer(modifier = Modifier.size(8.dp))
+                state.code.forEachIndexed { index, number ->
+                    OtpInputField(
+                        number = number,
+                        focusRequester = focusRequesters[index],
+                        onFocusChanged = { isFocused ->
+                            if (isFocused) {
+                                onAction(OtpAction.OnChangeFieldFocused(index))
+                            }
+                        },
+                        onNumberChanged = { newNumber ->
+                            onAction(OtpAction.OnEnterNumber(newNumber, index))
+                        },
+                        onKeyboardBack = {
+                            onAction(OtpAction.OnKeyboardBack)
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                    )
                     Spacer(modifier = Modifier.size(8.dp))
-                    state.code.forEachIndexed { index, number ->
-                        OtpInputField(
-                            number = number,
-                            focusRequester = focusRequesters[index],
-                            onFocusChanged = { isFocused ->
-                                if (isFocused) {
-                                    onAction(OtpAction.OnChangeFieldFocused(index))
-                                }
-                            },
-                            onNumberChanged = { newNumber ->
-                                onAction(OtpAction.OnEnterNumber(newNumber, index))
-                            },
-                            onKeyboardBack = {
-                                onAction(OtpAction.OnKeyboardBack)
-                            },
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f)
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                    }
-                }
-
-                NextButton(
-                    onClick = onClick,
-                    enabled = state.code.all { it != null },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-
-                state.isValid?.let { isValid ->
-                    LaunchedEffect(isValid) {
-                        dialogOpened = true
-                        userPinCreationSuccess = isValid
-                    }
                 }
             }
 
-//        }
-//    )
+            state.isValid?.let { isValid ->
+                LaunchedEffect(isValid) {
+                    dialogOpened = true
+                    userPinCreationSuccess = isValid
+                }
+            }
+        }
+
+    }
 
 }
 
