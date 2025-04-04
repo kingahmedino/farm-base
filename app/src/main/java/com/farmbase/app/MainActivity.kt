@@ -376,7 +376,7 @@ class MainActivity : ComponentActivity() {
 //        // false as per not completed on boarding
 //        else return Screen.Auth.route
 
-        return Screen.Homepage.route
+        return Screen.ConfirmAction.route
     }
 
 
