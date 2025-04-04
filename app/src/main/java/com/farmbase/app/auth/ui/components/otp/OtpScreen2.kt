@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -22,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -73,8 +71,6 @@ fun OtpScreen2(
     )
 
 
-    val context = LocalContext.current
-
     // hashed otp code
     viewModel.firstOtpCodeData = otpCode
 
@@ -100,7 +96,6 @@ fun OtpScreen2(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
             DoubleText(
@@ -111,11 +106,10 @@ fun OtpScreen2(
             Spacer(modifier = Modifier.height(54.dp))
 
             Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.Center
             ) {
-                Spacer(modifier = Modifier.size(8.dp))
                 state.code.forEachIndexed { index, number ->
                     OtpInputField(
                         number = number,
@@ -131,7 +125,7 @@ fun OtpScreen2(
                         onKeyboardBack = {
                             onAction(OtpAction.OnKeyboardBack)
                         },
-                        modifier = Modifier
+                        modifier = Modifier.padding(8.dp)
                             .weight(1f)
                             .aspectRatio(1f)
                     )
