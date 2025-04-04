@@ -46,5 +46,8 @@
     <string name="select_another">Select Another</string>
     <string name="continue_">Continue</string>
 
+    <string name="enter_security_pin">Enter Security Pin</string>
+    <string name="enter_security_pin_subtext">Enter Your Security Pin To Proceed.</string>
+
 
 </resources>

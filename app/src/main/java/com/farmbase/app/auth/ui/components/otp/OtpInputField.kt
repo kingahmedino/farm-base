@@ -65,10 +65,11 @@ fun OtpInputField(
 
     Box(
         modifier = modifier
+            .size(60.dp)
             .border(
                 width = 1.dp,
                 color = colorResource(R.color.hyper_text_link),
-                shape = RoundedCornerShape(12.dp) // Rounded corners
+                shape = RoundedCornerShape(8.dp) // Rounded corners
             ),
         contentAlignment = Alignment.Center // Ensures child components are centered
     )
@@ -85,15 +86,15 @@ fun OtpInputField(
             singleLine = true,
             textStyle = TextStyle(
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Light,
-                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                fontSize = 28.sp,
                 color = Color.Black
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword
             ),
             modifier = Modifier
-                .padding(10.dp)
+                .padding(4.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged {
                     isFocused = it.isFocused
@@ -125,7 +126,7 @@ fun OtpInputField(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun OtpInputFieldPreview() {
     FarmBaseTheme {
@@ -136,7 +137,7 @@ private fun OtpInputFieldPreview() {
             onKeyboardBack = {},
             onNumberChanged = {},
             modifier = Modifier
-                .size(100.dp)
+                .size(60.dp)
         )
     }
 }

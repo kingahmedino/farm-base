@@ -43,7 +43,7 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
 
             Column(modifier = modifier
                 //.padding(paddingValues)
-                .padding(innerPadding)
+//                .padding(innerPadding)
                 .fillMaxSize()
                 .background(
                 colorResource(R.color.cafitech_dark_green)

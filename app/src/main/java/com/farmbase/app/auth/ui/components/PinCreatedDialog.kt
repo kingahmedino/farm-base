@@ -260,7 +260,7 @@ fun PinCreatedDialog(
 @Composable
 fun PinCreatedDialog(
     dialogOpened: Boolean,
-    onNextClicked: () -> Unit,
+    onNextClicked: (Boolean) -> Unit,
     onDialogClosed: () -> Unit,
     userPinCreationSuccess: Boolean
 ) {
@@ -316,7 +316,7 @@ fun PinCreatedDialog(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            onNextClicked()
+                            onNextClicked(userPinCreationSuccess)
                             onDialogClosed()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = colors.button),

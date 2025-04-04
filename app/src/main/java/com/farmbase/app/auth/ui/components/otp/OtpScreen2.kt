@@ -3,10 +3,12 @@ package com.farmbase.app.auth.ui.components.otp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -29,6 +31,8 @@ import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.ui.widgets.BottomSheet
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
+import com.farmbase.app.auth.ui.components.PinCreatedDialog
+import com.farmbase.app.ui.widgets.NextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,7 +99,7 @@ fun OtpScreen2(
 
         Column(
             modifier = modifier
-                .padding(paddingValues)
+                .padding(horizontal = 8.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
@@ -111,6 +115,7 @@ fun OtpScreen2(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
             ) {
+                Spacer(modifier = Modifier.size(8.dp))
                 state.code.forEachIndexed { index, number ->
                     OtpInputField(
                         number = number,
@@ -139,6 +144,15 @@ fun OtpScreen2(
                 }
             }
         }
+    }
+
+        NextButton(
+            onClick = {},
+            enabled = state.code.all { it != null },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
     }
 
 //        }
