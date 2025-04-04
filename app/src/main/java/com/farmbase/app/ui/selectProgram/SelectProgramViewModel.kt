@@ -51,7 +51,7 @@ class SelectProgramViewModel @Inject constructor(
     /** This function fetches the details of available programs
      * and updates the program list state.
      * */
-    private fun fetchProgramDetails() {
+    fun fetchProgramDetails() {
         viewModelScope.launch {
             // set the program data to a loading state while the data is being fetched
             _programData.value = Resource.Loading()
