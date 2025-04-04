@@ -18,12 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.res.colorResource
@@ -68,7 +66,7 @@ fun OtpInputField(
             .size(60.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(R.color.hyper_text_link),
+                color = if (number == null) colorResource (R.color.light_gray) else colorResource (R.color.otp_color),
                 shape = RoundedCornerShape(8.dp) // Rounded corners
             ),
         contentAlignment = Alignment.Center // Ensures child components are centered
@@ -102,7 +100,7 @@ fun OtpInputField(
                 }
                 .onKeyEvent { event ->
                     val didPressDelete = event.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_DEL
-                    if(didPressDelete && number == null) {
+                    if (didPressDelete && number == null) {
                         onKeyboardBack()
                     }
                     false
@@ -113,7 +111,7 @@ fun OtpInputField(
                     Text(
                         text = "-",
                         textAlign = TextAlign.Center,
-                        color = Color.Blue,
+                        color = Color.Transparent,
                         fontSize = 36.sp,
                         fontWeight = FontWeight.Light,
                         modifier = Modifier
