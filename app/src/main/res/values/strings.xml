@@ -33,6 +33,8 @@
     <string name="cancel">Cancel</string>
 
     <string name="pin_created_successfully">Pin Created Successfully</string>
+    <string name="pin_correct">Pin Correct</string>
+    <string name="pin_correct_subtext">Your unique pin is correct, proceed to carry out your activities</string>
     <string name="pin_created_successfully_subtext">Your unique pin has been successfully created, proceed to carry out your activities</string>
 
     <string name="pin_mismatch">Pin Mismatch</string>

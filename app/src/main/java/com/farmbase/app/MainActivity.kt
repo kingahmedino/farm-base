@@ -253,13 +253,18 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
 
                     if (getData.finished != null) {
+
+                        val startDestination = remember(getData.finished) {
+                            getStartDestination(getData.finished)
+                        }
+
                         NavHost(
                             navController = navController,
                             modifier = Modifier.padding(innerPadding),
 
                             //startDestination = Screen.SelectProgram.route
 
-                        startDestination = getStartDestination(getData.finished)
+                        startDestination = startDestination
 
                         //   startDestination = Screen.Auth.route
 //                     startDestination = Screen.OtpScreen1.route
