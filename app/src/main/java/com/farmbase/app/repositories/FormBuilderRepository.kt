@@ -3,6 +3,8 @@ package com.farmbase.app.repositories
 import com.farmbase.app.models.FormData
 import com.farmbase.app.models.UploadFormData
 import com.farmbase.app.network.FormBuilderApiService
+import com.farmbase.app.network.SingleFormApiResponse
+import com.farmbase.app.network.ktor.KtorClient
 import com.farmbase.app.ui.formBuilder.utils.Resource
 
 class FormBuilderRepository(
@@ -23,16 +25,14 @@ class FormBuilderRepository(
     }
 
     suspend fun getFormDataById(id: String): Resource<FormData> {
-        return try {
-            val response = api.getFormDataById(id)
-            if (response.success) {
-                Resource.Success(response.data)
-            } else {
-                Resource.Error(response.message)
-            }
-        } catch (e: Exception) {
-            Resource.Error(e.message ?: "Unknown Error")
-        }
+        return KtorClient.get<SingleFormApiResponse>("https://form-builder-service-dev-v25.agric-os.com/form/$id")
+            .fold(
+                onSuccess = { value -> Resource.Success(value.data) },
+                onFailure = { e ->
+                    e.printStackTrace()
+                    Resource.Error(e.message ?: "Unknown error occurred")
+                }
+            )
     }
 
     suspend fun uploadFormData(uploadFormData: UploadFormData): Result<String> {

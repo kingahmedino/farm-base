@@ -25,6 +25,7 @@ coroutines = "1.7.3"
 couchbase = "3.2.1"
 cameraX = "1.4.1"
 security = "1.1.0-alpha06"
+ktor = "2.3.7"
 
 [libraries]
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
@@ -70,6 +71,11 @@ camerax-view = { module = "androidx.camera:camera-view", version.ref = "cameraX"
 camerax-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraX" }
 material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version = "1.5.1" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-gson = { group = "io.ktor", name = "ktor-serialization-gson", version.ref = "ktor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
