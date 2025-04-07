@@ -28,7 +28,7 @@ class GetSortedRolesUseCase @Inject constructor(
      * @return Flow of a list of ActivityCardItem sorted by the number of child portfolios.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun execute(description: String?, context: Context): Flow<List<ActivityCardItem>> {
+    fun execute(description: String?, context: Context, headerTextPrefix: String = ""): Flow<List<ActivityCardItem>> {
         val roleId = SharedPreferencesManager(context).encryptedGet(Constants.SELECTED_ROLE_ID)
         Log.d("Role_id", roleId.toString())
         // fetch roles from the repository as a flow and transform them
@@ -58,7 +58,7 @@ class GetSortedRolesUseCase @Inject constructor(
                                 ActivityCardItem(
                                     id = role.roleId,
                                     icon = R.drawable.ic_my_portfolio,
-                                    headerText = role.name,
+                                    headerText = "$headerTextPrefix${role.name}",
                                     descText = description,
                                     activityType = Constants.ActivityType.PORTFOLIO_ACTIVITY,
                                     iconFile = filePath

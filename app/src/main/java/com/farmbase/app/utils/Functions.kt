@@ -1,6 +1,7 @@
 package com.farmbase.app.utils
 
 import android.util.Base64
+import android.util.Log
 import com.google.gson.Gson
 
 object Functions {
@@ -11,7 +12,7 @@ object Functions {
 
         val payload = parts[1]
         val data =  String(Base64.decode(payload, Base64.URL_SAFE))
-
+        Log.d("access", data)
         return Gson().fromJson(data, TokenPayLoad::class.java)
     }
 }
