@@ -13,7 +13,7 @@ interface ActivityEntityDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActivities(activities: List<ActivityEntity>)
 
-    @Query("Select * from activities where scheduledActivityFlag = 0")
+    @Query("Select * from activities where scheduledActivityFlag = 1")
     fun selectAllUnscheduledActivities(): Flow<List<ActivityEntity>>
 
     @Query("Delete from activities")
