@@ -40,8 +40,14 @@ fun HomepageScreen(
     val selectedActivityCard by viewModel.selectedActivityCard.collectAsStateWithLifecycle()
 
     val sections = listOf(
-        stringResource(R.string.execute_user_portfolio_activities, role) to listOf(portfolioActivityList, portfolioList),
-        stringResource(R.string.execute_user_activities, role) to listOf(activityList, historyList)
+        if (portfolioActivityList.isNotEmpty()) {
+        stringResource(R.string.execute_user_portfolio_activities, role) to listOf(portfolioActivityList, portfolioList) } else {
+            "" to listOf(portfolioActivityList)
+        },
+        if (activityList.isNotEmpty()) {
+        stringResource(R.string.execute_user_activities, role) to listOf(activityList, historyList)} else {
+            "" to listOf(historyList)
+        }
     )
 
     val sheetState = rememberModalBottomSheetState()

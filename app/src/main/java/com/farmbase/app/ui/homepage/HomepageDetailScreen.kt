@@ -37,7 +37,9 @@ fun HomepageDetailScreen(
         item { HomepageHeader(role, showDialog, onDialogDismiss = { showDialog = false }, onTextClicked = { showDialog = true }) }
 
         sections.forEachIndexed { index, (title, lists) ->
-            item { ActivityCardTitle(title = title) }
+            if (title.isNotBlank()) {
+                item { ActivityCardTitle(title = title) }
+            }
 
             lists.forEachIndexed { listIndex, activityItemList ->
                 activityCardSection(
