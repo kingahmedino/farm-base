@@ -36,7 +36,7 @@ fun HomepageDetailScreen(
     ) {
         item { HomepageHeader(role, showDialog, onDialogDismiss = { showDialog = false }, onTextClicked = { showDialog = true }) }
 
-        sections.forEach { (title, lists) ->
+        sections.forEachIndexed { index, (title, lists) ->
             item { ActivityCardTitle(title = title) }
 
             lists.forEachIndexed { listIndex, activityItemList ->
@@ -44,7 +44,7 @@ fun HomepageDetailScreen(
                     itemList = activityItemList,
                     onItemSelected = viewModel::updateActivityCardSelected,
                     isItemSelected = { viewModel.cardStateChange(selectedActivityCard, it) },
-                    shouldDividerShow = listIndex != lists.lastIndex
+                    shouldDividerShow =  index != sections.lastIndex || listIndex != lists.lastIndex
                 )
             }
         }
