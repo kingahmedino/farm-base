@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.PinCreatedDialog
+import x.y.MyMessages
 
 @Composable
 fun OtpScreen2(
@@ -96,7 +97,7 @@ fun OtpScreen2(
             onClick = onClick,
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text(stringResource(R.string.next))
+            Text(MyMessages.next())
         }
 
         state.isValid?.let { isValid ->
@@ -124,7 +125,7 @@ fun OtpScreen2(
 @Composable
 fun DoubleText2(modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Confirm Security Pin", fontWeight = FontWeight.Bold)
-        Text("Confirm your 4-digit security pin to proceed", fontWeight = FontWeight.Bold)
+        Text(MyMessages.confirmPin(), fontWeight = FontWeight.Bold)
+        Text(MyMessages.confirmPinLong(), fontWeight = FontWeight.Bold)
     }
 }

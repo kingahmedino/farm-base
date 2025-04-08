@@ -173,7 +173,9 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController) {
             }
 
             OtpScreen2(
-                onClick = {},
+                onClick = {
+                    navController.navigate(Screen.FarmerList.route)
+                },
                 otpCode = otpCode,
 
                 state = state,

@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.farmbase.app.R
+import x.y.MyMessages
 
 @Composable
 fun OtpScreen1(
@@ -82,7 +83,7 @@ fun OtpScreen1(
             onClick = onClick,
             shape = RoundedCornerShape(8.dp)
         ) {
-            Text(stringResource(R.string.next))
+            Text(MyMessages.next())
         }
 
         state.isValid?.let { isValid ->
@@ -110,7 +111,7 @@ fun OtpScreen1(
 @Composable
 fun DoubleText(modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Welcome User, Create your Security Pin", fontWeight = FontWeight.Bold)
-        Text("Create your 4-digit security pin to proceed.", fontWeight = FontWeight.Bold)
+        Text(MyMessages.welcomeUser(), fontWeight = FontWeight.Bold)
+        Text(MyMessages.createPin(), fontWeight = FontWeight.Bold)
     }
 }
