@@ -6,47 +6,54 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
 import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
 
 @Composable
-fun HomepageNavigation(navHostController: NavHostController, startDestination: String) {
+fun Navigation(navHostController: NavHostController, startDestination: SplashScreen) {
     // navHost defines the navigation host with a given startDestination
     NavHost(navController = navHostController, startDestination = startDestination ){
+        composable<ConfirmAction> {
+            ConfirmActionScreen (
+                onContinueClicked = {navHostController.navigate(SelectProgram)},
+                onSelectAnotherClicked = { navHostController.navigate(SelectHomepage) },
+                onBackButtonClicked = {},
+            )
+        }
         // TODO:  add login screens
         // navigation(startDestination = "", route = "Login") {}
-
-        navigation(startDestination = NavigationDestinations.SelectProgram.route, route = "Homepage") {
-            composable(route = NavigationDestinations.SelectProgram.route) {
+        // navigation<Homepage>(startDestination = SelectProgram) {
+            composable<SelectProgram> {
                 SelectProgramScreen(
                     onNextButtonClicked = {
-                        navHostController.navigateToSingleTop(NavigationDestinations.SelectHomepage)
+                        navHostController.navigate(SelectHomepage)
                     }
                 )
             }
-            composable<NavigationDestinations.SelectHomepage> {
+
+            composable<SelectHomepage> {
                 SelectHomepageScreen(
                     onBackButtonClicked = {
                         navHostController.navigateUp()
                     },
                     onNextButtonClicked = {
-                        navHostController.navigateToScreen(
-                            NavigationDestinations.Homepage("Poultry Hub Lead"))
+                        navHostController.navigate(MyHomepage("Poultry Hub Lead"))
                     }
                 )
             }
-            composable<NavigationDestinations.Homepage> {
-                val argument = it.toRoute<NavigationDestinations.Homepage>()
+
+            composable<MyHomepage> { backStackEntry ->
+                val arguments: MyHomepage= backStackEntry.toRoute()
                 HomepageScreen(
-                    role = argument.role,
+                    role = arguments.role,
                     onBackButtonClicked = { navHostController.navigateUp()}
                 )
             }
         }
-    }
+   // }
 }
 
 /**

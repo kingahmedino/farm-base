@@ -2,6 +2,18 @@ package com.farmbase.app.ui.navigation
 import kotlinx.serialization.Serializable
 
 
+// Routes
+@Serializable object SplashScreen
+@Serializable object ConfirmAction
+
+// Route for nested graph
+@Serializable object Homepage
+
+// Routes inside nested graph
+@Serializable object SelectProgram
+@Serializable object SelectHomepage
+@Serializable data class MyHomepage(val role: String)
+
 /**
  * Possible destinations that can be navigated to within the app
  * */
