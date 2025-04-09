@@ -44,6 +44,45 @@ fun TopBar(modifier: Modifier, onBackClick: () -> Unit) {
     )
     var shouldMenuShow by remember { mutableStateOf(false) }
 
+ /*   if (shouldMenuShow) {
+        Menu(expanded = true, menuItem = menuItem,
+            onClick = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() },
+            onDismissRequest = {shouldMenuShow = false}
+        )
+    }
+
+    TopAppBar(
+        title = { Text(text = stringResource(R.string.back),
+            style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
+        },
+        modifier = modifier,
+        navigationIcon = { Icon(
+            imageVector = Icons.Filled.ArrowBackIosNew,
+            contentDescription = "Localized description",
+            tint = colorResource(R.color.top_bar_icon_tint)
+
+        )},
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
+                    contentDescription = "Speaker Image",
+                    tint = colorResource(R.color.light_gray)
+
+                )
+            }
+
+            IconButton(onClick = {shouldMenuShow = true}) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu Image",
+                    tint = colorResource(R.color.top_bar_icon_tint)
+
+                )
+            }
+        }
+    )*/
+
     Box(modifier =  modifier //modifier.statusBarsPadding()
             ) {
         Row(modifier = Modifier.align(Alignment.TopStart), verticalAlignment = Alignment.CenterVertically) {
@@ -55,15 +94,6 @@ fun TopBar(modifier: Modifier, onBackClick: () -> Unit) {
 
                 )
             }
-
-            /*Icon(
-                modifier = Modifier.size(20.dp).clickable { onBackClick() },
-                imageVector = Icons.Filled.ArrowBackIosNew,
-                contentDescription = "Back",
-                tint = colorResource(R.color.top_bar_icon_tint)
-            )*/
-
-            Spacer(modifier = Modifier.width(8.dp))
 
             Text(text = stringResource(R.string.back),
                 style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
