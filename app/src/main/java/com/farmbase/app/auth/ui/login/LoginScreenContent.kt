@@ -79,6 +79,9 @@ fun LoginScreenContent(
         onButtonClick = {
             if (areOtpCodesTheSame) {
                 onClick()
+                dialogOpened = false
+
+
             } else {
                 dialogOpened = false
             }

@@ -1,7 +1,8 @@
-package com.farmbase.app.auth.ui.components.otp
+package com.farmbase.app.auth.ui.components.otp.otpscreen1
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,34 +20,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.farmbase.app.R
 import com.farmbase.app.auth.ui.components.DoubleText
+import com.farmbase.app.auth.ui.components.otp.OtpAction
+import com.farmbase.app.auth.ui.components.otp.OtpInputField
+import com.farmbase.app.auth.ui.components.otp.OtpState
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 
 @Composable
-fun OtpScreen1(
+fun OtpScreen1Content(
+    paddingValues: PaddingValues,
     state: OtpState,
     focusRequesters: List<FocusRequester>,
-    onAction: (OtpAction) -> Unit,
-    onClick : () -> Unit
+    onAction: (OtpAction) -> Unit
 ) {
     var dialogOpened by remember { mutableStateOf(false) }
     var userPinCreationSuccess by remember { mutableStateOf(false) }
 
-    Scaffold(modifier = Modifier,
-        topBar = {
-            TopBar(modifier = Modifier.fillMaxWidth()){ }
-        },
-        bottomBar = { NextButton(
-            onClick = { onClick() } ,
-            enabled = state.code.all { it != null },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)) }
-    ) {paddingValues ->
 
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -94,12 +86,6 @@ fun OtpScreen1(
             }
         }
 
-    }
 
-}
 
-@Composable
-@Preview
-fun DoubleTextPreview() {
-   // DoubleText()
 }

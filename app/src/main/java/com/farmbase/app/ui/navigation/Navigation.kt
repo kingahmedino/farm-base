@@ -30,8 +30,8 @@ import androidx.navigation.navArgument
 import com.farmbase.app.auth.datastore.model.StartDestinationModel
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.ui.components.otp.OtpAction
-import com.farmbase.app.auth.ui.components.otp.OtpScreen1
-import com.farmbase.app.auth.ui.components.otp.OtpScreen2
+import com.farmbase.app.auth.ui.components.otp.otpscreen1.OtpScreen1
+import com.farmbase.app.auth.ui.components.otp.otpscreen2.OtpScreen2
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.auth.ui.login.LoginScreen
 import com.farmbase.app.auth.ui.screens.SplashScreen
@@ -55,14 +55,19 @@ sealed class Screen(val route: String) {
 
     data object Auth : Screen("auth")
 
-   // data object OtpScreen1 : Screen("otpScreen1")
-
     // deep link version
-    data object OtpScreen1 : Screen("otpScreen1/{status}?accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}")
+    data object OtpScreen1 :
+        Screen("otpScreen1/{status}?accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}")
 
 
-    data object OtpScreen2 : Screen("otpScreen2?otpCode={otpCode}&accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}") {
-        fun createRoute(otpCode: String, accessToken: String, refreshToken: String, resetPin: Boolean): String {
+    data object OtpScreen2 :
+        Screen("otpScreen2?otpCode={otpCode}&accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}") {
+        fun createRoute(
+            otpCode: String,
+            accessToken: String,
+            refreshToken: String,
+            resetPin: Boolean
+        ): String {
             val encodedOtp = URLEncoder.encode(otpCode, UTF_8.toString())
             val encodedAccessToken = URLEncoder.encode(accessToken, UTF_8.toString())
             val encodedRefreshToken = URLEncoder.encode(refreshToken, UTF_8.toString())
@@ -79,7 +84,7 @@ sealed class Screen(val route: String) {
 
     data object SelectHomepage : Screen("selectHomepage")
 
-    data object MyHomepage : Screen("myHomepage?role={role}"){
+    data object MyHomepage : Screen("myHomepage?role={role}") {
         fun createRoute(role: String): String {
             return "myHomepage?role=$role"
         }
@@ -100,14 +105,14 @@ sealed class Screen(val route: String) {
 
     data object NewForm : Screen("formBuilder")
 
-    data object Detail : Screen("detail/{status}?accessToken={accessToken}&refreshToken={refreshToken}")
+    data object Detail :
+        Screen("detail/{status}?accessToken={accessToken}&refreshToken={refreshToken}")
 
 }
 
 fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: PaddingValues) {
 
     composable(
-      //  Screen.OtpScreen1.route
         route = Screen.OtpScreen1.route,
 
         arguments = listOf(
@@ -118,104 +123,12 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
 
     ) { navBackStackEntry ->
-
-//        Scaffold(
-//            modifier = Modifier.fillMaxSize(),
-//        ) { innerPadding ->
-
-            // otp
-            val viewModel: OtpViewModel = hiltViewModel(navBackStackEntry) // Retain ViewModel
-
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            val focusRequesters = remember {
-                List(4) { FocusRequester() }
-            }
-            val focusManager = LocalFocusManager.current
-            val keyboardManager = LocalSoftwareKeyboardController.current
-
-            LaunchedEffect(state.focusedIndex) {
-                state.focusedIndex?.let { index ->
-                    focusRequesters.getOrNull(index)?.requestFocus()
-                }
-            }
-
-            LaunchedEffect(state.code, keyboardManager) {
-                val allNumbersEntered = state.code.none { it == null }
-                if (allNumbersEntered) {
-                    focusRequesters.forEach {
-                        it.freeFocus()
-                    }
-                    focusManager.clearFocus()
-                    keyboardManager?.hide()
-                }
-            }
-
-            val status = navBackStackEntry.arguments?.getString("status") ?: "N/A"
-            val accessToken = navBackStackEntry.arguments?.getString("accessToken") ?: "N/A"
-            val refreshToken = navBackStackEntry.arguments?.getString("refreshToken") ?: "N/A"
-            val resetPin = navBackStackEntry.arguments?.getBoolean("resetPin") ?: false
-
-            // box and column
-
-//            Box(
-//                modifier = Modifier.fillMaxSize().padding(innerPadding),
-//                contentAlignment = Alignment.Center
-//            ) {
-
-//                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//
-//                    /** hide $status $accessToken $refreshToken**/
-//                    Text(text = "Status: $status")
-//                    Text(text = "Access Token: $accessToken")
-//                    Text(text = "Refresh Token: $refreshToken")
-//                    Text(text = "resetPin: $resetPin")
-
-
-                    OtpScreen1(
-                        onClick = {
-//                    viewModel.firstOtpCodeData = state.code.toString()
-//                    navController.navigate(Screen.OtpScreen2.route)
-
-                            val otpCode =
-                                state.code.joinToString("") // Convert the list of digits to a string
-
-//                            val hashed4DigitCode = HashHelper.sha256(otpCode)
-
-                            // viewModel.firstOtpCodeData = otpCode
-//                            navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
-                            val hashed4DigitCode = HashHelper.sha256(otpCode)
-                            navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode, accessToken, refreshToken, resetPin))
-
-
-                        },
-
-                        state = state,
-                        focusRequesters = focusRequesters,
-                        onAction = { action ->
-                            when (action) {
-                                is OtpAction.OnEnterNumber -> {
-                                    if (action.number != null) {
-                                        focusRequesters[action.index].freeFocus()
-                                    }
-                                }
-
-                                else -> Unit
-                            }
-                            viewModel.onAction(action)
-                        },
-                    )
-
-                    // otp
-               // }
-      // box and column
-        //  }}
-
-      // scaffold  }
+        OtpScreen1(
+            navController = navController,
+            navBackStackEntry = navBackStackEntry
+        )
     }
 
-//    composable(Screen.OtpScreen2.route, arguments = listOf(
-//        navArgument("otpCode") { type = NavType.StringType }
-//    )) { navBackStackEntry ->
 
     composable(
         route = Screen.OtpScreen2.route,
@@ -226,114 +139,11 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
             navArgument("resetPin") { type = NavType.BoolType; defaultValue = false },
         )
     ) { navBackStackEntry ->
-
-        val otpCode = navBackStackEntry.arguments?.getString("otpCode") ?: ""
-        val accessToken = navBackStackEntry.arguments?.getString("accessToken") ?: ""
-        val refreshToken = navBackStackEntry.arguments?.getString("refreshToken") ?: ""
-        val resetPin = navBackStackEntry.arguments?.getBoolean("resetPin") ?: false
-
-        val context = LocalContext.current
-
-//        Scaffold(
-//            modifier = Modifier.fillMaxSize(),
-//        ) { innerPadding ->
-
-            // otp
-            val viewModel: OtpViewModel = hiltViewModel(navBackStackEntry) // Retain ViewModel
-
-            val startDestinationViewModel: StartDestinationViewModel = hiltViewModel() // start destination ViewModel
-
-
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            val focusRequesters = remember {
-                List(4) { FocusRequester() }
-            }
-            val focusManager = LocalFocusManager.current
-            val keyboardManager = LocalSoftwareKeyboardController.current
-
-            LaunchedEffect(state.focusedIndex) {
-                state.focusedIndex?.let { index ->
-                    focusRequesters.getOrNull(index)?.requestFocus()
-                }
-            }
-
-            LaunchedEffect(state.code, keyboardManager) {
-                val allNumbersEntered = state.code.none { it == null }
-                if(allNumbersEntered) {
-                    focusRequesters.forEach {
-                        it.freeFocus()
-                    }
-                    focusManager.clearFocus()
-                    keyboardManager?.hide()
-                }
-            }
-
-            OtpScreen2(
-                onClick = {
-
-                    // set start destination
-                    val setStartDestinationModel = StartDestinationModel(finished = true)
-
-                    startDestinationViewModel.saveData(setStartDestinationModel)
-                    // set start destination
-
-                    val userOtp = state.code.joinToString("")
-
-                    val hashedUserOtp = HashHelper.sha256(userOtp)
-
-                    // save access and refresh token in encrypted shared prefs
-
-                    SharedPreferencesManager(context).encryptedPut(
-                        key = "userOtp",
-                        value = hashedUserOtp
-                    )
-
-                    SharedPreferencesManager(context).encryptedPut(
-                        key = "accessToken",
-                        value = accessToken
-                    )
-
-                    SharedPreferencesManager(context).encryptedPut(
-                        key = "refreshToken",
-                        value = refreshToken
-                    )
-
-                    val programId = SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
-                    Log.d("Program Id", programId.toString())
-
-                    // save access and refresh token in encrypted shared prefs
-
-                    // navigate
-                    if (programId.isNullOrBlank()) {
-                        navController.navigate(Screen.SelectProgram.route)
-                    } else {
-                        navController.navigate(Screen.ConfirmAction.route)
-                    }
-
-//                    Toast.makeText(context, "$accessToken |||| $refreshToken", Toast.LENGTH_LONG).show()
-                },
-
-                otpCode = otpCode,
-
-                state = state,
-                focusRequesters = focusRequesters,
-                onAction = { action ->
-                    when(action) {
-                        is OtpAction.OnEnterNumber -> {
-                            if(action.number != null) {
-                                focusRequesters[action.index].freeFocus()
-                            }
-                        }
-                        else -> Unit
-                    }
-                    viewModel.onAction(action)
-                },
-                viewModel = viewModel,
-                onBackButtonClicked = { navController.popBackStack() }
-            )
-            // otp
-
-       // }
+        OtpScreen2(
+            navController = navController,
+            navBackStackEntry = navBackStackEntry,
+            onBackButtonClicked = { navController.popBackStack() }
+        )
     }
 
     composable(Screen.Auth.route) {
@@ -351,7 +161,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
 
 
-
     }
 
     composable(Screen.ConfirmAction.route) {
@@ -364,18 +173,19 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 
     composable(Screen.SelectProgram.route) {
         SelectProgramScreen(
-            onNextButtonClicked = {navController.navigate(Screen.SelectHomepage.route)}
+            onNextButtonClicked = { navController.navigate(Screen.SelectHomepage.route) }
         )
     }
 
     composable(Screen.SelectHomepage.route) {
         SelectHomepageScreen(
             onBackButtonClicked = { navController.navigateUp() },
-            onNextButtonClicked = {navController.navigate(Screen.MyHomepage.createRoute("Poultry Hub Lead"))}
+            onNextButtonClicked = { navController.navigate(Screen.MyHomepage.createRoute("Poultry Hub Lead")) }
         )
     }
 
-    composable(Screen.MyHomepage.route,
+    composable(
+        Screen.MyHomepage.route,
         arguments = listOf(
             navArgument("role") {
                 type = NavType.StringType
@@ -387,7 +197,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         val role = entry.arguments?.getString("role")
         HomepageScreen(
             onBackButtonClicked = { navController.navigateUp() },
-            role = role?:""
+            role = role ?: ""
 
         )
     }
@@ -431,32 +241,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 
     composable(Screen.NewForm.route) {
         FormBuilder()
-    }
-
-    composable(
-//        route = "detail/{status}?accessToken={accessToken}&refreshToken={refreshToken}",
-        route = Screen.Detail.route,
-
-        arguments = listOf(
-            navArgument("status") { type = NavType.StringType; defaultValue = "" },
-            navArgument("accessToken") { type = NavType.StringType; defaultValue = "" },
-            navArgument("refreshToken") { type = NavType.StringType; defaultValue = "" }
-        )
-    ) { entry ->
-        val status = entry.arguments?.getString("status") ?: "N/A"
-        val accessToken = entry.arguments?.getString("accessToken") ?: "N/A"
-        val refreshToken = entry.arguments?.getString("refreshToken") ?: "N/A"
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Status: $status")
-                Text(text = "Access Token: $accessToken")
-                Text(text = "Refresh Token: $refreshToken")
-            }
-        }
     }
 
 }
