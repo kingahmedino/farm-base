@@ -13,11 +13,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StartDestinationViewModel @Inject constructor(private val startDestinationRepo: StartDestinationRepo): ViewModel() {
+class StartDestinationViewModel @Inject constructor(private val startDestinationRepo: StartDestinationRepo) :
+    ViewModel() {
 
     ///// me
-    val getData : StateFlow<StartDestinationModel> =
-         startDestinationRepo.getDataStore().stateIn(
+    val getData: StateFlow<StartDestinationModel> =
+        startDestinationRepo.getDataStore().stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = StartDestinationModel(null)
@@ -30,6 +31,4 @@ class StartDestinationViewModel @Inject constructor(private val startDestination
             startDestinationRepo.saveDataStore(startDestinationModel)
         }
     }
-
-
 }

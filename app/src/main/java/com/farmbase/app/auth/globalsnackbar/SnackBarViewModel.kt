@@ -20,16 +20,30 @@ class SnackBarViewModel @Inject constructor(): ViewModel() {
 
     fun showSnackbar() {
         viewModelScope.launch {
-            SnackbarController.sendEvent(
-                event = SnackbarEvent(
+            SnackBarController.sendEvent(
+                event = SnackBarEvent(
                     message = "Internet Connection Lost",
-                    action = SnackbarAction(
+                    action = SnackBarAction(
                         name = "Okay!",
                         action = {
-
                             dismissSnackbar()
                             // SnackbarController.dismissSnackbar()
+                        }
+                    )
+                )
+            )
+        }
+    }
 
+    fun showSnackBarMessage(message: String, buttonText: String) {
+        viewModelScope.launch {
+            SnackBarController.sendEvent(
+                event = SnackBarEvent(
+                    message = message,
+                    action = SnackBarAction(
+                        name = buttonText,
+                        action = {
+                            dismissSnackbar()
                         }
                     )
                 )
@@ -39,7 +53,7 @@ class SnackBarViewModel @Inject constructor(): ViewModel() {
 
     fun dismissSnackbar() {
         viewModelScope.launch {
-            SnackbarController.dismissSnackbar()  // Call the dismiss function
+            SnackBarController.dismissSnackbar()  // Call the dismiss function
         }
     }
 

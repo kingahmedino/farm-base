@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,9 +19,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
@@ -59,13 +60,6 @@ sealed class Screen(val route: String) {
     // deep link version
     data object OtpScreen1 : Screen("otpScreen1/{status}?accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}")
 
-
-//    data object OtpScreen2 : Screen("otpScreen2?otpCode={otpCode}") {
-//        fun createRoute(otpCode: String): String {
-//            val encodedOtp = URLEncoder.encode(otpCode, UTF_8.toString())
-//            return "otpScreen2?otpCode=$encodedOtp"
-//        }
-//    }
 
     data object OtpScreen2 : Screen("otpScreen2?otpCode={otpCode}&accessToken={accessToken}&refreshToken={refreshToken}&resetPin={resetPin}") {
         fun createRoute(otpCode: String, accessToken: String, refreshToken: String, resetPin: Boolean): String {
@@ -343,88 +337,14 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     }
 
     composable(Screen.Auth.route) {
-        SplashScreen(innerPadding = innerPadding)
+        SplashScreen()
     }
 
     composable(Screen.Login.route) {
-//        SplashScreen(innerPadding = innerPadding)
-
-        val context = LocalContext.current
-
-        // otp
-        val viewModel: OtpViewModel = hiltViewModel() // Retain ViewModel
-
-        val state by viewModel.state.collectAsStateWithLifecycle()
-        val focusRequesters = remember {
-            List(4) { FocusRequester() }
-        }
-        val focusManager = LocalFocusManager.current
-        val keyboardManager = LocalSoftwareKeyboardController.current
-
-        LaunchedEffect(state.focusedIndex) {
-            state.focusedIndex?.let { index ->
-                focusRequesters.getOrNull(index)?.requestFocus()
-            }
-        }
-
-        LaunchedEffect(state.code, keyboardManager) {
-            val allNumbersEntered = state.code.none { it == null }
-            if (allNumbersEntered) {
-                focusRequesters.forEach {
-                    it.freeFocus()
-                }
-                focusManager.clearFocus()
-                keyboardManager?.hide()
-            }
-        }
-
-
-
-
 
         LoginScreen(
-            innerPadding = innerPadding,
-            onClick = {
-//                    viewModel.firstOtpCodeData = state.code.toString()
-//                    navController.navigate(Screen.OtpScreen2.route)
+            navController = navController,
 
-                val otpCode =
-                    state.code.joinToString("") // Convert the list of digits to a string
-
-//                            val hashed4DigitCode = HashHelper.sha256(otpCode)
-
-                // viewModel.firstOtpCodeData = otpCode
-//                            navController.navigate(Screen.OtpScreen2.createRoute(hashed4DigitCode))
-                val hashed4DigitCode = HashHelper.sha256(otpCode)
-
-                val programId = SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
-                Log.d("Program Id", programId.toString())
-
-                // save access and refresh token in encrypted shared prefs
-
-                // navigate
-                if (programId.isNullOrBlank()) {
-                    navController.navigate(Screen.SelectProgram.route)
-                } else {
-                    navController.navigate(Screen.ConfirmAction.route)
-                }
-
-            },
-
-            state = state,
-            focusRequesters = focusRequesters,
-            onAction = { action ->
-                when (action) {
-                    is OtpAction.OnEnterNumber -> {
-                        if (action.number != null) {
-                            focusRequesters[action.index].freeFocus()
-                        }
-                    }
-
-                    else -> Unit
-                }
-                viewModel.onAction(action)
-            },
             modifier = Modifier
                 .padding(innerPadding)
                 .consumeWindowInsets(innerPadding)
@@ -462,7 +382,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
                 nullable = false
                 defaultValue = ""
             }
-        )
+        ),
     ) { entry ->
         val role = entry.arguments?.getString("role")
         HomepageScreen(
@@ -540,3 +460,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     }
 
 }
+
+val NavHostController.canGoBack: Boolean
+    get() = this.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED

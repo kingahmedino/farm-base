@@ -23,16 +23,16 @@ class StartDestinationRepo(private val context: Context) : StartDestinationInter
     }
 
     override suspend fun saveDataStore(startDestinationModel: StartDestinationModel) {
-        context.datastore.edit { DS2s ->
-            DS2s[FINISHED] = startDestinationModel.finished ?: false
+        context.datastore.edit { datastore ->
+            datastore[FINISHED] = startDestinationModel.finished ?: false
 
         }
     }
 
     override fun getDataStore(): Flow<StartDestinationModel> =
-        context.datastore.data.map { ds2 ->
+        context.datastore.data.map { datastore ->
             StartDestinationModel(
-                finished = ds2[FINISHED] ?: false
+                finished = datastore[FINISHED] ?: false
             )
 
         }
