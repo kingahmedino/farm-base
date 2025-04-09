@@ -3,7 +3,9 @@ package com.farmbase.app.auth.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,17 +30,14 @@ fun DoubleText(
             text = stringResource(mainText),
             style = MaterialTheme.typography.labelLarge,
             textAlign = TextAlign.Start,  // Align text to the start (left)
-            modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp)
-                .align(Alignment.Start)  // Ensures left alignment
+            modifier = Modifier.align(Alignment.Start)  // Ensures left alignment
         )
+        Spacer(Modifier.height(12.dp))
         Text(
             text = stringResource(subText),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Start,
-            modifier = Modifier
-                .padding(top = 10.dp, start = 10.dp, end = 10.dp)
-                .align(Alignment.Start)
+            modifier = Modifier.align(Alignment.Start)
         )
     }
 }
