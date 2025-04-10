@@ -50,16 +50,17 @@ fun Navigation(navHostController: NavHostController, startDestination: SplashScr
                 val arguments: MyHomepage= backStackEntry.toRoute()
                 HomepageScreen(
                     role = arguments.role,
-                    onBackButtonClicked = { navHostController.navigateUp()}
+                    onBackButtonClicked = { navHostController.navigateUp()},
+                    onNextButtonClicked = {navHostController.navigate(ExecuteActivity(""))}
                 )
             }
 
         composable<ExecuteActivity> { backStackEntry ->
             val arguments: ExecuteActivity= backStackEntry.toRoute()
-            ExecuteOrUpdateActivityScreen(
+           /* ExecuteOrUpdateActivityScreen(
                 activity = arguments.activityCardItem,
                 onBackButtonClicked = { navHostController.navigateUp()}
-            )
+            )*/
         }
         }
    // }

@@ -36,11 +36,13 @@ import com.farmbase.app.auth.ui.login.LoginScreen
 import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.models.Farmer
 import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
+import com.farmbase.app.ui.executeOrUpdateActivity.ExecuteOrUpdateActivityScreen
 import com.farmbase.app.ui.farmerlist.FarmerListScreen
 import com.farmbase.app.ui.formBuilder.FormBuilder
 import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
+import com.farmbase.app.utils.ActivityCardItem
 import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
@@ -88,6 +90,14 @@ sealed class Screen(val route: String) {
     data object MyHomepage : Screen("myHomepage?role={role}"){
         fun createRoute(role: String): String {
             return "myHomepage?role=$role"
+        }
+    }
+
+    data object ExecuteOrUpdateActivity : Screen("executeOrUpdateActivity?activityItem={activityItem}"){
+        fun createRoute(activityItem: ActivityCardItem): String {
+            val jsonString = Json.encodeToString(activityItem)
+            val encodedJson = URLEncoder.encode(jsonString, UTF_8.toString())
+            return "executeOrUpdateActivity?activityItem=$encodedJson"
         }
     }
 
@@ -467,9 +477,34 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         val role = entry.arguments?.getString("role")
         HomepageScreen(
             onBackButtonClicked = { navController.navigateUp() },
-            role = role?:""
+            role = role?:"",
+            onNextButtonClicked = {activityCardItem ->
+                navController.navigate(Screen.ExecuteOrUpdateActivity.createRoute(activityCardItem))
+            }
 
         )
+    }
+
+    composable(Screen.ExecuteOrUpdateActivity.route,
+        arguments = listOf(
+            navArgument("activityItem") {
+                type = NavType.StringType
+                nullable = false
+                defaultValue = ""
+            }
+        )
+    ) { entry ->
+        val activityItemJson = entry.arguments?.getString("activityItem")
+        val activityItem = activityItemJson?.let {encodedJson ->
+            val decodedJson = URLDecoder.decode(encodedJson, UTF_8.toString())
+            Json.decodeFromString<ActivityCardItem>(decodedJson)
+        }
+        activityItem?.let {
+            ExecuteOrUpdateActivityScreen(
+                activity = it,
+                onBackButtonClicked = { navController.navigateUp() },
+            )
+        }
     }
 
     composable(Screen.FarmerList.route) {

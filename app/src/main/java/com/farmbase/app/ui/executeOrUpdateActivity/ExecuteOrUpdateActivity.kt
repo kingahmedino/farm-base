@@ -22,10 +22,11 @@ import com.farmbase.app.ui.widgets.ActivityCard
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.ui.widgets.activityCardSection
+import com.farmbase.app.utils.ActivityCardItem
 
 @Composable
 fun ExecuteOrUpdateActivityScreen(
-    activity: String,
+    activity: ActivityCardItem,
     onBackButtonClicked:() -> Unit,
     viewModel: ExecuteOrUpdateActivityViewModel = hiltViewModel()
 ) {
@@ -33,9 +34,9 @@ fun ExecuteOrUpdateActivityScreen(
     val selectedActivityCard by viewModel.selectedActivityCard.collectAsStateWithLifecycle()
     val activityCard by viewModel.activityCard.collectAsStateWithLifecycle()
 
-    LaunchedEffect(activity) {
+    /*LaunchedEffect(activity) {
        viewModel.updateSelectedActivityItem(activity)
-    }
+    }*/
     Scaffold(modifier = Modifier,
       topBar = { TopBar(modifier = Modifier.fillMaxWidth()) {onBackButtonClicked()} },
         bottomBar = {
@@ -60,10 +61,10 @@ fun ExecuteOrUpdateActivityScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ActivityCard(
-                iconUrl = activityCard?.iconUrl,
-                iconFile = activityCard?.iconFile,
-                icon = R.drawable.ic_alert,
-                headerText = activityCard?.headerText?:"",
+                iconUrl = activity.iconUrl,
+                iconFile = activity.iconFile,
+                icon = activity.icon,
+                headerText = activity.headerText ?:"",
                 isSelected = false,
                 onClick = {},
                 radius = 0.dp,

@@ -21,12 +21,15 @@ import com.farmbase.app.R
 import com.farmbase.app.ui.widgets.BottomSheet
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
+import com.farmbase.app.utils.ActivityCardItem
+import com.farmbase.app.utils.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomepageScreen(
     role: String,
     onBackButtonClicked: () -> Unit,
+    onNextButtonClicked: (ActivityCardItem) -> Unit,
     viewModel: HomepageViewModel = hiltViewModel()
 ) {
     LaunchedEffect(role) {
@@ -75,7 +78,12 @@ fun HomepageScreen(
         topBar = { TopBar(modifier = Modifier.fillMaxWidth(), onBackClick = onBackButtonClicked) },
         bottomBar = {
             NextButton(
-                onClick = { showBottomSheet = true },
+                onClick = { if (selectedActivityCard?.activityType == Constants.ActivityType.ACTIVITY) {
+                    onNextButtonClicked(selectedActivityCard!!)
+                } else {
+                    showBottomSheet = true
+                }
+                },
                 enabled = selectedActivityCard != null,
                 modifier = Modifier
                     .fillMaxWidth()

@@ -25,7 +25,7 @@ class HomepageViewModel @Inject constructor(
 ):ViewModel() {
 
     // update selected activity card
-    private val _selectedActivityCard = MutableStateFlow<Any?>(null)
+    private val _selectedActivityCard = MutableStateFlow<ActivityCardItem?>(null)
     val selectedActivityCard = _selectedActivityCard.asStateFlow()
 
     private val _portfolioActivityList = MutableStateFlow<List<ActivityCardItem>>(emptyList())
@@ -57,7 +57,7 @@ class HomepageViewModel @Inject constructor(
      * update activity card selected
      * @param card expects activity card selected
      * */
-    fun updateActivityCardSelected(card: Any?) {
+    fun updateActivityCardSelected(card: ActivityCardItem?) {
         when {
             card == _selectedActivityCard.value -> {
                 _selectedActivityCard.value = null
