@@ -1,10 +1,8 @@
 package com.farmbase.app.ui.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
@@ -12,83 +10,46 @@ import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
 
-@Composable
-fun Navigation(navHostController: NavHostController, startDestination: SplashScreen) {
-    // navHost defines the navigation host with a given startDestination
-    NavHost(navController = navHostController, startDestination = startDestination ){
-        composable<ConfirmAction> {
-            ConfirmActionScreen (
-                onContinueClicked = {navHostController.navigate(SelectProgram)},
-                onSelectAnotherClicked = { navHostController.navigate(SelectHomepage) },
-                onBackButtonClicked = {},
-            )
-        }
-        // TODO:  add login screens
-        // navigation(startDestination = "", route = "Login") {}
-        // navigation<Homepage>(startDestination = SelectProgram) {
-            composable<SelectProgram> {
-                SelectProgramScreen(
-                    onNextButtonClicked = {
-                        navHostController.navigate(SelectHomepage)
-                    }
-                )
-            }
 
-            composable<SelectHomepage> {
-                SelectHomepageScreen(
-                    onBackButtonClicked = {
-                        navHostController.navigateUp()
-                    },
-                    onNextButtonClicked = {
-                        navHostController.navigate(MyHomepage("Poultry Hub Lead"))
-                    }
-                )
-            }
+fun NavGraphBuilder.homePageNavigationRoute(
+    modifier: Modifier,
+    navHostController: NavHostController
+    ) {
 
-            composable<MyHomepage> { backStackEntry ->
-                val arguments: MyHomepage= backStackEntry.toRoute()
-                HomepageScreen(
-                    role = arguments.role,
-                    onBackButtonClicked = { navHostController.navigateUp()}
-                )
-            }
-        }
-   // }
-}
 
-/**
- * Extension function for `NavHostController` to navigate to a route with specific behavior.
- * Ensures the navigation is handled in a way that avoids duplicate destinations and restores the state.
- * @param route The destination route to navigate to.
- */
-fun NavHostController.navigateToSingleTop(route: NavigationDestinations) {
-    return this.navigate(route) {
-        // Ensure we navigate to the start destination of the graph and avoid adding it multiple times
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true // Save the current state to restore it later
-        }
-        launchSingleTop = true // Avoid creating multiple instances of the same destination
-        restoreState = true // Restore previously saved state when navigating back
-    }
-}
-
-/**
- * Extension function for [NavController] to navigate to a specific screen.
- * Ensures that the same destination is not launched multiple times and preserves state.
- * @param route The destination screen to navigate to.
- */
-fun NavController.navigateToScreen(route: NavigationDestinations) {
-    return this.navigate(route) { // Navigate to the specified route
-        launchSingleTop = true // Prevents multiple copies of the same destination from being created
-
-        restoreState = true // Restores the previously saved state if available
-
-        popBackStack(
-            route,
-            inclusive = false, // keeps the destination in the stack instead of removing it
-            saveState = true // saves the state of the previous destination before popping
+    composable<ConfirmAction> {
+        ConfirmActionScreen(
+            onContinueClicked = { navHostController.navigate(SelectProgram) },
+            onSelectAnotherClicked = { navHostController.navigate(SelectHomepage) },
+            onBackButtonClicked = {},
         )
     }
+
+    composable<SelectProgram> {
+        SelectProgramScreen(
+            onNextButtonClicked = {
+                navHostController.navigate(SelectHomepage)
+            }
+        )
+    }
+
+    composable<SelectHomepage> {
+        SelectHomepageScreen(
+            onBackButtonClicked = {
+                navHostController.navigateUp()
+            },
+            onNextButtonClicked = {
+                navHostController.navigate(MyHomepage("Poultry Hub Lead"))
+            }
+        )
+    }
+
+    composable<MyHomepage> { backStackEntry ->
+        val arguments: MyHomepage = backStackEntry.toRoute()
+        HomepageScreen(
+            role = arguments.role,
+            onBackButtonClicked = { navHostController.navigateUp() }
+        )
+    }
+
 }
-
-

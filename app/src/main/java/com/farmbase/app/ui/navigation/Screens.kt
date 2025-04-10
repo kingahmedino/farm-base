@@ -22,4 +22,7 @@ sealed class Screens {
     @Serializable
     data object NewForm : Screens()
 
+    @Serializable
+    data object FarmerList : Screens()
+
 }

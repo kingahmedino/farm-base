@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
@@ -58,7 +56,6 @@ sealed class Screen(val route: String) {
         }
     }
 
-    data object FarmerList : Screen("farmerList")
     data object FarmerRegistration : Screen("farmerRegistration?farmerJson={farmerJson}") {
         fun createRoute(farmer: Farmer? = null): String {
             return if (farmer != null) {
@@ -109,23 +106,6 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
     }
 
-    composable<Screens.Auth> {
-        SplashScreen()
-    }
-
-    composable<Screens.Login> {
-
-        LoginScreen(
-            navController = navController,
-
-            modifier = Modifier
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-        )
-
-
-    }
-
     composable<Screens.ConfirmAction> {
         ConfirmActionScreen(
             onBackButtonClicked = { navController.navigateUp() },
@@ -165,7 +145,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
     }
 
-    composable(Screen.FarmerList.route) {
+    composable<Screens.FarmerList> {
         FarmerListScreen(
             onAddNewFarmer = {
                 navController.navigate(Screens.NewForm)
@@ -207,6 +187,3 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     }
 
 }
-
-val NavHostController.canGoBack: Boolean
-    get() = this.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED

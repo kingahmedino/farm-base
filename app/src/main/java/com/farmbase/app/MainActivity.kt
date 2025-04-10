@@ -15,6 +15,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
+import com.farmbase.app.auth.util.AppExitDialog
 import com.farmbase.app.auth.util.CheckInternetConnectivity
 import com.farmbase.app.auth.util.CheckUserInactivity
 import com.farmbase.app.ui.navigation.Screen
@@ -63,8 +65,9 @@ class MainActivity : ComponentActivity() {
                 CheckInternetConnectivity(snackBarHostState = snackBarHostState, coroutineScope = coroutineScope)
                 CheckUserInactivity(sessionManager = sessionManager, snackBarHostState = snackBarHostState, coroutineScope = coroutineScope)
 
+                AppExitDialog(this)
+
                 val navController = rememberNavController()
-                val showExitDialog = remember { mutableStateOf(false) }
 
                 // State to track if getStartDestination has been called
                 var startDestination by remember { mutableStateOf<Screens?>(null) }
@@ -74,29 +77,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = getStartDestination(getData.finished)
                 }
 
-                // Back press handler
-                BackHandler {
-                    showExitDialog.value = true
-                }
 
-                // Show exit confirmation dialog
-                if (showExitDialog.value) {
-                    AlertDialog(
-                        onDismissRequest = { showExitDialog.value = false },
-                        title = { Text("Exit App") },
-                        text = { Text("Are you sure you want to close the app?") },
-                        confirmButton = {
-                            TextButton(onClick = { finish() }) {
-                                Text("Yes")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showExitDialog.value = false }) {
-                                Text("No")
-                            }
-                        }
-                    )
-                }
 
                 Scaffold(
                     snackbarHost = {
