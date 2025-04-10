@@ -35,6 +35,7 @@ import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.auth.ui.login.LoginScreen
 import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.models.Farmer
+import com.farmbase.app.ui.activityLearningVideos.ActivityLearningVideosScreen
 import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
 import com.farmbase.app.ui.executeOrUpdateActivity.ExecuteOrUpdateActivityScreen
 import com.farmbase.app.ui.farmerlist.FarmerListScreen
@@ -98,6 +99,8 @@ sealed class Screen(val route: String) {
             return "executeOrUpdateActivity?activityItem=$activityItem"
         }
     }
+
+    data object LearningVideos : Screen("learningVideos")
 
     data object FarmerList : Screen("farmerList")
     data object FarmerRegistration : Screen("farmerRegistration?farmerJson={farmerJson}") {
@@ -497,8 +500,16 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
             ExecuteOrUpdateActivityScreen(
                 activity = it,
                 onBackButtonClicked = { navController.navigateUp() },
+                onNextButtonClicked = { navController.navigate(Screen.LearningVideos.route)}
             )
         }
+    }
+
+    composable(Screen.LearningVideos.route) {
+        ActivityLearningVideosScreen (
+            onBackButtonClicked = { navController.navigateUp() },
+            onNextButtonClicked = { }
+        )
     }
 
     composable(Screen.FarmerList.route) {

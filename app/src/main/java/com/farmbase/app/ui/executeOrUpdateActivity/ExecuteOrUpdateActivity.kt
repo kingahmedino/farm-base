@@ -28,6 +28,7 @@ import com.farmbase.app.ui.widgets.activityCardSection
 fun ExecuteOrUpdateActivityScreen(
     activity: String,
     onBackButtonClicked:() -> Unit,
+    onNextButtonClicked:() -> Unit,
     viewModel: ExecuteOrUpdateActivityViewModel = hiltViewModel()
 ) {
     val list by viewModel.programList.collectAsStateWithLifecycle()
@@ -41,7 +42,7 @@ fun ExecuteOrUpdateActivityScreen(
       topBar = { TopBar(modifier = Modifier.fillMaxWidth()) {onBackButtonClicked()} },
         bottomBar = {
             NextButton(
-                onClick = { },
+                onClick = onNextButtonClicked,
                 enabled = selectedActivityCard != null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,7 +59,7 @@ fun ExecuteOrUpdateActivityScreen(
                 mainText = R.string.execute_or_update_activity,
                 subText = R.string.execute_or_update_activity_desc
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             ActivityCard(
                 iconUrl = activityCard?.iconUrl,
@@ -70,9 +71,9 @@ fun ExecuteOrUpdateActivityScreen(
                 radius = 0.dp,
                 )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             HorizontalDivider(thickness = 1.dp, color = colorResource(R.color.gray))
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 activityCardSection(
