@@ -57,7 +57,6 @@ fun ActivityLearningVideosScreen(
                 descriptionText = stringResource(R.string.learning_videos_desc),
                 isSelected = isSelected,
                 onClick = { isSelected = !isSelected},
-                radius = 0.dp,
             )
         }
     }
