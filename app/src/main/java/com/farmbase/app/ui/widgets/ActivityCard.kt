@@ -21,11 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
@@ -56,12 +59,13 @@ fun ActivityCard(
     isSelected :Boolean = false,
     count: Int = 0,
     onClick: () -> Unit,
+    radius: Dp = dimensionResource(R.dimen.corner_radius_standard)
 ) {
     val imageUri = iconFile.takeIf { it?.exists() == true }?.toUri()
     val data = imageUri ?: iconUrl?: icon
 
     // card container with rounded corners and border color based on selection state
-    Card(shape = RoundedCornerShape(10.dp),
+    Card(shape = RoundedCornerShape(radius),
         border = BorderStroke(width = 1.dp, color =if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(id = R.color.gray)),
         colors = CardDefaults.cardColors(containerColor = if (isSelected) colorResource(R.color.selected_card_color) else colorResource(id = R.color.white),
             contentColor = if (isSelected) colorResource(id = R.color.selected_card_content_color) else colorResource(id = R.color.black_text)),
