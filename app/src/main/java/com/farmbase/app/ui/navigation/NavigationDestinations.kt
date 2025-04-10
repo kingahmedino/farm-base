@@ -1,4 +1,5 @@
 package com.farmbase.app.ui.navigation
+import com.farmbase.app.utils.ActivityCardItem
 import kotlinx.serialization.Serializable
 
 
@@ -13,6 +14,7 @@ import kotlinx.serialization.Serializable
 @Serializable object SelectProgram
 @Serializable object SelectHomepage
 @Serializable data class MyHomepage(val role: String)
+@Serializable data class ExecuteActivity(val activityCardItem: String)
 
 /**
  * Possible destinations that can be navigated to within the app

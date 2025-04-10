@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.farmbase.app.ui.confirmAction.ConfirmActionScreen
+import com.farmbase.app.ui.executeOrUpdateActivity.ExecuteOrUpdateActivityScreen
 import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
@@ -52,6 +53,14 @@ fun Navigation(navHostController: NavHostController, startDestination: SplashScr
                     onBackButtonClicked = { navHostController.navigateUp()}
                 )
             }
+
+        composable<ExecuteActivity> { backStackEntry ->
+            val arguments: ExecuteActivity= backStackEntry.toRoute()
+            ExecuteOrUpdateActivityScreen(
+                activity = arguments.activityCardItem,
+                onBackButtonClicked = { navHostController.navigateUp()}
+            )
+        }
         }
    // }
 }
