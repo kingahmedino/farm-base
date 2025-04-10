@@ -68,7 +68,7 @@ fun ExecuteOrUpdateActivityScreen(
       topBar = { TopBar(modifier = Modifier.fillMaxWidth()) {onBackButtonClicked()} },
         bottomBar = {
             NextButton(
-                onClick = { if(selectedActivityCard?.headerText == context.getString(R.string.complete_activity)) {onNextButtonClicked()} else { showBottomSheet = false }},
+                onClick = { if(selectedActivityCard?.headerText == context.getString(R.string.complete_activity)) {onNextButtonClicked()} else { showBottomSheet = true }},
                 enabled = selectedActivityCard != null,
                 modifier = Modifier
                     .fillMaxWidth()
