@@ -50,6 +50,10 @@
 
     <string name="enter_security_pin">Enter Security Pin</string>
     <string name="enter_security_pin_subtext">Enter Your Security Pin To Proceed.</string>
+    <string name="execute_or_update_activity">Execute or Update Activity</string>
+    <string name="execute_or_update_activity_desc">"What will you like to do with this activity? Click the green color icon “Complete activity” to log if the activity has been done or click the yellow color icon “Provide Status Update” if the activity has not been executed, but you would like to provide more information about the status of this activity.\nThen click the green “Next” button to proceed."</string>
+    <string name="complete_activity">Complete Activity</string>
+    <string name="provide_status_update">Provide Status Update</string>
 
 
 </resources>
