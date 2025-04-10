@@ -1,38 +1,19 @@
 package com.farmbase.app.ui.navigation
 
 import FarmerRegistrationScreen
-import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.farmbase.app.auth.datastore.model.StartDestinationModel
-import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
-import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.otpscreen1.OtpScreen1
 import com.farmbase.app.auth.ui.components.otp.otpscreen2.OtpScreen2
-import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.auth.ui.login.LoginScreen
 import com.farmbase.app.auth.ui.screens.SplashScreen
 import com.farmbase.app.models.Farmer
@@ -42,9 +23,6 @@ import com.farmbase.app.ui.formBuilder.FormBuilder
 import com.farmbase.app.ui.homepage.HomepageScreen
 import com.farmbase.app.ui.selectHomepage.SelectHomepageScreen
 import com.farmbase.app.ui.selectProgram.SelectProgramScreen
-import com.farmbase.app.utils.Constants
-import com.farmbase.app.utils.HashHelper
-import com.farmbase.app.utils.SharedPreferencesManager
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
@@ -52,8 +30,6 @@ import java.net.URLEncoder
 import kotlin.text.Charsets.UTF_8
 
 sealed class Screen(val route: String) {
-
-    data object Auth : Screen("auth")
 
     // deep link version
     data object OtpScreen1 :
@@ -76,14 +52,6 @@ sealed class Screen(val route: String) {
     }
 
 
-    data object Login : Screen("login")
-
-    data object ConfirmAction : Screen("confirmActionScreen")
-
-    data object SelectProgram : Screen("selectProgram")
-
-    data object SelectHomepage : Screen("selectHomepage")
-
     data object MyHomepage : Screen("myHomepage?role={role}") {
         fun createRoute(role: String): String {
             return "myHomepage?role=$role"
@@ -102,11 +70,6 @@ sealed class Screen(val route: String) {
             }
         }
     }
-
-    data object NewForm : Screen("formBuilder")
-
-    data object Detail :
-        Screen("detail/{status}?accessToken={accessToken}&refreshToken={refreshToken}")
 
 }
 
@@ -146,11 +109,11 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
     }
 
-    composable(Screen.Auth.route) {
+    composable<Screens.Auth> {
         SplashScreen()
     }
 
-    composable(Screen.Login.route) {
+    composable<Screens.Login> {
 
         LoginScreen(
             navController = navController,
@@ -163,21 +126,21 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
 
     }
 
-    composable(Screen.ConfirmAction.route) {
+    composable<Screens.ConfirmAction> {
         ConfirmActionScreen(
             onBackButtonClicked = { navController.navigateUp() },
-            onContinueClicked = { navController.navigate(Screen.SelectHomepage.route) },
-            onSelectAnotherClicked = { navController.navigate(Screen.SelectProgram.route) }
+            onContinueClicked = { navController.navigate(Screens.SelectHomepage) },
+            onSelectAnotherClicked = { navController.navigate(Screens.SelectProgram) }
         )
     }
 
-    composable(Screen.SelectProgram.route) {
+    composable<Screens.SelectProgram> {
         SelectProgramScreen(
-            onNextButtonClicked = { navController.navigate(Screen.SelectHomepage.route) }
+            onNextButtonClicked = { navController.navigate(Screens.SelectHomepage) }
         )
     }
 
-    composable(Screen.SelectHomepage.route) {
+    composable<Screens.SelectHomepage> {
         SelectHomepageScreen(
             onBackButtonClicked = { navController.navigateUp() },
             onNextButtonClicked = { navController.navigate(Screen.MyHomepage.createRoute("Poultry Hub Lead")) }
@@ -205,7 +168,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
     composable(Screen.FarmerList.route) {
         FarmerListScreen(
             onAddNewFarmer = {
-                navController.navigate(Screen.NewForm.route)
+                navController.navigate(Screens.NewForm)
             },
             onEditFarmer = { farmer ->
                 navController.navigate(Screen.FarmerRegistration.createRoute(farmer))
@@ -239,7 +202,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
         )
     }
 
-    composable(Screen.NewForm.route) {
+    composable<Screens.NewForm> {
         FormBuilder()
     }
 

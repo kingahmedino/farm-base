@@ -19,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
-import com.farmbase.app.ui.navigation.Screen
+import com.farmbase.app.ui.navigation.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
@@ -43,10 +43,6 @@ fun LoginScreen(
 
     val onClick: () -> Unit = {
 
-        val otpCode =
-            state.code.joinToString("") // Convert the list of digits to a string
-
-
         val programId =
             SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
         Log.d("Program Id", programId.toString())
@@ -55,9 +51,9 @@ fun LoginScreen(
 
         // navigate
         if (programId.isNullOrBlank()) {
-            navController.navigate(Screen.SelectProgram.route)
+            navController.navigate(Screens.SelectProgram)
         } else {
-            navController.navigate(Screen.ConfirmAction.route)
+            navController.navigate(Screens.ConfirmAction)
         }
     }
 
@@ -88,7 +84,11 @@ fun LoginScreen(
     Scaffold(
         modifier = Modifier,
         topBar = {
-            TopBar(modifier = Modifier.fillMaxWidth()) { }
+            TopBar(modifier = Modifier.fillMaxWidth(), onBackClick =
+                {
+                    // todo: to be implemented
+//                    if (navController.canGoBack){ navController.popBackStack() }
+                })
         },
         bottomBar = {
             NextButton(

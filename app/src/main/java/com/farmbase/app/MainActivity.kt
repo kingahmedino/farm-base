@@ -31,6 +31,7 @@ import com.farmbase.app.auth.sessionManager.SessionManager
 import com.farmbase.app.auth.util.CheckInternetConnectivity
 import com.farmbase.app.auth.util.CheckUserInactivity
 import com.farmbase.app.ui.navigation.Screen
+import com.farmbase.app.ui.navigation.Screens
 import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 val showExitDialog = remember { mutableStateOf(false) }
 
                 // State to track if getStartDestination has been called
-                var startDestination by remember { mutableStateOf<String?>(null) }
+                var startDestination by remember { mutableStateOf<Screens?>(null) }
 
                 // Call getStartDestination only once
                 if (startDestination == null && getData.finished != null) {
@@ -139,9 +140,9 @@ class MainActivity : ComponentActivity() {
 
 
 
-    private fun getStartDestination(checkStartDestination: Boolean?): String {
-        return if (checkStartDestination == null || !checkStartDestination) Screen.Auth.route
-        else Screen.Login.route
+    private fun getStartDestination(checkStartDestination: Boolean?): Screens {
+        return if (checkStartDestination == null || !checkStartDestination) Screens.Auth
+        else Screens.Login
     }
 
     // session manager

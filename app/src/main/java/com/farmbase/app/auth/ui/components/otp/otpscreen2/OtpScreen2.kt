@@ -24,6 +24,7 @@ import com.farmbase.app.auth.datastore.model.StartDestinationModel
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.ui.navigation.Screen
+import com.farmbase.app.ui.navigation.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
@@ -198,9 +199,9 @@ fun OtpScreen2(
         Log.d("Program Id", programId.toString())
 
         if (programId.isNullOrBlank()) {
-            navController.navigate(Screen.SelectProgram.route)
+            navController.navigate(Screens.SelectProgram)
         } else {
-            navController.navigate(Screen.ConfirmAction.route)
+            navController.navigate(Screens.ConfirmAction)
         }
     }
 
