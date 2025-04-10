@@ -1,5 +1,6 @@
 package com.farmbase.app.ui.executeOrUpdateActivity
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,11 +23,10 @@ import com.farmbase.app.ui.widgets.ActivityCard
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.ui.widgets.activityCardSection
-import com.farmbase.app.utils.ActivityCardItem
 
 @Composable
 fun ExecuteOrUpdateActivityScreen(
-    activity: ActivityCardItem,
+    activity: String,
     onBackButtonClicked:() -> Unit,
     viewModel: ExecuteOrUpdateActivityViewModel = hiltViewModel()
 ) {
@@ -34,15 +34,15 @@ fun ExecuteOrUpdateActivityScreen(
     val selectedActivityCard by viewModel.selectedActivityCard.collectAsStateWithLifecycle()
     val activityCard by viewModel.activityCard.collectAsStateWithLifecycle()
 
-    /*LaunchedEffect(activity) {
+    LaunchedEffect(activity) {
        viewModel.updateSelectedActivityItem(activity)
-    }*/
+    }
     Scaffold(modifier = Modifier,
       topBar = { TopBar(modifier = Modifier.fillMaxWidth()) {onBackButtonClicked()} },
         bottomBar = {
             NextButton(
                 onClick = { },
-                enabled = true,
+                enabled = selectedActivityCard != null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -61,10 +61,10 @@ fun ExecuteOrUpdateActivityScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             ActivityCard(
-                iconUrl = activity.iconUrl,
-                iconFile = activity.iconFile,
-                icon = activity.icon,
-                headerText = activity.headerText ?:"",
+                iconUrl = activityCard?.iconUrl,
+                iconFile = null,
+                icon = activityCard?.icon?: R.drawable.ic_alert,
+                headerText = activityCard?.headerText ?:"",
                 isSelected = false,
                 onClick = {},
                 radius = 0.dp,
@@ -74,7 +74,7 @@ fun ExecuteOrUpdateActivityScreen(
             HorizontalDivider(thickness = 1.dp, color = colorResource(R.color.gray))
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 activityCardSection(
                     itemList = list,
                     isItemSelected = { selectedActivityCard == it },

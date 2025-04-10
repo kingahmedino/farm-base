@@ -94,10 +94,8 @@ sealed class Screen(val route: String) {
     }
 
     data object ExecuteOrUpdateActivity : Screen("executeOrUpdateActivity?activityItem={activityItem}"){
-        fun createRoute(activityItem: ActivityCardItem): String {
-            val jsonString = Json.encodeToString(activityItem)
-            val encodedJson = URLEncoder.encode(jsonString, UTF_8.toString())
-            return "executeOrUpdateActivity?activityItem=$encodedJson"
+        fun createRoute(activityItem: String): String {
+            return "executeOrUpdateActivity?activityItem=$activityItem"
         }
     }
 
@@ -494,11 +492,7 @@ fun NavGraphBuilder.farmerNavGraph(navController: NavController, innerPadding: P
             }
         )
     ) { entry ->
-        val activityItemJson = entry.arguments?.getString("activityItem")
-        val activityItem = activityItemJson?.let {encodedJson ->
-            val decodedJson = URLDecoder.decode(encodedJson, UTF_8.toString())
-            Json.decodeFromString<ActivityCardItem>(decodedJson)
-        }
+        val activityItem = entry.arguments?.getString("activityItem")
         activityItem?.let {
             ExecuteOrUpdateActivityScreen(
                 activity = it,

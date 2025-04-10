@@ -23,13 +23,14 @@ import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.ActivityCardItem
 import com.farmbase.app.utils.Constants
+import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomepageScreen(
     role: String,
     onBackButtonClicked: () -> Unit,
-    onNextButtonClicked: (ActivityCardItem) -> Unit,
+    onNextButtonClicked: (String) -> Unit,
     viewModel: HomepageViewModel = hiltViewModel()
 ) {
     LaunchedEffect(role) {
@@ -79,7 +80,8 @@ fun HomepageScreen(
         bottomBar = {
             NextButton(
                 onClick = { if (selectedActivityCard?.activityType == Constants.ActivityType.ACTIVITY) {
-                    onNextButtonClicked(selectedActivityCard!!)
+                    val activityCardItem = Gson().toJson(selectedActivityCard)
+                    onNextButtonClicked(activityCardItem)
                 } else {
                     showBottomSheet = true
                 }

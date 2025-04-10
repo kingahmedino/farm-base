@@ -1,6 +1,7 @@
 package com.farmbase.app.ui.executeOrUpdateActivity
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.farmbase.app.R
 import com.farmbase.app.utils.ActivityCardItem
@@ -59,5 +60,6 @@ class ExecuteOrUpdateActivityViewModel @Inject constructor(
     fun updateSelectedActivityItem(activityCardItem: String) {
         val activityItem = Gson().fromJson(activityCardItem, ActivityCardItem::class.java)
         _activityCard.value = activityItem
+        Log.d("Actvity Card", activityCardItem)
     }
 }
