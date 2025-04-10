@@ -1,4 +1,4 @@
-package com.farmbase.app.ui
+package com.farmbase.app.ui.success
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
