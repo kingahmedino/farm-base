@@ -1,7 +1,7 @@
 package com.farmbase.app.auth.ui.components.otp.otpscreen2
 
+//import com.farmbase.app.ui.navigation.target.Screens
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -19,14 +19,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.farmbase.app.auth.datastore.model.StartDestinationModel
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.ui.navigation.target.NavigationAuth
 import com.farmbase.app.ui.navigation.target.NavigationHomepage
-//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
@@ -39,15 +37,14 @@ fun OtpScreen2(
     onBackButtonClicked: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel(),
     startDestinationViewModel: StartDestinationViewModel = hiltViewModel(),
-    navBackStackEntry: NavBackStackEntry,
     args: NavigationAuth.OtpScreen2?
 ) {
     val context = LocalContext.current
 
-    val otpCode = args?.otpCode ?: ""
-    val accessToken = args?.accessToken ?: ""
-    val refreshToken = args?.refreshToken ?: ""
-    val resetPin = args?.resetPin ?: false
+    val otpCode = args?.authModel?.otpCode ?: ""
+    val accessToken = args?.authModel?.accessToken ?: ""
+    val refreshToken = args?.authModel?.refreshToken ?: ""
+    val resetPin = args?.authModel?.resetPin ?: false
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val focusRequesters = remember { List(4) { FocusRequester() } }
@@ -63,9 +60,6 @@ fun OtpScreen2(
 
         val userOtp = state.code.joinToString("")
         val hashedUserOtp = HashHelper.sha256(userOtp)
-
-        Toast.makeText(context, "$userOtp $accessToken", Toast.LENGTH_SHORT).show()
-        Toast.makeText(context, "$refreshToken $resetPin", Toast.LENGTH_LONG).show()
 
         SharedPreferencesManager(context).encryptedPut("userOtp", hashedUserOtp)
         SharedPreferencesManager(context).encryptedPut("accessToken", accessToken)

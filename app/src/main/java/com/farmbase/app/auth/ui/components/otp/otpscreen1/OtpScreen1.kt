@@ -1,6 +1,6 @@
 package com.farmbase.app.auth.ui.components.otp.otpscreen1
 
-import android.widget.Toast
+//import com.farmbase.app.ui.navigation.target.Screens
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,18 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import com.farmbase.app.auth.AuthModel
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.ui.navigation.target.NavigationAuth
-//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.HashHelper
@@ -30,14 +28,12 @@ import com.farmbase.app.utils.HashHelper
 fun OtpScreen1(
     navController: NavController,
     modifier: Modifier = Modifier,
-    navBackStackEntry: NavBackStackEntry,
     args: NavigationAuth.OtpScreen1?
 ) {
 
     // otp
-    val viewModel: OtpViewModel = hiltViewModel(navBackStackEntry) // Retain ViewModel
-
-    val context = LocalContext.current
+    val viewModel: OtpViewModel =
+        hiltViewModel(navController.currentBackStackEntry!!) // Retain ViewModel
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val focusRequesters = remember {
@@ -68,42 +64,21 @@ fun OtpScreen1(
     val refreshToken = args?.refreshToken ?: "N/A"
     val resetPin = args?.resetPin ?: false
 
-//    val status = navBackStackEntry.arguments?.getString("status") ?: "N/A"
-//    val accessToken = navBackStackEntry.arguments?.getString("accessToken") ?: "N/A"
-//    val refreshToken = navBackStackEntry.arguments?.getString("refreshToken") ?: "N/A"
-//    val resetPin = navBackStackEntry.arguments?.getBoolean("resetPin") ?: false
-
-
     val onClick: () -> Unit = {
-        val otpCode =
-            state.code.joinToString("") // Convert the list of digits to a string
-
-        Toast.makeText(context, "$status $accessToken", Toast.LENGTH_SHORT).show()
-        Toast.makeText(context, "$refreshToken $resetPin", Toast.LENGTH_LONG).show()
+        val otpCode = state.code.joinToString("") // Convert the list of digits to a string
 
         val hashed4DigitCode = HashHelper.sha256(otpCode)
-        navController.navigate(
 
-
-            NavigationAuth.OtpScreen2(
-                otpCode = hashed4DigitCode,
-                accessToken = accessToken,
-                refreshToken = refreshToken,
-                resetPin = resetPin
-            )
-
-//            Screen.OtpScreen2.createRoute(
-//                hashed4DigitCode,
-//                accessToken,
-//                refreshToken,
-//                resetPin
-//            )
-
-
+        val authModel = AuthModel(
+            status = status,
+            otpCode = hashed4DigitCode,
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            resetPin = resetPin
         )
-    }
 
-    //////
+        navController.navigate(NavigationAuth.OtpScreen2(authModel = authModel))
+    }
 
     Scaffold(
         modifier = Modifier,
@@ -137,9 +112,7 @@ fun OtpScreen1(
                     }
                     viewModel.onAction(action)
                 }
-
             )
-
         }
 
     )

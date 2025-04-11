@@ -20,7 +20,6 @@ import androidx.navigation.NavController
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.ui.navigation.target.NavigationHomepage
-//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
@@ -33,7 +32,6 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: OtpViewModel = hiltViewModel()
 ) {
-
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 

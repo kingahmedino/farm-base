@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,8 +25,6 @@ import com.farmbase.app.auth.ui.components.DoubleText
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpInputField
 import com.farmbase.app.auth.ui.components.otp.OtpState
-import com.farmbase.app.ui.widgets.NextButton
-import com.farmbase.app.ui.widgets.TopBar
 
 @Composable
 fun OtpScreen1Content(

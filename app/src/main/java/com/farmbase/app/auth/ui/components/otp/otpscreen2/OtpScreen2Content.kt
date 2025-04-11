@@ -13,10 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -30,96 +26,6 @@ import com.farmbase.app.auth.ui.components.otp.OtpInputField
 import com.farmbase.app.auth.ui.components.otp.OtpState
 import com.farmbase.app.ui.widgets.BottomSheet
 
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun OtpScreen2Content(
-    paddingValues: PaddingValues,
-    state: OtpState,
-    focusRequesters: List<FocusRequester>,
-    onAction: (OtpAction) -> Unit,
-    onClick: () -> Unit,
-) {
-    var dialogOpened by remember { mutableStateOf(false) }
-    var userPinCreationSuccess by remember { mutableStateOf(false) }
-
-    val sheetState = rememberModalBottomSheetState()
-
-    val headerText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully) else stringResource(
-        R.string.pin_mismatch)
-    val decText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully_subtext) else stringResource(
-        R.string.pin_mismatch_subtext)
-    val textColor = if(userPinCreationSuccess) colorResource(R.color.black_text) else colorResource(
-        R.color.cafitech_dark_red)
-    val backgroundColor = if(userPinCreationSuccess) colorResource(R.color.light_yellow) else colorResource(
-        R.color.cafitech_light_red)
-    val buttonColor = if(userPinCreationSuccess) R.color.yellow else R.color.cafitech_dark_red
-    val buttonTextColor = if(userPinCreationSuccess) R.color.black_text else R.color.white
-    val iconTint = if(userPinCreationSuccess) R.color.black_text else R.color.white
-
-    BottomSheet(
-        sheetState = sheetState,
-        showBottomSheet = dialogOpened,
-        sheetColor = backgroundColor,
-        headerText = headerText,
-        descText = decText,
-        textColor = textColor,
-        buttonColor = buttonColor,
-        buttonTextColor = buttonTextColor,
-        iconTint = iconTint,
-        onDismissRequest = { dialogOpened = false },
-        onButtonClick = { if(userPinCreationSuccess) { onClick() } else { dialogOpened = false } }
-    )
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp)
-                .fillMaxSize(),
-        ) {
-
-            DoubleText(
-                mainText = R.string.confirm_security_pin,
-                subText = R.string.confirm_your_4_digit_security_pin_to_proceed
-            )
-
-            Spacer(modifier = Modifier.height(54.dp))
-
-            Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                state.code.forEachIndexed { index, number ->
-                    OtpInputField(
-                        number = number,
-                        focusRequester = focusRequesters[index],
-                        onFocusChanged = { isFocused ->
-                            if (isFocused) {
-                                onAction(OtpAction.OnChangeFieldFocused(index))
-                            }
-                        },
-                        onNumberChanged = { newNumber ->
-                            onAction(OtpAction.OnEnterNumber(newNumber, index))
-                        },
-                        onKeyboardBack = {
-                            onAction(OtpAction.OnKeyboardBack)
-                        },
-                        modifier = Modifier.padding(8.dp)
-                            .weight(1f)
-                            .aspectRatio(1f)
-                    )
-                }
-            }
-
-            state.isValid?.let { isValid ->
-                LaunchedEffect(isValid) {
-                    userPinCreationSuccess = isValid
-                }
-            }
-        }
-
-}*/
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OtpScreen2Content(
@@ -132,37 +38,29 @@ fun OtpScreen2Content(
     onDialogOpenedChange: (Boolean) -> Unit,
     userPinCreationSuccess: Boolean,
     onPinSuccessChange: (Boolean) -> Unit
-){
-//    var dialogOpened by remember { mutableStateOf(false) }
-//    var userPinCreationSuccess by remember { mutableStateOf(false) }
+) {
 
     val sheetState = rememberModalBottomSheetState()
 
-    val headerText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully) else stringResource(
-        R.string.pin_mismatch)
-    val decText = if(userPinCreationSuccess) stringResource(R.string.pin_created_successfully_subtext) else stringResource(
-        R.string.pin_mismatch_subtext)
-    val textColor = if(userPinCreationSuccess) colorResource(R.color.black_text) else colorResource(
-        R.color.cafitech_dark_red)
-    val backgroundColor = if(userPinCreationSuccess) colorResource(R.color.light_yellow) else colorResource(
-        R.color.cafitech_light_red)
-    val buttonColor = if(userPinCreationSuccess) R.color.yellow else R.color.cafitech_dark_red
-    val buttonTextColor = if(userPinCreationSuccess) R.color.black_text else R.color.white
-    val iconTint = if(userPinCreationSuccess) R.color.black_text else R.color.white
-
-//    BottomSheet(
-//        sheetState = sheetState,
-//        showBottomSheet = dialogOpened,
-//        sheetColor = backgroundColor,
-//        headerText = headerText,
-//        descText = decText,
-//        textColor = textColor,
-//        buttonColor = buttonColor,
-//        buttonTextColor = buttonTextColor,
-//        iconTint = iconTint,
-//        onDismissRequest = { dialogOpened = false },
-//        onButtonClick = { if(userPinCreationSuccess) { onClick() } else { dialogOpened = false } }
-//    )
+    val headerText =
+        if (userPinCreationSuccess) stringResource(R.string.pin_created_successfully) else stringResource(
+            R.string.pin_mismatch
+        )
+    val decText =
+        if (userPinCreationSuccess) stringResource(R.string.pin_created_successfully_subtext) else stringResource(
+            R.string.pin_mismatch_subtext
+        )
+    val textColor =
+        if (userPinCreationSuccess) colorResource(R.color.black_text) else colorResource(
+            R.color.cafitech_dark_red
+        )
+    val backgroundColor =
+        if (userPinCreationSuccess) colorResource(R.color.light_yellow) else colorResource(
+            R.color.cafitech_light_red
+        )
+    val buttonColor = if (userPinCreationSuccess) R.color.yellow else R.color.cafitech_dark_red
+    val buttonTextColor = if (userPinCreationSuccess) R.color.black_text else R.color.white
+    val iconTint = if (userPinCreationSuccess) R.color.black_text else R.color.white
 
     BottomSheet(
         sheetState = sheetState,
@@ -176,7 +74,7 @@ fun OtpScreen2Content(
         iconTint = iconTint,
         onDismissRequest = { onDialogOpenedChange(false) },
         onButtonClick = {
-            if(userPinCreationSuccess) {
+            if (userPinCreationSuccess) {
                 onClick()
             } else {
                 onDialogOpenedChange(false)
@@ -186,55 +84,50 @@ fun OtpScreen2Content(
 
 
     Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp)
-                .fillMaxSize(),
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(horizontal = 16.dp)
+            .fillMaxSize(),
+    ) {
+
+        DoubleText(
+            mainText = R.string.confirm_security_pin,
+            subText = R.string.confirm_your_4_digit_security_pin_to_proceed
+        )
+
+        Spacer(modifier = Modifier.height(54.dp))
+
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-
-            DoubleText(
-                mainText = R.string.confirm_security_pin,
-                subText = R.string.confirm_your_4_digit_security_pin_to_proceed
-            )
-
-            Spacer(modifier = Modifier.height(54.dp))
-
-            Row(
-                modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                state.code.forEachIndexed { index, number ->
-                    OtpInputField(
-                        number = number,
-                        focusRequester = focusRequesters[index],
-                        onFocusChanged = { isFocused ->
-                            if (isFocused) {
-                                onAction(OtpAction.OnChangeFieldFocused(index))
-                            }
-                        },
-                        onNumberChanged = { newNumber ->
-                            onAction(OtpAction.OnEnterNumber(newNumber, index))
-                        },
-                        onKeyboardBack = {
-                            onAction(OtpAction.OnKeyboardBack)
-                        },
-                        modifier = Modifier.padding(8.dp)
-                            .weight(1f)
-                            .aspectRatio(1f)
-                    )
-                }
+            state.code.forEachIndexed { index, number ->
+                OtpInputField(
+                    number = number,
+                    focusRequester = focusRequesters[index],
+                    onFocusChanged = { isFocused ->
+                        if (isFocused) {
+                            onAction(OtpAction.OnChangeFieldFocused(index))
+                        }
+                    },
+                    onNumberChanged = { newNumber ->
+                        onAction(OtpAction.OnEnterNumber(newNumber, index))
+                    },
+                    onKeyboardBack = {
+                        onAction(OtpAction.OnKeyboardBack)
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .weight(1f)
+                        .aspectRatio(1f)
+                )
             }
+        }
 
         LaunchedEffect(state.isValid) {
             state.isValid?.let { onPinSuccessChange(it) }
         }
-
-//        state.isValid?.let { isValid ->
-//                LaunchedEffect(isValid) {
-//                    userPinCreationSuccess = isValid
-//                }
-//            }
-        }
+    }
 
 }

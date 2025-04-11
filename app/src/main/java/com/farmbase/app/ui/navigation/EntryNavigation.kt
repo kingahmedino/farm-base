@@ -9,9 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.farmbase.app.ui.navigation.target.NavigationTarget
 
-//import com.farmbase.app.ui.navigation.target.Screens
-
-
 @Composable
 fun EntryNavigation(
     navHostController: NavHostController,

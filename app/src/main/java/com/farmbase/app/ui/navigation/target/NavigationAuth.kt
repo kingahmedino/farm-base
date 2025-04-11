@@ -1,5 +1,6 @@
 package com.farmbase.app.ui.navigation.target
 
+import com.farmbase.app.auth.AuthModel
 import kotlinx.serialization.Serializable
 
 sealed interface NavigationAuth : NavigationTarget {
@@ -14,10 +15,7 @@ sealed interface NavigationAuth : NavigationTarget {
 
     @Serializable
     data class OtpScreen2(
-        val otpCode: String,
-        val accessToken: String,
-        val refreshToken: String,
-        val resetPin: Boolean
+        val authModel: AuthModel
     ) : NavigationAuth
 
     @Serializable

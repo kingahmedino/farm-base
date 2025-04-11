@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.serialization)
     kotlin("kapt")
     alias(libs.plugins.compose.compiler)
+    id("kotlin-parcelize")
+
 }
 
 val envFile = rootProject.file("env.properties")
