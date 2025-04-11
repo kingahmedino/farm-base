@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.serialization)
     kotlin("kapt")
     alias(libs.plugins.compose.compiler)
+    id("de.comahe.i18n4k") version "0.10.0"
 }
 
 val envFile = rootProject.file("env.properties")
@@ -74,7 +75,14 @@ android {
     }
 }
 
+// configure i18n4k
+i18n4k {
+    sourceCodeLocales = listOf("en", "ha_NG")
+}
+
 dependencies {
+
+    implementation(libs.i18n4k.core.android)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

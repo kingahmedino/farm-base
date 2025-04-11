@@ -2,7 +2,9 @@ package com.farmbase.app.auth.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,13 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,67 +31,88 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.farmbase.app.R
 import com.farmbase.app.auth.util.AuthObjects.launchWebsite
+import com.farmbase.app.i18n.ui.LanguagesMenu
 import com.farmbase.app.ui.theme.FredokaFontFamily
 import com.farmbase.app.ui.widgets.NextButtonEnabled
+import x.y.MyMessages
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
+fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues?) {
+
+    var expandLanguageMenu by remember { mutableStateOf(false) }
+    
     val context = LocalContext.current
 
 //    Scaffold (
 //        content = {
     //   paddingValues ->
 
-    Column(
-        modifier = modifier
-            //.padding(paddingValues)
-//                .padding(innerPadding)
-            .fillMaxSize()
-            .background(
-                colorResource(R.color.cafitech_dark_green)
-            ),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Image(painter = painterResource(R.drawable.group_4), contentDescription = "null")
-
-        Spacer(modifier = modifier
-            .fillMaxWidth()
-            .height(24.dp))
-
-        Text(
-            stringResource(R.string.cafitech),
-            fontSize = 32.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FredokaFontFamily
-        )
-        Text(
-            stringResource(R.string.ecosystem),
-            fontSize = 32.sp,
-            color = Color.White,
-            modifier = modifier.padding(top = 12.dp),
-            fontWeight = FontWeight.Bold,
-            fontFamily = FredokaFontFamily
-        )
-
-        Spacer(modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp))
-
-        NextButtonEnabled(
+    Box {
+        Column(
             modifier = modifier
+                //.padding(paddingValues)
+//                .padding(innerPadding)
+                .fillMaxSize()
+                .background(
+                    colorResource(R.color.cafitech_dark_green)
+                ),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Image(painter = painterResource(R.drawable.group_4), contentDescription = "null")
+
+            Spacer(modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            buttonColor = R.color.cafitech_light_green,
-            onClick = {
-                // do nothing
-                launchWebsite(context = context)
-            },
-            buttonText = stringResource(R.string.login),
-            shouldIconShow = false
-        )
+                .height(24.dp))
+
+            Text(
+                MyMessages.cafitech(),
+                fontSize = 32.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FredokaFontFamily
+            )
+            Text(
+                MyMessages.ecosystem().uppercase(),
+                fontSize = 32.sp,
+                color = Color.White,
+                modifier = modifier.padding(top = 12.dp),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FredokaFontFamily
+            )
+
+            Spacer(modifier = modifier
+                .fillMaxWidth()
+                .height(48.dp))
+
+            NextButtonEnabled(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                buttonColor = R.color.cafitech_light_green,
+                onClick = {
+                    // do nothing
+                    launchWebsite(context = context)
+                },
+                buttonText = MyMessages.login(),
+                shouldIconShow = false
+            )
+        }
+        Box(
+            modifier = modifier
+                .padding(top = 10.dp)
+                .clickable {
+                    expandLanguageMenu = true
+                },
+        ){
+            LanguagesMenu(
+                isExpanded = expandLanguageMenu,
+                onDismiss = {
+                    expandLanguageMenu = false
+                }
+            )
+        }
     }
 
 //        }
@@ -103,6 +125,8 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues) {
 @Composable
 @Preview
 fun SplashScreenPreview() {
-//   SplashScreen()
+   SplashScreen(
+       innerPadding = null
+   )
 }
 

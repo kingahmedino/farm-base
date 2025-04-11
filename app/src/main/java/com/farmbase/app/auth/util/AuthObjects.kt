@@ -7,12 +7,13 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.farmbase.app.R
+import com.farmbase.app.i18n.utils.I18nManager
 
 object AuthObjects {
 
     fun launchWebsite(context: Context) {
         val URL =
-            "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app"
+            "https://iam-service-frontend-v25.agric-os.com?scheme=yourapp&package=com.farmbase.app&lang=${I18nManager.currentLocal?.language ?: "en"}"
 
         val customizeChromeIntent = CustomTabsIntent.Builder()
             // set Color of the Toolbar

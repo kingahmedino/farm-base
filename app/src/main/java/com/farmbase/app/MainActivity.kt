@@ -3,15 +3,12 @@ package com.farmbase.app
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -33,33 +30,26 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.globalsnackbar.ObserveAsEvents
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.globalsnackbar.SnackbarController
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
-import com.farmbase.app.auth.ui.components.otp.OtpAction
-import com.farmbase.app.auth.ui.components.otp.OtpViewModel
+import com.farmbase.app.i18n.utils.I18nManager
+import com.farmbase.app.i18n.utils.I18nManager.Companion.setLocale
 import com.farmbase.app.ui.navigation.Screen
 import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
-import com.farmbase.app.ui.theme.PLCodingGray
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import x.y.MyMessages
 import javax.inject.Inject
 
 //@AndroidEntryPoint
@@ -417,6 +407,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        I18nManager.initI18n4k(this)
+
         setContent {
             FarmBaseTheme {
 
@@ -557,6 +550,17 @@ class MainActivity : ComponentActivity() {
                                 Log.d("TAG", "accessToken: $accessToken")
                                 Log.d("TAG", "refreshToken: $refreshToken")
                                 Log.d("TAG", "resetPin: $resetPin")
+
+
+                                // Set the app language to the web language if required
+                                val lang = intent.getStringExtra("lang")
+                                lang?.let {
+                                    Log.d("TAG", "lang: $lang")
+                                    val local = MyMessages.locales.find { locale -> locale.language == lang }
+                                    local?.let {
+                                        setLocale(it, context)
+                                    }
+                                }
 
                                 navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
                                     launchSingleTop = true;
