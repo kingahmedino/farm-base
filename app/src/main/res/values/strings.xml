@@ -55,6 +55,9 @@
     <string name="complete_activity">Complete Activity</string>
     <string name="provide_status_update">Provide Status Update</string>
     <string name="done">Done</string>
+    <string name="enter_comments_take_picture">Enter Comments / Take Picture</string>
+    <string name="enter_comments_take_picture_desc">Optionally enter comments or take pictures, if needed.</string>
+    <string name="enter_comment">Enter Comment</string>
 
 
 </resources>
