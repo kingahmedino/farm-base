@@ -19,7 +19,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
-import com.farmbase.app.ui.navigation.Screens
+import com.farmbase.app.ui.navigation.target.NavigationHomepage
+//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
@@ -51,9 +52,9 @@ fun LoginScreen(
 
         // navigate
         if (programId.isNullOrBlank()) {
-            navController.navigate(Screens.SelectProgram)
+            navController.navigate(NavigationHomepage.SelectProgram)
         } else {
-            navController.navigate(Screens.ConfirmAction)
+            navController.navigate(NavigationHomepage.ConfirmAction)
         }
     }
 

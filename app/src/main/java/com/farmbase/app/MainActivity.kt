@@ -2,20 +2,14 @@ package com.farmbase.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,16 +19,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
 import com.farmbase.app.auth.util.AppExitDialog
 import com.farmbase.app.auth.util.CheckInternetConnectivity
 import com.farmbase.app.auth.util.CheckUserInactivity
-import com.farmbase.app.ui.navigation.Screen
-import com.farmbase.app.ui.navigation.Screens
-import com.farmbase.app.ui.navigation.farmerNavGraph
+import com.farmbase.app.ui.navigation.EntryNavigation
+import com.farmbase.app.ui.navigation.target.NavigationAuth
+import com.farmbase.app.ui.navigation.target.NavigationTarget
+//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -58,26 +52,22 @@ class MainActivity : ComponentActivity() {
                 // global snack bar
                 val snackBarHostState = remember { SnackbarHostState() }
                 val coroutineScope = rememberCoroutineScope()
+                val navController = rememberNavController()
+
+                // State to track if getStartDestination has been called
+                var startDestination by remember { mutableStateOf<NavigationTarget?>(null) }
 
                 // global snack bar
 
                 // CheckInternetConnectivity
                 CheckInternetConnectivity(snackBarHostState = snackBarHostState, coroutineScope = coroutineScope)
                 CheckUserInactivity(sessionManager = sessionManager, snackBarHostState = snackBarHostState, coroutineScope = coroutineScope)
-
                 AppExitDialog(this)
-
-                val navController = rememberNavController()
-
-                // State to track if getStartDestination has been called
-                var startDestination by remember { mutableStateOf<Screens?>(null) }
 
                 // Call getStartDestination only once
                 if (startDestination == null && getData.finished != null) {
                     startDestination = getStartDestination(getData.finished)
                 }
-
-
 
                 Scaffold(
                     snackbarHost = {
@@ -88,13 +78,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     if (startDestination != null) {
-                        NavHost(
-                            navController = navController,
-                            modifier = Modifier.padding(innerPadding),
-                            startDestination = startDestination!!
-                        ) {
-                            farmerNavGraph(navController, innerPadding)
-                        }
+
+                        EntryNavigation(
+                            navHostController = navController,
+                            startDestination = startDestination!!,
+                            modifier = Modifier.padding(innerPadding)
+                        )
 
                         LaunchedEffect(intent) {
                             intent?.data?.let { uri ->
@@ -103,27 +92,26 @@ class MainActivity : ComponentActivity() {
                                 val refreshToken = intent.getStringExtra("refreshToken") ?: ""
                                 val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
 
-                                Log.d("TAG", "status: $status")
-                                Log.d("TAG", "accessToken: $accessToken")
-                                Log.d("TAG", "refreshToken: $refreshToken")
-                                Log.d("TAG", "resetPin: $resetPin")
-
-                                navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
-                                    launchSingleTop = true;
-                                }
+                                navController.navigate(
+                                    NavigationAuth.OtpScreen1(
+                                        status = status,
+                                        accessToken = accessToken,
+                                        refreshToken = refreshToken,
+                                        resetPin = resetPin
+                                    )
+                                )
                             }
                         }
+
                     }
                 }
             }
         }
     }
 
-
-
-    private fun getStartDestination(checkStartDestination: Boolean?): Screens {
-        return if (checkStartDestination == null || !checkStartDestination) Screens.Auth
-        else Screens.Login
+    private fun getStartDestination(checkStartDestination: Boolean?): NavigationTarget {
+        return if (checkStartDestination == null || !checkStartDestination) NavigationAuth.Auth
+        else NavigationAuth.Login
     }
 
     // session manager

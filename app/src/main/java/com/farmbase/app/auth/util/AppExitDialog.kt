@@ -8,6 +8,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
+import com.farmbase.app.R
 
 @Composable
 fun AppExitDialog(activity : ComponentActivity){
@@ -23,16 +25,16 @@ fun AppExitDialog(activity : ComponentActivity){
     if (showExitDialog.value) {
         AlertDialog(
             onDismissRequest = { showExitDialog.value = false },
-            title = { Text("Exit App") },
-            text = { Text("Are you sure you want to close the app?") },
+            title = { Text(stringResource(R.string.exit_app)) },
+            text = { Text(stringResource(R.string.are_you_sure_you_want_to_close_the_app)) },
             confirmButton = {
                 TextButton(onClick = { activity.finish() }) {
-                    Text("Yes")
+                    Text(stringResource(R.string.yes))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showExitDialog.value = false }) {
-                    Text("No")
+                    Text(stringResource(R.string.no))
                 }
             }
         )

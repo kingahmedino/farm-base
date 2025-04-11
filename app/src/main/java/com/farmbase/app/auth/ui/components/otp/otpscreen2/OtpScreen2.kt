@@ -1,6 +1,7 @@
 package com.farmbase.app.auth.ui.components.otp.otpscreen2
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -23,143 +24,14 @@ import androidx.navigation.NavController
 import com.farmbase.app.auth.datastore.model.StartDestinationModel
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
-import com.farmbase.app.ui.navigation.Screen
-import com.farmbase.app.ui.navigation.Screens
+import com.farmbase.app.ui.navigation.target.NavigationAuth
+import com.farmbase.app.ui.navigation.target.NavigationHomepage
+//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
-
-/*@Composable
-fun OtpScreen2(
-    navController: NavController,
-    onBackButtonClicked: () -> Unit,
-    viewModel: OtpViewModel = hiltViewModel(),
-    startDestinationViewModel: StartDestinationViewModel = hiltViewModel(),
-    navBackStackEntry: NavBackStackEntry
-) {
-
-    val context = LocalContext.current
-
-    val otpCode = navBackStackEntry.arguments?.getString("otpCode") ?: ""
-    val accessToken = navBackStackEntry.arguments?.getString("accessToken") ?: ""
-    val refreshToken = navBackStackEntry.arguments?.getString("refreshToken") ?: ""
-    val resetPin = navBackStackEntry.arguments?.getBoolean("resetPin") ?: false
-
-
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val focusRequesters = remember {
-        List(4) { FocusRequester() }
-    }
-    val focusManager = LocalFocusManager.current
-    val keyboardManager = LocalSoftwareKeyboardController.current
-
-    val onClick: () -> Unit = {
-
-        // set start destination
-        val setStartDestinationModel = StartDestinationModel(finished = true)
-
-        startDestinationViewModel.saveData(setStartDestinationModel)
-        // set start destination
-
-        val userOtp = state.code.joinToString("")
-
-        val hashedUserOtp = HashHelper.sha256(userOtp)
-
-        // save access and refresh token in encrypted shared prefs
-
-        SharedPreferencesManager(context).encryptedPut(
-            key = "userOtp",
-            value = hashedUserOtp
-        )
-
-        SharedPreferencesManager(context).encryptedPut(
-            key = "accessToken",
-            value = accessToken
-        )
-
-        SharedPreferencesManager(context).encryptedPut(
-            key = "refreshToken",
-            value = refreshToken
-        )
-
-        val programId =
-            SharedPreferencesManager(context).encryptedGet(key = Constants.SELECTED_PROGRAM_ID)
-        Log.d("Program Id", programId.toString())
-
-        // save access and refresh token in encrypted shared prefs
-
-        // navigate
-        if (programId.isNullOrBlank()) {
-            navController.navigate(Screen.SelectProgram.route)
-        } else {
-            navController.navigate(Screen.ConfirmAction.route)
-        }
-    }
-
-    LaunchedEffect(state.focusedIndex) {
-        state.focusedIndex?.let { index ->
-            focusRequesters.getOrNull(index)?.requestFocus()
-        }
-    }
-
-    LaunchedEffect(state.code, keyboardManager) {
-        val allNumbersEntered = state.code.none { it == null }
-        if (allNumbersEntered) {
-            focusRequesters.forEach {
-                it.freeFocus()
-            }
-            focusManager.clearFocus()
-            keyboardManager?.hide()
-        }
-    }
-
-    // hashed otp code
-    viewModel.firstOtpCodeData = otpCode
-
-    Scaffold(
-        modifier = Modifier,
-        topBar = {
-            TopBar(modifier = Modifier.fillMaxWidth()) { onBackButtonClicked() }
-        },
-        bottomBar = {
-            NextButton(
-                onClick = {
-                    // error is here, need to link dialogOpened here to
-                    // dialogOpened in OtpScreen2Content
-                    dialogOpened = true
-                          },
-                enabled = state.code.all { it != null },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
-        },
-
-        content = { paddingValues ->
-
-            OtpScreen2Content(
-                paddingValues = paddingValues,
-                state = state,
-                focusRequesters = focusRequesters,
-                onAction = { action ->
-                    when (action) {
-                        is OtpAction.OnEnterNumber -> {
-                            if (action.number != null) {
-                                focusRequesters[action.index].freeFocus()
-                            }
-                        }
-
-                        else -> Unit
-                    }
-                    viewModel.onAction(action)
-                },
-                onClick = onClick,
-            )
-        }
-    )
-}*/
 
 @Composable
 fun OtpScreen2(
@@ -167,14 +39,15 @@ fun OtpScreen2(
     onBackButtonClicked: () -> Unit,
     viewModel: OtpViewModel = hiltViewModel(),
     startDestinationViewModel: StartDestinationViewModel = hiltViewModel(),
-    navBackStackEntry: NavBackStackEntry
+    navBackStackEntry: NavBackStackEntry,
+    args: NavigationAuth.OtpScreen2?
 ) {
     val context = LocalContext.current
 
-    val otpCode = navBackStackEntry.arguments?.getString("otpCode") ?: ""
-    val accessToken = navBackStackEntry.arguments?.getString("accessToken") ?: ""
-    val refreshToken = navBackStackEntry.arguments?.getString("refreshToken") ?: ""
-    val resetPin = navBackStackEntry.arguments?.getBoolean("resetPin") ?: false
+    val otpCode = args?.otpCode ?: ""
+    val accessToken = args?.accessToken ?: ""
+    val refreshToken = args?.refreshToken ?: ""
+    val resetPin = args?.resetPin ?: false
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val focusRequesters = remember { List(4) { FocusRequester() } }
@@ -191,6 +64,9 @@ fun OtpScreen2(
         val userOtp = state.code.joinToString("")
         val hashedUserOtp = HashHelper.sha256(userOtp)
 
+        Toast.makeText(context, "$userOtp $accessToken", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "$refreshToken $resetPin", Toast.LENGTH_LONG).show()
+
         SharedPreferencesManager(context).encryptedPut("userOtp", hashedUserOtp)
         SharedPreferencesManager(context).encryptedPut("accessToken", accessToken)
         SharedPreferencesManager(context).encryptedPut("refreshToken", refreshToken)
@@ -199,9 +75,9 @@ fun OtpScreen2(
         Log.d("Program Id", programId.toString())
 
         if (programId.isNullOrBlank()) {
-            navController.navigate(Screens.SelectProgram)
+            navController.navigate(NavigationHomepage.SelectProgram)
         } else {
-            navController.navigate(Screens.ConfirmAction)
+            navController.navigate(NavigationHomepage.ConfirmAction)
         }
     }
 

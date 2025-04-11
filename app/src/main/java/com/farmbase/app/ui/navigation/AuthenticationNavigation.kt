@@ -1,60 +1,55 @@
 package com.farmbase.app.ui.navigation
 
+import android.util.Log
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.farmbase.app.auth.ui.components.otp.otpscreen1.OtpScreen1
 import com.farmbase.app.auth.ui.components.otp.otpscreen2.OtpScreen2
 import com.farmbase.app.auth.ui.login.LoginScreen
 import com.farmbase.app.auth.ui.screens.SplashScreen
+import com.farmbase.app.ui.navigation.target.NavigationAuth
+
+//import com.farmbase.app.ui.navigation.target.Screens
 
 fun NavGraphBuilder.authenticationRoute(
     modifier: Modifier,
     navHostController: NavHostController
 ) {
 
-    composable(
-        route = Screen.OtpScreen1.route,
+    composable<NavigationAuth.OtpScreen1> { backStackEntry ->
+        val args = backStackEntry.toRoute<NavigationAuth.OtpScreen1>()
 
-        arguments = listOf(
-            navArgument("status") { type = NavType.StringType; defaultValue = "" },
-            navArgument("accessToken") { type = NavType.StringType; defaultValue = "" },
-            navArgument("refreshToken") { type = NavType.StringType; defaultValue = "" },
-            navArgument("resetPin") { type = NavType.BoolType; defaultValue = false }
-        )
+        Log.d("authenticationRoute1", "authenticationRoute1: ${args.toString()}")
 
-    ) { navBackStackEntry ->
         OtpScreen1(
             navController = navHostController,
-            navBackStackEntry = navBackStackEntry
+            navBackStackEntry = backStackEntry,
+            modifier = modifier,
+            args = args
         )
     }
 
+    composable<NavigationAuth.OtpScreen2> { backStackEntry ->
+        val args = backStackEntry.toRoute<NavigationAuth.OtpScreen2>()
+        Log.d("authenticationRoute2", "authenticationRoute2: ${args.toString()}")
 
-    composable(
-        route = Screen.OtpScreen2.route,
-        arguments = listOf(
-            navArgument("otpCode") { type = NavType.StringType },
-            navArgument("accessToken") { type = NavType.StringType; defaultValue = "" },
-            navArgument("refreshToken") { type = NavType.StringType; defaultValue = "" },
-            navArgument("resetPin") { type = NavType.BoolType; defaultValue = false },
-        )
-    ) { navBackStackEntry ->
+
         OtpScreen2(
             navController = navHostController,
-            navBackStackEntry = navBackStackEntry,
+            navBackStackEntry = backStackEntry,
+            args = args,
             onBackButtonClicked = { navHostController.popBackStack() }
         )
     }
 
-    composable<Screens.Auth> {
+    composable<NavigationAuth.Auth> {
         SplashScreen()
     }
 
-    composable<Screens.Login> {
+    composable<NavigationAuth.Login> {
         LoginScreen(
             navController = navHostController,
             modifier = modifier

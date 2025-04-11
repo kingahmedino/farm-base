@@ -7,12 +7,15 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.farmbase.app.ui.navigation.target.NavigationTarget
+
+//import com.farmbase.app.ui.navigation.target.Screens
 
 
 @Composable
 fun EntryNavigation(
     navHostController: NavHostController,
-    startDestination: SplashScreen,
+    startDestination: NavigationTarget,
     modifier: Modifier
 ) {
 
@@ -66,5 +69,19 @@ fun NavController.navigateToScreen(route: NavigationDestinations) {
     }
 }
 
+
+/**
+ * An extension property for [NavHostController] that determines if it's safe to navigate back.
+ * It checks the lifecycle state of the current back stack entry. If the current screen
+ * is in the [Lifecycle.State.RESUMED] state, it implies that the screen is currently
+ * visible and active, making it generally safe to perform a `popBackStack()` operation.
+ */
 val NavHostController.canGoBack: Boolean
+// Get the current back stack entry. This represents the currently displayed screen.
+
     get() = this.currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
+
+// Check if there is a current back stack entry and if its lifecycle state is RESUMED.
+// A RESUMED state indicates that the composable associated with this entry is currently
+// active and visible on the screen. Navigating back from a RESUMED state is generally safe.
+

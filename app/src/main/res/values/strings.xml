@@ -50,6 +50,10 @@
 
     <string name="enter_security_pin">Enter Security Pin</string>
     <string name="enter_security_pin_subtext">Enter Your Security Pin To Proceed.</string>
+    <string name="exit_app">Exit App</string>
+    <string name="are_you_sure_you_want_to_close_the_app">Are you sure you want to close the app?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
 </resources>
