@@ -73,7 +73,7 @@ fun LanguagesMenu(
                 value = query,
                 onValueChange = { value ->
                     query = value
-                    locales = MyMessages.locales.filter {
+                    locales = myLocales.filter {
                         it.displayName.contains(
                             query,
                             ignoreCase = true
