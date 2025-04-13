@@ -12,10 +12,12 @@ import com.farmbase.app.auth.globalsnackbar.SnackBarController
 import com.farmbase.app.auth.sessionManager.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CheckUserInactivity(
-    snackBarViewModel: SnackBarViewModel = hiltViewModel(),
+//    snackBarViewModel: SnackBarViewModel = hiltViewModel(),
+    snackBarViewModel: SnackBarViewModel = koinViewModel(),
     snackBarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
     sessionManager: SessionManager

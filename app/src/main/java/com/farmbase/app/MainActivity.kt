@@ -28,16 +28,20 @@ import com.farmbase.app.auth.util.CheckUserInactivity
 import com.farmbase.app.ui.navigation.EntryNavigation
 import com.farmbase.app.ui.navigation.target.NavigationAuth
 import com.farmbase.app.ui.navigation.target.NavigationTarget
-//import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var sessionManager: SessionManager
+//    @Inject
+//    lateinit var sessionManager: SessionManager
+
+    private val sessionManager: SessionManager by inject()
+
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +50,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             FarmBaseTheme {
 
-                val viewmodel: StartDestinationViewModel = hiltViewModel()
+//                val viewmodel: StartDestinationViewModel = hiltViewModel()
+                val viewmodel: StartDestinationViewModel = koinViewModel()
                 val getData by viewmodel.getData.collectAsStateWithLifecycle()
 
                 // global snack bar

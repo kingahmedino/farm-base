@@ -9,12 +9,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object StartDestinationDataStore {
-
-    @Singleton
-    @Provides
-    fun provideDataStoreRepository(@ApplicationContext context: Context)= StartDestinationRepo(context)
-
-}
+//@Module
+//@InstallIn(SingletonComponent::class)
+//object StartDestinationDataStore {
+//
+//    @Singleton
+//    @Provides
+//    fun provideDataStoreRepository(@ApplicationContext context: Context)= StartDestinationRepo(context)
+//
+//}

@@ -16,16 +16,13 @@ val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = Dat
 
 
 class StartDestinationRepo(private val context: Context) : StartDestinationInterface {
-
     companion object {
         val FINISHED = booleanPreferencesKey("FINISHED")
-
     }
 
     override suspend fun saveDataStore(startDestinationModel: StartDestinationModel) {
         context.datastore.edit { datastore ->
             datastore[FINISHED] = startDestinationModel.finished ?: false
-
         }
     }
 
@@ -34,7 +31,6 @@ class StartDestinationRepo(private val context: Context) : StartDestinationInter
             StartDestinationModel(
                 finished = datastore[FINISHED] ?: false
             )
-
         }
 
 }

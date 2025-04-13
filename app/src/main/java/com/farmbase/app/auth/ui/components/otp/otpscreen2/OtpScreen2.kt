@@ -30,13 +30,16 @@ import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OtpScreen2(
     navController: NavController,
     onBackButtonClicked: () -> Unit,
-    viewModel: OtpViewModel = hiltViewModel(),
-    startDestinationViewModel: StartDestinationViewModel = hiltViewModel(),
+//    viewModel: OtpViewModel = hiltViewModel(),
+//    startDestinationViewModel: StartDestinationViewModel = hiltViewModel(),
+    viewModel: OtpViewModel = koinViewModel(),
+    startDestinationViewModel: StartDestinationViewModel = koinViewModel(),
     args: NavigationAuth.OtpScreen2?
 ) {
     val context = LocalContext.current

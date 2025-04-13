@@ -152,4 +152,10 @@ dependencies {
     // DataStore Preferences
     implementation(libs.androidx.datastore.preferences)
 
+    // koin
+    implementation (libs.koin.android)
+    implementation (libs.koin.androidx.navigation)
+    implementation (libs.koin.androidx.compose)
+    testImplementation (libs.koin.test.junit4)
+
 }

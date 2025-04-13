@@ -8,9 +8,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+//@HiltViewModel
+//class ConnectivityViewModel @Inject constructor(
+//    private val connectivityObserver: ConnectivityObserver
+//): ViewModel() {
 
-@HiltViewModel
-class ConnectivityViewModel @Inject constructor(
+class ConnectivityViewModel(
     private val connectivityObserver: ConnectivityObserver
 ): ViewModel() {
 

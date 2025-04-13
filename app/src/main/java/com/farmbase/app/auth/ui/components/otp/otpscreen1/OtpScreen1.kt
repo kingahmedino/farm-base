@@ -23,17 +23,22 @@ import com.farmbase.app.ui.navigation.target.NavigationAuth
 import com.farmbase.app.ui.widgets.NextButton
 import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.HashHelper
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OtpScreen1(
     navController: NavController,
     modifier: Modifier = Modifier,
-    args: NavigationAuth.OtpScreen1?
+    args: NavigationAuth.OtpScreen1?,
 ) {
+
+//    // otp
+//    val viewModel: OtpViewModel =
+//        hiltViewModel(navController.currentBackStackEntry!!) // Retain ViewModel
 
     // otp
     val viewModel: OtpViewModel =
-        hiltViewModel(navController.currentBackStackEntry!!) // Retain ViewModel
+        koinViewModel(viewModelStoreOwner = navController.currentBackStackEntry!!) // Retain ViewModel
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val focusRequesters = remember {

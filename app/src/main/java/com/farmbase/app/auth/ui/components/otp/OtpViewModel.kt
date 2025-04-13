@@ -10,8 +10,10 @@ import javax.inject.Inject
 
 private const val VALID_OTP_CODE = "1414"
 
-@HiltViewModel
-class OtpViewModel @Inject constructor(): ViewModel() {
+//@HiltViewModel
+//class OtpViewModel @Inject constructor(): ViewModel() {
+
+class OtpViewModel (): ViewModel() {
 
     private val _state = MutableStateFlow(OtpState())
     val state = _state.asStateFlow()

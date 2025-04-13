@@ -25,12 +25,14 @@ import com.farmbase.app.ui.widgets.TopBar
 import com.farmbase.app.utils.Constants
 import com.farmbase.app.utils.HashHelper
 import com.farmbase.app.utils.SharedPreferencesManager
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: OtpViewModel = hiltViewModel()
+//    viewModel: OtpViewModel = hiltViewModel()
+    viewModel: OtpViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()

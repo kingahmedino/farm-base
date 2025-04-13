@@ -12,8 +12,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class StartDestinationViewModel @Inject constructor(private val startDestinationRepo: StartDestinationRepo) :
+//@HiltViewModel
+//class StartDestinationViewModel @Inject constructor(private val startDestinationRepo: StartDestinationRepo) :
+//    ViewModel() {
+
+
+class StartDestinationViewModel (private val startDestinationRepo: StartDestinationRepo) :
     ViewModel() {
 
     ///// me

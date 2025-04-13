@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class SessionManager @Inject constructor(@ApplicationContext private val context: Context) {
+//class SessionManager @Inject constructor(@ApplicationContext private val context: Context) {
+
+
+class SessionManager (private val context: Context) {
 
     private var lastInteractionTime: Long = System.currentTimeMillis()
     private val handler = Handler(Looper.getMainLooper())

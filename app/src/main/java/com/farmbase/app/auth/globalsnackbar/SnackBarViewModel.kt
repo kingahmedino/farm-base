@@ -8,14 +8,33 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class SnackBarViewModel @Inject constructor(): ViewModel() {
+//@HiltViewModel
+//class SnackBarViewModel @Inject constructor(): ViewModel() {
+
+//@HiltViewModel
+class SnackBarViewModel() : ViewModel() {
 
     private val _snackbarMessage = MutableLiveData<String>()
     val snackBarMessage: LiveData<String> get() = _snackbarMessage
 
     fun showSessionSnackbar(message: String) {
         _snackbarMessage.value = message
+    }
+
+    fun showInternetAvailabilitySnackBar(onclick: () -> Unit) {
+        viewModelScope.launch {
+            SnackBarController.sendEvent(
+                event = SnackBarEvent(
+                    message = "Internet Connection Lost",
+                    action = SnackBarAction(
+                        name = "Okay!",
+                        action = {
+                            dismissSnackbar()
+                        }
+                    )
+                )
+            )
+        }
     }
 
     fun showSnackbar() {
@@ -27,7 +46,6 @@ class SnackBarViewModel @Inject constructor(): ViewModel() {
                         name = "Okay!",
                         action = {
                             dismissSnackbar()
-                            // SnackbarController.dismissSnackbar()
                         }
                     )
                 )

@@ -26,6 +26,7 @@ cameraX = "1.4.1"
 security = "1.1.0-alpha06"
 browser = "1.5.0"
 datastorePreferences = "1.1.1"
+koinAndroid = "3.5.6"
 
 
 [libraries]
@@ -75,6 +76,11 @@ androidx-security-crypto = { module = "androidx.security:security-crypto", versi
 
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
+#koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroid" }
+koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroid" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

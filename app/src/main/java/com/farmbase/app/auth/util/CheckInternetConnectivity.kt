@@ -13,11 +13,15 @@ import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CheckInternetConnectivity(
-    connectivityViewModel: ConnectivityViewModel = hiltViewModel(),
-    snackBarViewModel: SnackBarViewModel = hiltViewModel(),
+//    connectivityViewModel: ConnectivityViewModel = hiltViewModel(),
+//    snackBarViewModel: SnackBarViewModel = hiltViewModel(),
+
+    connectivityViewModel: ConnectivityViewModel = koinViewModel(),
+    snackBarViewModel: SnackBarViewModel = koinViewModel(),
 
     snackBarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope
@@ -38,4 +42,21 @@ fun CheckInternetConnectivity(
         initialConnectionState = false // Update initial state after first composition
     }
 
+    @Composable
+    fun checkInternetAvailability(){
+
+        LaunchedEffect(isConnected) {
+            if (!isConnected && !initialConnectionState) { // Only show if not connected AND not initial
+                coroutineScope.launch {
+
+                    snackBarHostState.currentSnackbarData?.dismiss()
+
+                    snackBarViewModel.showSnackbar()
+
+                }
+            }
+            initialConnectionState = false // Update initial state after first composition
+        }
+
+    }
 }
