@@ -1,5 +1,6 @@
 package com.farmbase.app.ui.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,7 +16,8 @@ import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.authenticationRoute(
     modifier: Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    snackBarHostState: SnackbarHostState
 ) {
 
     composable<NavigationAuth.OtpScreen1> { backStackEntry ->
@@ -46,7 +48,9 @@ fun NavGraphBuilder.authenticationRoute(
     }
 
     composable<NavigationAuth.Auth> {
-        SplashScreen()
+        SplashScreen(
+            snackBarHostState = snackBarHostState
+        )
     }
 
     composable<NavigationAuth.Login> {

@@ -8,75 +8,76 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-private const val VALID_OTP_CODE = "1414"
-
 @HiltViewModel
-class OtpViewModel @Inject constructor(): ViewModel() {
+class OtpViewModel @Inject constructor() : ViewModel() {
 
     private val _state = MutableStateFlow(OtpState())
     val state = _state.asStateFlow()
 
     // hashed otp code data
-    var firstOtpCodeData : String = ""
-    val secondOtpCodeData = 0
+    var firstOtpCodeData: String = ""
 
     fun onAction(action: OtpAction) {
-        when(action) {
+        when (action) {
             is OtpAction.OnChangeFieldFocused -> {
-                _state.update { it.copy(
-                    focusedIndex = action.index
-                ) }
+                _state.update {
+                    it.copy(
+                        focusedIndex = action.index
+                    )
+                }
             }
+
             is OtpAction.OnEnterNumber -> {
                 enterNumber(action.number, action.index)
             }
+
             OtpAction.OnKeyboardBack -> {
                 val previousIndex = getPreviousFocusedIndex(state.value.focusedIndex)
-                _state.update { it.copy(
-                    code = it.code.mapIndexed { index, number ->
-                        if(index == previousIndex) {
-                            null
-                        } else {
-                            number
-                        }
-                    },
-                    focusedIndex = previousIndex
-                ) }
+                _state.update {
+                    it.copy(
+                        code = it.code.mapIndexed { index, number ->
+                            if (index == previousIndex) {
+                                null
+                            } else {
+                                number
+                            }
+                        },
+                        focusedIndex = previousIndex
+                    )
+                }
             }
         }
     }
 
     private fun enterNumber(number: Int?, index: Int) {
         val newCode = state.value.code.mapIndexed { currentIndex, currentNumber ->
-            if(currentIndex == index) {
+            if (currentIndex == index) {
                 number
             } else {
                 currentNumber
             }
         }
         val wasNumberRemoved = number == null
-        _state.update { it.copy(
-            code = newCode,
-            focusedIndex = if(wasNumberRemoved || it.code.getOrNull(index) != null) {
-                it.focusedIndex
-            } else {
-                getNextFocusedTextFieldIndex(
-                    currentCode = it.code,
-                    currentFocusedIndex = it.focusedIndex
-                )
-            },
-            isValid = if(newCode.none { it == null }) {
+        _state.update {
+            it.copy(
+                code = newCode,
+                focusedIndex = if (wasNumberRemoved || it.code.getOrNull(index) != null) {
+                    it.focusedIndex
+                } else {
+                    getNextFocusedTextFieldIndex(
+                        currentCode = it.code,
+                        currentFocusedIndex = it.focusedIndex
+                    )
+                },
+                isValid = if (newCode.none { it == null }) {
 
-               // newCode.joinToString("") == VALID_OTP_CODE
+                    val newCodeAsString = newCode.joinToString("")
+                    val hashedNewCode = HashHelper.sha256(newCodeAsString)
 
-              val newCodeAsString = newCode.joinToString("")
-                val hashedNewCode = HashHelper.sha256(newCodeAsString)
-
-
-             //   newCode.joinToString("") == firstOtpCodeData
-                hashedNewCode == firstOtpCodeData
-            } else null
-        ) }
+                    hashedNewCode == firstOtpCodeData
+                } else null
+            )
+        }
     }
 
     private fun getPreviousFocusedIndex(currentIndex: Int?): Int? {
@@ -87,11 +88,11 @@ class OtpViewModel @Inject constructor(): ViewModel() {
         currentCode: List<Int?>,
         currentFocusedIndex: Int?
     ): Int? {
-        if(currentFocusedIndex == null) {
+        if (currentFocusedIndex == null) {
             return null
         }
 
-        if(currentFocusedIndex == 3) {
+        if (currentFocusedIndex == 3) {
             return currentFocusedIndex
         }
 
@@ -106,10 +107,10 @@ class OtpViewModel @Inject constructor(): ViewModel() {
         currentFocusedIndex: Int
     ): Int {
         code.forEachIndexed { index, number ->
-            if(index <= currentFocusedIndex) {
+            if (index <= currentFocusedIndex) {
                 return@forEachIndexed
             }
-            if(number == null) {
+            if (number == null) {
                 return index
             }
         }

@@ -1,5 +1,6 @@
 package com.farmbase.app.ui.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
@@ -13,6 +14,7 @@ import com.farmbase.app.ui.navigation.target.NavigationTarget
 fun EntryNavigation(
     navHostController: NavHostController,
     startDestination: NavigationTarget,
+    snackBarHostState: SnackbarHostState,
     modifier: Modifier
 ) {
 
@@ -22,7 +24,7 @@ fun EntryNavigation(
         modifier = modifier
     ) {
 
-        authenticationRoute(modifier = modifier, navHostController = navHostController)
+        authenticationRoute(modifier = modifier, navHostController = navHostController, snackBarHostState = snackBarHostState)
 
         homePageNavigationRoute(modifier = modifier, navHostController = navHostController)
 

@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.farmbase.app.R
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,17 +26,23 @@ fun CheckInternetConnectivity(
     val isConnected by connectivityViewModel.isConnected.collectAsStateWithLifecycle()
     var initialConnectionState by remember { mutableStateOf(true) } // Track initial state
 
+    val messageText = convertRawStringToString(R.string.internet_connection_lost)
+    val buttonText = convertRawStringToString(R.string.okay)
+
+
     LaunchedEffect(isConnected) {
         if (!isConnected && !initialConnectionState) { // Only show if not connected AND not initial
             coroutineScope.launch {
 
                 snackBarHostState.currentSnackbarData?.dismiss()
 
-                snackBarViewModel.showSnackbar()
+                snackBarViewModel.showAppSnackBar(
+                    message = messageText,
+                    buttonMessage = buttonText
+                )
 
             }
         }
         initialConnectionState = false // Update initial state after first composition
     }
-
 }

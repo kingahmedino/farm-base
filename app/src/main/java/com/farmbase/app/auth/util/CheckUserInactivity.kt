@@ -6,6 +6,7 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.farmbase.app.R
 import com.farmbase.app.auth.globalsnackbar.ObserveAsEvents
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.globalsnackbar.SnackBarController
@@ -20,12 +21,19 @@ fun CheckUserInactivity(
     coroutineScope: CoroutineScope,
     sessionManager: SessionManager
 ){
+    val messageText = convertRawStringToString(R.string.user_inactive_for_30_seconds)
+    val buttonText = convertRawStringToString(R.string.okay)
 
     // Collect session timeout event and show Snackbar
     LaunchedEffect(Unit) {
         sessionManager.sessionTimeoutFlow.collect {
             coroutineScope.launch {
-                snackBarViewModel.showSnackBarMessage("User inactive for 30 seconds", "Okay!!!")
+
+                snackBarViewModel.showAppSnackBar(
+                    message = messageText,
+                    buttonMessage = buttonText
+                )
+
             }
         }
     }

@@ -82,7 +82,8 @@ class MainActivity : ComponentActivity() {
                         EntryNavigation(
                             navHostController = navController,
                             startDestination = startDestination!!,
-                            modifier = Modifier.padding(innerPadding)
+                            modifier = Modifier.padding(innerPadding),
+                            snackBarHostState = snackBarHostState
                         )
 
                         LaunchedEffect(intent) {

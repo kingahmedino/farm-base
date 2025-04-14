@@ -30,6 +30,7 @@
     <string name="ecosystem">ECOSYSTEM</string>
 
     <string name="login">Login</string>
+    <string name="okay">Okay!</string>
     <string name="cancel">Cancel</string>
 
     <string name="pin_created_successfully">Pin Created Successfully</string>
@@ -54,6 +55,12 @@
     <string name="are_you_sure_you_want_to_close_the_app">Are you sure you want to close the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="hello_world">Hello, World!</string>
+
+    <string name="internet_connection_lost">Internet Connection Lost</string>
+    <string name="internet_connection_unavailable">Internet Unavailable, Kindly Connect To The Internet.</string>
+    <string name="user_inactive_for_30_seconds">User inactive for 30 seconds</string>
 
 
 </resources>
