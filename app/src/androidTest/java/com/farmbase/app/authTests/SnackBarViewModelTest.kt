@@ -22,13 +22,18 @@ class SnackBarViewModelTest {
 
     @Test
     fun showSnackbar_sendsSnackBarEvent() = runTest {
+        val messageText = "Internet Connection Lost"
+        val buttonText = "Okay!"
+
         val job = launch {
+
+
             val event = SnackBarController.events.first()
-            assertEquals("Internet Connection Lost", event.message)
-            assertEquals("Okay!", event.action?.name)
+            assertEquals(messageText, event.message)
+            assertEquals(buttonText, event.action?.name)
         }
 
-        viewModel.showSnackbar()
+        viewModel.showAppSnackBar(message = messageText, buttonMessage = buttonText)
         job.cancel()
     }
 
