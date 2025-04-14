@@ -1,5 +1,6 @@
 package com.farmbase.app
 
+import AppStrings
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -49,7 +50,6 @@ import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import x.y.MyMessages
 import javax.inject.Inject
 
 //@AndroidEntryPoint
@@ -556,7 +556,7 @@ class MainActivity : ComponentActivity() {
                                 val lang = intent.getStringExtra("lang")
                                 lang?.let {
                                     Log.d("TAG", "lang: $lang")
-                                    val local = MyMessages.locales.find { locale -> locale.language == lang }
+                                    val local = AppStrings.locales.find { locale -> locale.language == lang }
                                     local?.let {
                                         setLocale(it, context)
                                     }

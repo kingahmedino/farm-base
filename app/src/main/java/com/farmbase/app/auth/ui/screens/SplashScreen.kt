@@ -1,5 +1,6 @@
 package com.farmbase.app.auth.ui.screens
 
+import AppStrings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +35,6 @@ import com.farmbase.app.auth.util.AuthObjects.launchWebsite
 import com.farmbase.app.i18n.ui.LanguagesMenu
 import com.farmbase.app.ui.theme.FredokaFontFamily
 import com.farmbase.app.ui.widgets.NextButtonEnabled
-import x.y.MyMessages
 
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues?) {
@@ -67,14 +67,14 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues?) {
                 .height(24.dp))
 
             Text(
-                MyMessages.cafitech(),
+                AppStrings.cafitech(),
                 fontSize = 32.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FredokaFontFamily
             )
             Text(
-                MyMessages.ecosystem().uppercase(),
+                AppStrings.ecosystem().uppercase(),
                 fontSize = 32.sp,
                 color = Color.White,
                 modifier = modifier.padding(top = 12.dp),
@@ -95,7 +95,7 @@ fun SplashScreen(modifier: Modifier = Modifier, innerPadding: PaddingValues?) {
                     // do nothing
                     launchWebsite(context = context)
                 },
-                buttonText = MyMessages.login(),
+                buttonText = AppStrings.login(),
                 shouldIconShow = false
             )
         }

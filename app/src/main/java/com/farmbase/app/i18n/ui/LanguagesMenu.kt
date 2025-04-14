@@ -1,5 +1,6 @@
 package com.farmbase.app.i18n.ui
 
+import AppStrings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +34,6 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.farmbase.app.i18n.utils.I18nManager
 import de.comahe.i18n4k.Locale
-import x.y.MyMessages
 
 @Composable
 fun LanguagesMenu(
@@ -42,7 +42,7 @@ fun LanguagesMenu(
 ) {
     val context = LocalContext.current
 
-    val myLocales = MyMessages.locales
+    val myLocales = AppStrings.locales
 
     var locales by remember { mutableStateOf(myLocales) }
     var query by remember { mutableStateOf("") }
