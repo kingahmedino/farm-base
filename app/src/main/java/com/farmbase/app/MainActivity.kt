@@ -2,6 +2,8 @@ package com.farmbase.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
@@ -31,7 +35,9 @@ import com.farmbase.app.ui.navigation.target.NavigationTarget
 //import com.farmbase.app.ui.navigation.target.Screens
 import com.farmbase.app.ui.theme.FarmBaseTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
+import com.farmbase.app.auth.util.TrackCurrentScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -106,6 +112,8 @@ class MainActivity : ComponentActivity() {
 
                     }
                 }
+
+                TrackCurrentScreen(navController)
             }
         }
     }
@@ -130,6 +138,7 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         sessionManager.stopSessionTimer()
     }
+
 }
 
 

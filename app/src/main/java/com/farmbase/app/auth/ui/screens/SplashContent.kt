@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,8 +29,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.farmbase.app.R
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
+import com.farmbase.app.auth.util.AuthObjects.launchWebsite
 import com.farmbase.app.auth.util.convertRawStringToString
 import com.farmbase.app.ui.theme.FredokaFontFamily
+import com.farmbase.app.ui.widgets.NextButtonEnabled
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,6 +42,8 @@ fun SplashContent(
     onClick: () -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
+
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -79,26 +85,26 @@ fun SplashContent(
                 .height(48.dp)
         )
 
-        ButtonWithInternetCheck(
-            onClick = onClick,
-            text = "Login",
-            snackBarHostState = snackBarHostState
-        )
+//        ButtonWithInternetCheck(
+//            onClick = onClick,
+//            text = "Login",
+//            snackBarHostState = snackBarHostState
+//        )
 
-        /*      NextButtonEnabled(
+              NextButtonEnabled(
                   modifier = modifier
                       .fillMaxWidth()
                       .padding(horizontal = 24.dp),
                   buttonColor = R.color.cafitech_light_green,
                   onClick = {
 
-                      if (!isConnected) {
-                          coroutineScope.launch {
-                              snackBarViewModel.showSnackbar()
-                          }
-                      } else {
-                          // do the thing
-                      }
+//                      if (!isConnected) {
+//                          coroutineScope.launch {
+//                              snackBarViewModel.showSnackbar()
+//                          }
+//                      } else {
+//                          // do the thing
+//                      }
 
 
                       // do nothing
@@ -106,7 +112,7 @@ fun SplashContent(
                   },
                   buttonText = stringResource(R.string.login),
                   shouldIconShow = false
-              )*/
+              )
 
 
     }
