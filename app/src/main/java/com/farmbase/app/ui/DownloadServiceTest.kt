@@ -23,9 +23,10 @@ fun TestDownloadService(viewModel: DownloadServiceViewModel = hiltViewModel()) {
     val urlList = remember {
         mutableStateListOf(
             "https://storage.googleapis.com/agricos-dev-bucket-1/string/bird_20250205113018642.png",
-            "https://storage.googleapis.com/agricos-dev-bucket-1/configIcons/BGO/RF_High%20Risk(BGO).png",
-            "https://www.freepik.com/free-psd/macaroon-isolated-transparent-background_137449294.htm#fromView=keyword&page=1&position=1&uuid=9b163ae4-5765-4e96-8857-1bd11e4c3ee8&query=Png",
+            "https://storage.googleapis.com/babbangona-prod-bucket-2/asset_manager/images/asset/contract_agreement_video_AST-0613230933_kwakwsk_kwakwsk_IK00000000_2025-03-21_1655043729451933294141680.mp4",
             "https://picsum.photos/id/8/5000/3333.jpg",
+            "https://storage.googleapis.com/babbangona-prod-bucket-2/asset_manager/images/assigned_asset/assigned_asset_video_AST-0613230933_mobilListe10018_mobilListe10018_IK00000000_2025-04-09_1509548981546450491100855.mp4",
+            "https://storage.googleapis.com/agric-os-media-files/activity_planning/English_Audio/Activity/Log%20Redflag.mp3",
             "https://picsum.photos/id/9/5000/3269.jpg"
         )
     }
@@ -41,7 +42,7 @@ fun TestDownloadService(viewModel: DownloadServiceViewModel = hiltViewModel()) {
         Button(
             onClick = { viewModel.startDownload(urlList) },
         ) {
-            Text("Download Image")
+            Text("Download Media")
         }
     }
 }
