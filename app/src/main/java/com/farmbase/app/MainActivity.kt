@@ -54,6 +54,8 @@ import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
 import com.farmbase.app.auth.ui.components.otp.OtpAction
 import com.farmbase.app.auth.ui.components.otp.OtpViewModel
+import com.farmbase.app.ui.DownloadServiceViewModel
+import com.farmbase.app.ui.TestDownloadService
 import com.farmbase.app.ui.navigation.Screen
 import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
@@ -431,140 +433,144 @@ class MainActivity : ComponentActivity() {
                 }
                 val scope = rememberCoroutineScope()
 
+                TestDownloadService(
+                   // viewModel = DownloadServiceViewModel()
+                )
+
                 // Collect session timeout event and show Snackbar
-                LaunchedEffect(Unit) {
-                    sessionManager.sessionTimeoutFlow.collect {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "User inactive for 30 seconds",
-                                duration = SnackbarDuration.Short
-                            )
-                        }
-                    }
-                }
-
-                ObserveAsEvents(
-                    flow = SnackbarController.events,
-                    snackbarHostState
-                ) { event ->
-                    scope.launch {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-
-                        val result = snackbarHostState.showSnackbar(
-                            message = event.message,
-                            actionLabel = event.action?.name,
-                            duration = SnackbarDuration.Long
-                        )
-
-                        if (result == SnackbarResult.ActionPerformed) {
-                            event.action?.action?.invoke()
-                        }
-                    }
-                }
-
-                ObserveAsEvents(flow = SnackbarController.dismissEvents, snackbarHostState) {
-                    scope.launch {
-                        snackbarHostState.currentSnackbarData?.dismiss() // Dismiss from ViewModel
-                    }
-                }
-
-                // global snack bar
-
-                // CheckInternetConnectivity
-                CheckInternetConnectivity()
-
-                val navController = rememberNavController()
-                val showExitDialog = remember { mutableStateOf(false) }
-
-                // State to track if getStartDestination has been called
-                var startDestination by remember { mutableStateOf<String?>(null) }
-
-                // Call getStartDestination only once
-                if (startDestination == null && getData.finished != null) {
-                    startDestination = getStartDestination(getData.finished)
-                }
-
-                // Back press handler
-                BackHandler {
-                    showExitDialog.value = true
-                }
-
-                // Show exit confirmation dialog
-                if (showExitDialog.value) {
-                    AlertDialog(
-                        onDismissRequest = { showExitDialog.value = false },
-                        title = { Text("Exit App") },
-                        text = { Text("Are you sure you want to close the app?") },
-                        confirmButton = {
-                            TextButton(onClick = { finish() }) {
-                                Text("Yes")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showExitDialog.value = false }) {
-                                Text("No")
-                            }
-                        }
-                    )
-                }
-
-                Scaffold(
-                    snackbarHost = {
-                        SnackbarHost(
-                            hostState = snackbarHostState
-                        ) {
-                            Snackbar(
-                                modifier = Modifier.padding(12.dp),
-                                containerColor = MaterialTheme.colorScheme.background,
-                                dismissAction = {
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(horizontal = 12.dp)
-                                            .clickable(onClick = { it.dismiss() }),
-                                        text = it.visuals.actionLabel ?: "",
-                                        color = MaterialTheme.colorScheme.secondary,
-                                        style = MaterialTheme.typography.labelLarge
-                                    )
-                                }
-                            ) {
-                                Text(
-                                    text = it.visuals.message,
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    if (startDestination != null) {
-                        NavHost(
-                            navController = navController,
-                            modifier = Modifier.padding(innerPadding),
-                            startDestination = startDestination!!
-                        ) {
-                            farmerNavGraph(navController, innerPadding)
-                        }
-
-                        LaunchedEffect(intent) {
-                            intent?.data?.let { uri ->
-                                val status = uri.pathSegments.getOrNull(0) ?: ""
-                                val accessToken = intent.getStringExtra("accessToken") ?: ""
-                                val refreshToken = intent.getStringExtra("refreshToken") ?: ""
-                                val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
-
-                                Log.d("TAG", "status: $status")
-                                Log.d("TAG", "accessToken: $accessToken")
-                                Log.d("TAG", "refreshToken: $refreshToken")
-                                Log.d("TAG", "resetPin: $resetPin")
-
-                                navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
-                                    launchSingleTop = true;
-                                }
-                            }
-                        }
-                    }
-                }
+//                LaunchedEffect(Unit) {
+//                    sessionManager.sessionTimeoutFlow.collect {
+//                        scope.launch {
+//                            snackbarHostState.showSnackbar(
+//                                message = "User inactive for 30 seconds",
+//                                duration = SnackbarDuration.Short
+//                            )
+//                        }
+//                    }
+//                }
+//
+//                ObserveAsEvents(
+//                    flow = SnackbarController.events,
+//                    snackbarHostState
+//                ) { event ->
+//                    scope.launch {
+//                        snackbarHostState.currentSnackbarData?.dismiss()
+//
+//                        val result = snackbarHostState.showSnackbar(
+//                            message = event.message,
+//                            actionLabel = event.action?.name,
+//                            duration = SnackbarDuration.Long
+//                        )
+//
+//                        if (result == SnackbarResult.ActionPerformed) {
+//                            event.action?.action?.invoke()
+//                        }
+//                    }
+//                }
+//
+//                ObserveAsEvents(flow = SnackbarController.dismissEvents, snackbarHostState) {
+//                    scope.launch {
+//                        snackbarHostState.currentSnackbarData?.dismiss() // Dismiss from ViewModel
+//                    }
+//                }
+//
+//                // global snack bar
+//
+//                // CheckInternetConnectivity
+//                CheckInternetConnectivity()
+//
+//                val navController = rememberNavController()
+//                val showExitDialog = remember { mutableStateOf(false) }
+//
+//                // State to track if getStartDestination has been called
+//                var startDestination by remember { mutableStateOf<String?>(null) }
+//
+//                // Call getStartDestination only once
+//                if (startDestination == null && getData.finished != null) {
+//                    startDestination = getStartDestination(getData.finished)
+//                }
+//
+//                // Back press handler
+//                BackHandler {
+//                    showExitDialog.value = true
+//                }
+//
+//                // Show exit confirmation dialog
+//                if (showExitDialog.value) {
+//                    AlertDialog(
+//                        onDismissRequest = { showExitDialog.value = false },
+//                        title = { Text("Exit App") },
+//                        text = { Text("Are you sure you want to close the app?") },
+//                        confirmButton = {
+//                            TextButton(onClick = { finish() }) {
+//                                Text("Yes")
+//                            }
+//                        },
+//                        dismissButton = {
+//                            TextButton(onClick = { showExitDialog.value = false }) {
+//                                Text("No")
+//                            }
+//                        }
+//                    )
+//                }
+//
+//                Scaffold(
+//                    snackbarHost = {
+//                        SnackbarHost(
+//                            hostState = snackbarHostState
+//                        ) {
+//                            Snackbar(
+//                                modifier = Modifier.padding(12.dp),
+//                                containerColor = MaterialTheme.colorScheme.background,
+//                                dismissAction = {
+//                                    Text(
+//                                        modifier = Modifier
+//                                            .padding(horizontal = 12.dp)
+//                                            .clickable(onClick = { it.dismiss() }),
+//                                        text = it.visuals.actionLabel ?: "",
+//                                        color = MaterialTheme.colorScheme.secondary,
+//                                        style = MaterialTheme.typography.labelLarge
+//                                    )
+//                                }
+//                            ) {
+//                                Text(
+//                                    text = it.visuals.message,
+//                                    color = MaterialTheme.colorScheme.secondary,
+//                                    style = MaterialTheme.typography.bodyMedium
+//                                )
+//                            }
+//                        }
+//                    },
+//                    modifier = Modifier.fillMaxSize()
+//                ) { innerPadding ->
+//                    if (startDestination != null) {
+//                        NavHost(
+//                            navController = navController,
+//                            modifier = Modifier.padding(innerPadding),
+//                            startDestination = startDestination!!
+//                        ) {
+//                            farmerNavGraph(navController, innerPadding)
+//                        }
+//
+//                        LaunchedEffect(intent) {
+//                            intent?.data?.let { uri ->
+//                                val status = uri.pathSegments.getOrNull(0) ?: ""
+//                                val accessToken = intent.getStringExtra("accessToken") ?: ""
+//                                val refreshToken = intent.getStringExtra("refreshToken") ?: ""
+//                                val resetPin = intent.getStringExtra("resetPin")?.toBoolean() ?: false
+//
+//                                Log.d("TAG", "status: $status")
+//                                Log.d("TAG", "accessToken: $accessToken")
+//                                Log.d("TAG", "refreshToken: $refreshToken")
+//                                Log.d("TAG", "resetPin: $resetPin")
+//
+//                                navController.navigate("otpScreen1/$status?accessToken=$accessToken&refreshToken=$refreshToken&resetPin=$resetPin") {
+//                                    launchSingleTop = true;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }
