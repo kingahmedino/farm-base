@@ -15,12 +15,13 @@ import android.os.Environment
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toUri
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable.isActive
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -159,7 +160,7 @@ class MediaDownloadService : Service() {
      */
     override fun onCreate() {
         super.onCreate()
-        downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         createNotificationChannel()
     }
 
@@ -171,36 +172,43 @@ class MediaDownloadService : Service() {
      * @param startId A unique identifier for this start request
      * @return START_NOT_STICKY to prevent automatic restart if service is killed
      */
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            CANCEL_ACTION -> {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        // Get URLs from intent and validate
+        val urls = intent.getStringArrayListExtra("urls")
+
+        when {
+            // Handle cancel action immediately
+            intent.action == CANCEL_ACTION -> {
                 cancelDownloads()
-                return START_NOT_STICKY
+            }
+
+            urls == null || urls.isEmpty() -> {
+
+            }
+
+            else -> {
+                // Start foreground service with notification
+                startForeground(NOTIFICATION_ID, buildNotification("Download started..."))
+
+                // Launch download job in coroutine scope
+                val job = downloadScope.launch {
+                    try {
+                        downloadInBatches(urls)
+                        updateNotification("All downloads complete!")
+                        delay(NOTIFICATION_DELAY_MS)
+                    } catch (e: Exception) {
+                        Log.e("MediaDownloadService", "Download error: ${e.message}", e)
+                        updateNotification("Download error: ${e.message}")
+                        delay(NOTIFICATION_DELAY_MS)
+                    } finally {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        stopSelf()
+                    }
+                }
+
+                downloadJobs.add(job)
             }
         }
-
-        val urls = intent?.getStringArrayListExtra("urls") ?: return START_NOT_STICKY
-        if (urls.isEmpty()) return START_NOT_STICKY
-
-        startForeground(NOTIFICATION_ID, buildNotification("Download started..."))
-
-        val job = downloadScope.launch {
-            try {
-                downloadInBatches(urls)
-                updateNotification("All downloads complete!")
-                delay(NOTIFICATION_DELAY_MS)
-            } catch (e: Exception) {
-                Log.e("MediaDownloadService", "Download error: ${e.message}", e)
-                updateNotification("Download error: ${e.message}")
-                delay(NOTIFICATION_DELAY_MS)
-            } finally {
-                stopForeground(STOP_FOREGROUND_REMOVE)
-                stopSelf()
-            }
-        }
-
-        downloadJobs.add(job)
-
         return START_NOT_STICKY
     }
 
@@ -250,13 +258,15 @@ class MediaDownloadService : Service() {
             Log.d("DownloadService:: URL", url)
             val fileExtension = determineFileExtension(url)
             val mediaType = EXTENSION_TO_MEDIA_TYPE[fileExtension.lowercase()] ?: "unknown"
-            val environmentDir = MEDIA_DIRECTORIES[mediaType] ?:
-            Pair(Environment.DIRECTORY_DOWNLOADS, "Downloads")
+            val environmentDir =
+                MEDIA_DIRECTORIES[mediaType] ?: Pair(Environment.DIRECTORY_DOWNLOADS, "Downloads")
 
-            val fileName = "${url.substringAfterLast("/").substringBeforeLast(".")}.${fileExtension}"
-            val fileDir = File(getExternalFilesDir(environmentDir.first), environmentDir.second).apply {
-                if (!exists()) mkdirs()
-            }
+            val fileName =
+                "${url.substringAfterLast("/").substringBeforeLast(".")}.${fileExtension}"
+            val fileDir =
+                File(getExternalFilesDir(environmentDir.first), environmentDir.second).apply {
+                    if (!exists()) mkdirs()
+                }
             val mediaFile = File(fileDir, fileName)
 
             if (mediaFile.exists()) {
@@ -283,7 +293,8 @@ class MediaDownloadService : Service() {
      */
     private fun updateNotification(content: String) {
         val notification = buildNotification(content)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
@@ -308,7 +319,7 @@ class MediaDownloadService : Service() {
         }
 
         // Default to jpg if not found
-        return "jpg"
+        return "unknown"
     }
 
     /**
@@ -332,7 +343,7 @@ class MediaDownloadService : Service() {
     private fun buildDownloadRequest(url: String, destinationFile: File): DownloadManager.Request {
         val mimeType = determineMimeType(url)
 
-        return DownloadManager.Request(Uri.parse(url)).apply {
+        return DownloadManager.Request(url.toUri()).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setAllowedOverRoaming(false)
             setTitle(destinationFile.name)
@@ -370,8 +381,10 @@ class MediaDownloadService : Service() {
 
                     // Track download progress for larger files
                     if (status == DownloadManager.STATUS_RUNNING) {
-                        val bytesDownloaded = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                        val bytesTotal = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                        val bytesDownloaded =
+                            c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                        val bytesTotal =
+                            c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
 
                         if (bytesTotal > 0) {
                             val progress = (bytesDownloaded * 100 / bytesTotal).toInt()
@@ -447,7 +460,8 @@ class MediaDownloadService : Service() {
                 description = "Notification channel for media downloads"
                 setShowBadge(false)
             }
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
