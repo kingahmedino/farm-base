@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.implementation
+import org.gradle.kotlin.dsl.testImplementation
+import org.jetbrains.kotlin.gradle.idea.proto.com.google.protobuf.SourceCodeInfoKt.location
 import java.util.Properties
 
 plugins {
@@ -150,4 +153,20 @@ dependencies {
     // DataStore Preferences
     implementation(libs.androidx.datastore.preferences)
 
+    // Location Services
+    implementation (libs.play.services.location)
+
+    // AppCompat (needed for LocationUtility)
+    implementation (libs.androidx.appcompat)
+
+    // Core Android testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+
+    // Mockito for Android
+    androidTestImplementation(libs.mockito.android) // Use latest version
+
+    // Kotlin Coroutines Test
+    testImplementation(libs.kotlinx.coroutines.test)
 }

@@ -2,28 +2,20 @@ package com.farmbase.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,33 +25,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.farmbase.app.auth.datastore.viewmodel.StartDestinationViewModel
-import com.farmbase.app.auth.globalsnackbar.ObserveAsEvents
 import com.farmbase.app.auth.globalsnackbar.SnackBarViewModel
-import com.farmbase.app.auth.globalsnackbar.SnackbarController
 import com.farmbase.app.auth.internetconnectionobserver.ConnectivityViewModel
 import com.farmbase.app.auth.sessionManager.SessionManager
-import com.farmbase.app.auth.ui.components.otp.OtpAction
-import com.farmbase.app.auth.ui.components.otp.OtpViewModel
 import com.farmbase.app.ui.DownloadServiceViewModel
-import com.farmbase.app.ui.TestDownloadService
+import com.farmbase.app.ui.LocationUtilsDemo
 import com.farmbase.app.ui.navigation.Screen
-import com.farmbase.app.ui.navigation.farmerNavGraph
 import com.farmbase.app.ui.theme.FarmBaseTheme
-import com.farmbase.app.ui.theme.PLCodingGray
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -415,10 +393,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var sessionManager: SessionManager
 
+    @OptIn(ExperimentalPermissionsApi::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             FarmBaseTheme {
 
@@ -434,9 +414,10 @@ class MainActivity : ComponentActivity() {
                 val scope = rememberCoroutineScope()
                 val downloadServiceViewModel: DownloadServiceViewModel = hiltViewModel()
 
-                TestDownloadService(
-                    viewModel = downloadServiceViewModel
-                )
+//                TestDownloadService(
+//                    viewModel = downloadServiceViewModel
+//                )
+                LocationUtilsDemo()
 
                 // Collect session timeout event and show Snackbar
                 /*LaunchedEffect(Unit) {
